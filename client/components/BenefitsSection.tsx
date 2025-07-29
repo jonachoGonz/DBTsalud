@@ -78,16 +78,16 @@ export default function BenefitsSection() {
       {/* Header */}
       <div className="flex flex-col items-center justify-start gap-2 pt-[120px] text-center">
         <div className="text-[rgba(0,0,0,0.3)] text-[13.5px] font-medium leading-[17.55px] text-center transition-all duration-800">
-          Benefits
+          Enfoques Terapéuticos
         </div>
-        <h2 
+        <h2
           className="text-2xl font-medium leading-[28.8px] text-center transition-all duration-800"
-          style={{ 
+          style={{
             fontFamily: '"saans trial", sans-serif',
             letterSpacing: '-0.24px'
           }}
         >
-          Feel the difference in every aspect
+          Transformación basada en evidencia
         </h2>
       </div>
 

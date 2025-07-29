@@ -100,63 +100,38 @@ export default function Footer() {
               ))}
             </div>
 
-            {/* Stats */}
+            {/* Contact Info */}
             <div className="flex flex-col gap-4 mr-[194px] mt-[46px] w-[260px]">
               <div className="flex items-center gap-[10px] justify-start">
                 <div className="h-6 min-h-6 min-w-6 w-6">
                   <svg width="100%" height="auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clipPath="url(#clip0_profile_icon)">
-                      <path d="M12 13.7998C13.5802 13.7998 15.9727 14.2912 17.9629 15.2725C19.97 16.2621 21.4502 17.6865 21.4502 19.5V22.2002H2.5498V19.5C2.54981 17.6865 4.02999 16.2621 6.03711 15.2725C8.02729 14.2912 10.4198 13.7998 12 13.7998ZM10.1055 2.17676C10.897 1.8489 11.7583 1.73279 12.6045 1.83691L12.9658 1.89551C13.8059 2.06264 14.5858 2.44446 15.2314 3.00098L15.5 3.25C16.1057 3.85567 16.5428 4.60629 16.7705 5.42773L16.8545 5.78418C17.0216 6.62422 16.9682 7.49133 16.7012 8.30078L16.5732 8.64453C16.2454 9.43587 15.7187 10.1267 15.0469 10.6514L14.75 10.8662C13.936 11.41 12.9789 11.7002 12 11.7002C10.7693 11.7002 9.58573 11.242 8.67773 10.4199L8.5 10.25C7.5717 9.3217 7.0498 8.06282 7.0498 6.75C7.04981 5.89329 7.27237 5.05346 7.69238 4.31152L7.88379 4C8.35966 3.28781 9.01122 2.71266 9.77246 2.3291L10.1055 2.17676Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_profile_icon">
-                        <rect width="24" height="24" fill="white"/>
-                      </clipPath>
-                    </defs>
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#FCF8F1"/>
                   </svg>
                 </div>
                 <div className="text-[rgb(252,248,241)] text-xs leading-[14.4px]">
-                  Combined across all platforms: 11k followers
+                  Almirante Pastene 185, Providencia (oficina 204)
                 </div>
               </div>
 
               <div className="flex items-center gap-[10px] justify-start">
                 <div className="h-6 min-h-6 min-w-6 w-6">
                   <svg width="100%" height="auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clipPath="url(#clip0_bell_icon)">
-                      <path d="M14.9414 20.5498C14.7194 20.9122 14.4325 21.2314 14.0938 21.4902L13.8887 21.6357C13.3273 22.0033 12.671 22.1985 12 22.1992C11.4129 22.1985 10.8369 22.0494 10.3262 21.7656L10.1113 21.6357C9.6828 21.3551 9.32411 20.9833 9.05859 20.5498H14.9414Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                      <path d="M13.6211 1.7998L13.9541 3.7998L13.9873 3.99805L14.1836 4.04297C15.7087 4.38987 16.7658 5.23914 17.4482 6.39453C18.1356 7.55828 18.4502 9.04638 18.4502 10.6631V13.5996L18.5098 13.6797L20.7002 16.5996V18.4502H3.2998V16.5996L5.49023 13.6797L5.5498 13.5996V10.6631C5.5498 9.04027 5.86213 7.55263 6.54785 6.39062C7.22859 5.23715 8.28512 4.39 9.81641 4.04297L10.0127 3.99805L10.0459 3.7998L10.3789 1.7998H13.6211Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_bell_icon">
-                        <rect width="24" height="24" fill="white"/>
-                      </clipPath>
-                    </defs>
+                    <path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.27-.27.35-.67.24-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z" fill="#FCF8F1"/>
                   </svg>
                 </div>
                 <div className="text-[rgb(252,248,241)] text-xs leading-[14.4px]">
-                  Daily: 50 requests/DMs
+                  WhatsApp: +56949897699
                 </div>
               </div>
 
               <div className="flex items-center gap-[10px] justify-start">
                 <div className="h-6 min-h-6 min-w-6 w-6">
                   <svg width="100%" height="auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g clipPath="url(#clip0_columns_icon)">
-                      <path d="M5.7002 14.5498V22.9502H2.5498V14.5498H5.7002Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                      <path d="M16.2002 10.0498V22.9502H13.0498V10.0498H16.2002Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                      <path d="M21.4502 4.7998V22.9502H18.2998V4.7998H21.4502Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                      <path d="M10.9502 1.0498V22.9502H7.7998V1.0498H10.9502Z" stroke="#FCF8F1" strokeWidth="0.6"/>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_columns_icon">
-                        <rect width="24" height="24" fill="white"/>
-                      </clipPath>
-                    </defs>
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" fill="#FCF8F1"/>
                   </svg>
                 </div>
                 <div className="text-[rgb(252,248,241)] text-xs leading-[14.4px]">
-                  Growth: 2% organic growth monthly
+                  Atención presencial y online
                 </div>
               </div>
             </div>

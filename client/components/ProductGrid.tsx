@@ -1,42 +1,42 @@
 export default function ProductGrid() {
-  const products = [
+  const services = [
     {
       id: 1,
-      title: "Stay your best self, always",
-      category: "Wellbeing",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/6748577ad24e2f2050ddaf30_man.webp",
-      alt: "man in white t-shirt looking forward",
-      link: "/product/essential",
+      title: "Construye una vida con propósito y equilibrio emocional",
+      category: "Programa DBT Completo",
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=600&fit=crop",
+      alt: "persona en sesión de terapia individual",
+      link: "/servicios/dbt-completo",
       gradient: {
-        from: "#FF9A2B",
-        via: "#FFDFCF", 
-        to: "#FFAD37"
+        from: "#6366F1",
+        via: "#E0E7FF",
+        to: "#4F46E5"
       }
     },
     {
       id: 2,
-      title: "Optimize your fertility, cycle and menopause naturally",
-      category: "Women's health",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673c1a67dd8dc2f34eb35582_Portrait%20of%20Black%20Woman%203.webp",
-      alt: "Portrait of Black Woman",
-      link: "/product/kini",
+      title: "Terapia personalizada para tus necesidades únicas",
+      category: "Terapia Individual",
+      image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=500&h=600&fit=crop",
+      alt: "consultorio de psicología acogedor",
+      link: "/servicios/terapia-individual",
       gradient: {
-        from: "#FF97E7",
-        via: "#FFDDFE",
-        to: "#FF66B9"
+        from: "#10B981",
+        via: "#D1FAE5",
+        to: "#059669"
       }
     },
     {
       id: 3,
-      title: "Fuel your cells for a supercharged life",
-      category: "Longevity",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/671b4edb7e08b9f23ffd16d8_Smiling%20Woman%20Purple%20Glasses%201.webp",
-      alt: "old woman is smiling",
-      link: "/product/kini-essential-bundle",
+      title: "Comprende y transforma tu bienestar emocional",
+      category: "Evaluaciones",
+      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=500&h=600&fit=crop",
+      alt: "profesional realizando evaluación psicológica",
+      link: "/servicios/evaluaciones",
       gradient: {
-        from: "#FF783F",
-        via: "#FF8A35",
-        to: "#FF3232"
+        from: "#F59E0B",
+        via: "#FEF3C7",
+        to: "#D97706"
       }
     }
   ];

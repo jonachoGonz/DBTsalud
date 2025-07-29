@@ -170,13 +170,13 @@ export default function LuminousHeader() {
         {/* Content */}
         <div className="flex flex-col items-center justify-end text-center">
           <div className="text-[rgba(242,236,226,0.6)] text-lg leading-6 text-center mb-4" style={{ letterSpacing: '-0.18px' }}>
-            Red Light Therapy: proven, safe, and non-invasive
+            Terapia basada en evidencia: segura, efectiva y personalizada
           </div>
-          <h1 className="text-[rgb(252,248,241)] font-medium text-7xl leading-[79.2px] text-center" style={{ 
+          <h1 className="text-[rgb(252,248,241)] font-medium text-7xl leading-[79.2px] text-center" style={{
             fontFamily: '"saans trial", sans-serif',
             letterSpacing: '-0.72px'
           }}>
-            Your cells, supercharged
+            Tu bienestar, transformado
           </h1>
         </div>
       </div>

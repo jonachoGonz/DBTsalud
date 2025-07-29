@@ -3,9 +3,12 @@ export default function BenefitsSection() {
     {
       id: 1,
       title: "Terapia Dialéctico-Conductual (DBT)",
-      subtitle: "Tratamiento intensivo para desregulación emocional, crisis frecuentes y relaciones conflictivas.",
-      description: "Incluye terapia individual, talleres de habilidades, coaching telefónico y trabajo en equipo para construir una vida con mayor equilibrio y sentido.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop",
+      subtitle:
+        "Tratamiento intensivo para desregulación emocional, crisis frecuentes y relaciones conflictivas.",
+      description:
+        "Incluye terapia individual, talleres de habilidades, coaching telefónico y trabajo en equipo para construir una vida con mayor equilibrio y sentido.",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop",
       alt: "Persona en sesión de terapia DBT",
       link: "/terapias/dbt",
       features: ["Regulación emocional", "Tolerancia al malestar"],
@@ -14,49 +17,71 @@ export default function BenefitsSection() {
         data: [
           { label: "Sesiones", value: "16-24" },
           { label: "Duración", value: "6-12m" },
-          { label: "Éxito", value: "85%" }
-        ]
-      }
+          { label: "Éxito", value: "85%" },
+        ],
+      },
     },
     {
       id: 2,
       title: "Terapia Cognitivo-Conductual (TCC)",
-      subtitle: "Enfoque directo y práctico para transformar pensamientos y comportamientos problemáticos.",
-      description: "Trabajo con metas claras, monitoreo del progreso y herramientas efectivas para ansiedad, depresión, trastornos alimentarios y más.",
-      image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=600&h=400&fit=crop",
+      subtitle:
+        "Enfoque directo y práctico para transformar pensamientos y comportamientos problemáticos.",
+      description:
+        "Trabajo con metas claras, monitoreo del progreso y herramientas efectivas para ansiedad, depresión, trastornos alimentarios y más.",
+      image:
+        "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=600&h=400&fit=crop",
       alt: "Consultorio de TCC",
       link: "/terapias/tcc",
-      features: ["Técnicas estructuradas", "Herramientas prácticas", "Monitoreo constante"],
+      features: [
+        "Técnicas estructuradas",
+        "Herramientas prácticas",
+        "Monitoreo constante",
+      ],
       progressMetrics: [
         { label: "Progreso semanal", value: "Óptimo", progress: 88 },
-        { label: "Adherencia", value: "Excelente", progress: 92 }
-      ]
+        { label: "Adherencia", value: "Excelente", progress: 92 },
+      ],
     },
     {
       id: 3,
       title: "Terapia de Aceptación y Compromiso (ACT)",
-      subtitle: "Acepta lo que no puedes controlar y comprométete con acciones alineadas a tus valores.",
-      description: "Cultiva flexibilidad psicológica, reduce la lucha interna y avanza hacia una vida con mayor significado y autenticidad.",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop",
+      subtitle:
+        "Acepta lo que no puedes controlar y comprométete con acciones alineadas a tus valores.",
+      description:
+        "Cultiva flexibilidad psicológica, reduce la lucha interna y avanza hacia una vida con mayor significado y autenticidad.",
+      image:
+        "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop",
       alt: "Persona en meditación mindfulness",
       link: "/terapias/act",
-      features: ["Flexibilidad psicológica", "Aceptación radical", "Valores personales"],
-      mindfulnessChart: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop"
+      features: [
+        "Flexibilidad psicológica",
+        "Aceptación radical",
+        "Valores personales",
+      ],
+      mindfulnessChart:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop",
     },
     {
       id: 4,
       title: "Process-Based Therapy (PBT)",
-      subtitle: "Enfoque innovador y personalizado que combina estrategias de distintas terapias basadas en evidencia.",
-      description: "No se basa solo en diagnósticos, sino en entender los procesos únicos que sostienen tu malestar para intervenir de manera precisa y efectiva.",
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=400&fit=crop",
+      subtitle:
+        "Enfoque innovador y personalizado que combina estrategias de distintas terapias basadas en evidencia.",
+      description:
+        "No se basa solo en diagnósticos, sino en entender los procesos únicos que sostienen tu malestar para intervenir de manera precisa y efectiva.",
+      image:
+        "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=400&fit=crop",
       alt: "Proceso terapéutico personalizado",
       link: "/terapias/pbt",
-      features: ["Enfoque personalizado", "Procesos individuales", "Intervención precisa"],
+      features: [
+        "Enfoque personalizado",
+        "Procesos individuales",
+        "Intervención precisa",
+      ],
       processMetrics: {
         personalization: "95%",
-        effectiveness: "90%"
-      }
-    }
+        effectiveness: "90%",
+      },
+    },
   ];
 
   return (
@@ -70,7 +95,7 @@ export default function BenefitsSection() {
           className="text-2xl font-medium leading-[28.8px] text-center transition-all duration-800"
           style={{
             fontFamily: '"saans trial", sans-serif',
-            letterSpacing: '-0.24px'
+            letterSpacing: "-0.24px",
           }}
         >
           Transformación basada en evidencia
@@ -89,8 +114,9 @@ export default function BenefitsSection() {
             <div
               className="relative w-[400px] flex-shrink-0 rounded-[40px] overflow-hidden cursor-pointer"
               style={{
-                backgroundImage: 'url("https://d3e54v103j8qbb.cloudfront.net/img/background-image.svg")',
-                backgroundPosition: '0px 0px'
+                backgroundImage:
+                  'url("https://d3e54v103j8qbb.cloudfront.net/img/background-image.svg")',
+                backgroundPosition: "0px 0px",
               }}
             >
               <img
@@ -108,7 +134,10 @@ export default function BenefitsSection() {
                   </div>
                   <div className="flex gap-[26px]">
                     {therapy.metrics.data.map((item, index) => (
-                      <div key={index} className="flex flex-col gap-[1.6px] w-[53px]">
+                      <div
+                        key={index}
+                        className="flex flex-col gap-[1.6px] w-[53px]"
+                      >
                         <div className="text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] tracking-[-0.24px]">
                           {item.label}
                         </div>
@@ -127,9 +156,12 @@ export default function BenefitsSection() {
                     <div
                       key={index}
                       className={`bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-4 w-[250.88px] ${
-                        index === 0 ? 'bottom-[104px]' : 'bottom-[40px]'
+                        index === 0 ? "bottom-[104px]" : "bottom-[40px]"
                       }`}
-                      style={{ position: 'absolute', bottom: index === 0 ? '104px' : '40px' }}
+                      style={{
+                        position: "absolute",
+                        bottom: index === 0 ? "104px" : "40px",
+                      }}
                     >
                       <div className="flex justify-between items-center mb-3">
                         <div className="text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px]">
@@ -206,18 +238,16 @@ export default function BenefitsSection() {
                   </div>
                 </div>
               )}
-
-
             </div>
 
             {/* Content Section */}
             <div className="flex flex-col flex-1 justify-between p-10">
               <div className="flex flex-col gap-3 pr-[60px]">
-                <div 
+                <div
                   className="text-[36px] font-medium leading-[39.6px]"
-                  style={{ 
+                  style={{
                     fontFamily: '"saans trial", sans-serif',
-                    letterSpacing: '-0.36px'
+                    letterSpacing: "-0.36px",
                   }}
                 >
                   {therapy.title}
@@ -233,7 +263,7 @@ export default function BenefitsSection() {
                 </p>
                 <div className="flex gap-[10px]">
                   {therapy.features.map((feature, index) => (
-                    <div 
+                    <div
                       key={index}
                       className="flex-1 border-b border-[rgba(0,0,0,0.1)] rounded-b-[12px] h-[78px] px-[14px] pt-[14px] pb-8"
                     >

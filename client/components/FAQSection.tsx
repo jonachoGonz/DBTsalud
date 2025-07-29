@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function FAQSection() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -7,23 +7,27 @@ export default function FAQSection() {
     {
       id: 1,
       question: "¿Cuándo puedo ver resultados en la terapia?",
-      answer: "La constancia y el compromiso son fundamentales. Generalmente, después de 3-4 semanas de terapia regular, puedes empezar a notar cambios en tu bienestar emocional. Cada proceso es único y depende de tu historia personal y objetivos."
+      answer:
+        "La constancia y el compromiso son fundamentales. Generalmente, después de 3-4 semanas de terapia regular, puedes empezar a notar cambios en tu bienestar emocional. Cada proceso es único y depende de tu historia personal y objetivos.",
     },
     {
       id: 2,
       question: "¿Cuál es la diferencia entre DBT y TCC?",
-      answer: "DBT (Terapia Dialéctico-Conductual) está especialmente diseñada para personas con desregulación emocional intensa, incluyendo talleres de habilidades y coaching telefónico. TCC (Terapia Cognitivo-Conductual) es más directa y práctica, enfocándose en identificar y cambiar patrones de pensamiento problemáticos. Ambas son efectivas, pero para diferentes necesidades."
+      answer:
+        "DBT (Terapia Dialéctico-Conductual) está especialmente diseñada para personas con desregulación emocional intensa, incluyendo talleres de habilidades y coaching telefónico. TCC (Terapia Cognitivo-Conductual) es más directa y práctica, enfocándose en identificar y cambiar patrones de pensamiento problemáticos. Ambas son efectivas, pero para diferentes necesidades.",
     },
     {
       id: 3,
       question: "¿Ofrecen atención en español e inglés?",
-      answer: "Sí, ofrecemos todos nuestros servicios tanto en español como en inglés. Nuestro equipo está capacitado para brindar terapia de calidad en ambos idiomas, adaptándose a tus necesidades lingüísticas y culturales."
+      answer:
+        "Sí, ofrecemos todos nuestros servicios tanto en español como en inglés. Nuestro equipo está capacitado para brindar terapia de calidad en ambos idiomas, adaptándose a tus necesidades lingüísticas y culturales.",
     },
     {
       id: 4,
       question: "¿Cómo funciona la modalidad online?",
-      answer: "Nuestras sesiones online tienen la misma efectividad que las presenciales. Utilizamos plataformas seguras y confidenciales que te permiten acceder a terapia desde la comodidad de tu hogar. Solo necesitas una conexión estable a internet y un dispositivo con cámara y micrófono."
-    }
+      answer:
+        "Nuestras sesiones online tienen la misma efectividad que las presenciales. Utilizamos plataformas seguras y confidenciales que te permiten acceder a terapia desde la comodidad de tu hogar. Solo necesitas una conexión estable a internet y un dispositivo con cámara y micrófono.",
+    },
   ];
 
   const toggleFAQ = (id: number) => {
@@ -41,11 +45,10 @@ export default function FAQSection() {
               style={{ fontFamily: '"saans trial", sans-serif' }}
             >
               <span className="text-[rgba(0,0,0,0.3)]">
-                Creemos en conversaciones significativas. Para ayudarte, ofrecemos{" "}
+                Creemos en conversaciones significativas. Para ayudarte,
+                ofrecemos{" "}
               </span>
-              <span className="inline-block">
-                una primera sesión gratuita
-              </span>
+              <span className="inline-block">una primera sesión gratuita</span>
               <span> para conocer tus necesidades.</span>
             </h4>
 
@@ -57,19 +60,19 @@ export default function FAQSection() {
               <div className="text-[15.2px] font-medium leading-[16.72px] transition-transform duration-400">
                 Contactar por WhatsApp
               </div>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="20" 
-                height="18" 
-                viewBox="0 0 20 18" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="18"
+                viewBox="0 0 20 18"
                 fill="none"
                 className="transition-transform duration-400"
               >
-                <path 
-                  d="M1 9L19 9M19 9L11.35 17M19 9L11.35 1" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
+                <path
+                  d="M1 9L19 9M19 9L11.35 17M19 9L11.35 1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
@@ -90,20 +93,20 @@ export default function FAQSection() {
                       {faq.question}
                     </div>
                     <div className="mt-[3.2px] min-w-4 w-4 transition-transform duration-400">
-                      <svg 
-                        width="100%" 
-                        height="auto" 
-                        viewBox="0 0 18 21" 
+                      <svg
+                        width="100%"
+                        height="auto"
+                        viewBox="0 0 18 21"
                         xmlns="http://www.w3.org/2000/svg"
                         className={`transition-transform duration-400 ${
-                          openFAQ === faq.id ? 'rotate-180' : ''
+                          openFAQ === faq.id ? "rotate-180" : ""
                         }`}
                       >
-                        <path 
-                          d="M9 1.5L9 19.5M9 19.5L1 11.85M9 19.5L17 11.85" 
-                          stroke="currentcolor" 
-                          strokeWidth="1.5" 
-                          strokeLinecap="round" 
+                        <path
+                          d="M9 1.5L9 19.5M9 19.5L1 11.85M9 19.5L17 11.85"
+                          stroke="currentcolor"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                       </svg>
@@ -111,9 +114,11 @@ export default function FAQSection() {
                   </div>
 
                   {/* Answer */}
-                  <div 
+                  <div
                     className={`flex flex-col overflow-hidden transition-all duration-400 ease-in-out ${
-                      openFAQ === faq.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                      openFAQ === faq.id
+                        ? "max-h-96 opacity-100"
+                        : "max-h-0 opacity-0"
                     }`}
                   >
                     <div className="flex flex-col px-6 pb-6 transition-transform duration-400">

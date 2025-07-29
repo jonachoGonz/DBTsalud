@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function LuminousHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +15,10 @@ export default function LuminousHeader() {
               href="/"
               className="text-[rgb(252,248,241)] cursor-pointer float-left relative"
             >
-              <div className="text-2xl font-bold" style={{ fontFamily: '"saans trial", sans-serif' }}>
+              <div
+                className="text-2xl font-bold"
+                style={{ fontFamily: '"saans trial", sans-serif' }}
+              >
                 DBT Salud
               </div>
             </a>
@@ -61,19 +64,19 @@ export default function LuminousHeader() {
                 <div className="text-[rgb(252,248,241)] text-[13.5px] leading-[17.55px] cursor-pointer">
                   EN
                 </div>
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="12" 
-                  height="6" 
-                  viewBox="0 0 12 6" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="6"
+                  viewBox="0 0 12 6"
                   fill="none"
                   className="text-[rgb(252,248,241)]"
                 >
-                  <path 
-                    fillRule="evenodd" 
-                    clipRule="evenodd" 
-                    d="M0.130033 0.163667C0.315787 -0.0406617 0.632011 -0.05572 0.83634 0.130033L6 4.82427L11.1637 0.130033C11.368 -0.05572 11.6842 -0.0406617 11.87 0.163667C12.0557 0.367996 12.0407 0.68422 11.8363 0.869974L6.33634 5.86997C6.14563 6.04335 5.85438 6.04335 5.66367 5.86997L0.163667 0.869974C-0.0406617 0.68422 -0.05572 0.367996 0.130033 0.163667Z" 
-                    fill="currentColor" 
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M0.130033 0.163667C0.315787 -0.0406617 0.632011 -0.05572 0.83634 0.130033L6 4.82427L11.1637 0.130033C11.368 -0.05572 11.6842 -0.0406617 11.87 0.163667C12.0557 0.367996 12.0407 0.68422 11.8363 0.869974L6.33634 5.86997C6.14563 6.04335 5.85438 6.04335 5.66367 5.86997L0.163667 0.869974C-0.0406617 0.68422 -0.05572 0.367996 0.130033 0.163667Z"
+                    fill="currentColor"
                     fillOpacity="0.5"
                   />
                 </svg>
@@ -90,20 +93,20 @@ export default function LuminousHeader() {
                       {cartCount}
                     </div>
                   )}
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    width="20" 
-                    height="20" 
-                    viewBox="0 0 37 38" 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 37 38"
                     fill="none"
                     className="text-[rgb(252,248,241)]"
                   >
-                    <path 
-                      d="M22.3373 13.8193H14.6641C13.5595 13.8193 12.6641 14.7148 12.6641 15.8193V23.4926C12.6641 24.5971 13.5595 25.4926 14.6641 25.4926H22.3373C23.4419 25.4926 24.3373 24.5971 24.3373 23.4926V15.8193C24.3373 14.7148 23.4419 13.8193 22.3373 13.8193Z" 
+                    <path
+                      d="M22.3373 13.8193H14.6641C13.5595 13.8193 12.6641 14.7148 12.6641 15.8193V23.4926C12.6641 24.5971 13.5595 25.4926 14.6641 25.4926H22.3373C23.4419 25.4926 24.3373 24.5971 24.3373 23.4926V15.8193C24.3373 14.7148 23.4419 13.8193 22.3373 13.8193Z"
                       stroke="currentColor"
                     />
-                    <path 
-                      d="M20.7456 15.8955V12.5078C20.7456 11.4032 19.8501 10.5078 18.7456 10.5078H18.2559C17.1513 10.5078 16.2559 11.4032 16.2559 12.5078V15.8955" 
+                    <path
+                      d="M20.7456 15.8955V12.5078C20.7456 11.4032 19.8501 10.5078 18.7456 10.5078H18.2559C17.1513 10.5078 16.2559 11.4032 16.2559 12.5078V15.8955"
                       stroke="currentColor"
                     />
                   </svg>
@@ -111,7 +114,7 @@ export default function LuminousHeader() {
               </div>
 
               {/* Mobile menu button */}
-              <button 
+              <button
                 className="lg:hidden flex flex-col items-center justify-center w-[37px] h-[37px] gap-1"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
@@ -127,37 +130,41 @@ export default function LuminousHeader() {
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-end h-full relative rounded-b-[40px] overflow-hidden pb-16 mb-0">
         {/* Background Image */}
-        <img 
+        <img
           src="https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp"
           alt="Young woman looking for beauty and anti-aging interventions that are non-invasive and fun to use. She found Luminous Labs Red Light Therapy."
           className="absolute inset-0 w-full h-full object-cover -z-20 rounded-b-[40px]"
         />
-        
+
         {/* Overlay Image with Animation */}
-        <img 
+        <img
           src="https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673af047ffda0bac4655c97f_db80b98027f9694237c7f771a092fe61_bg-2.avif"
           alt=""
           className="absolute inset-0 w-full h-full object-cover -z-10 rounded-b-[40px] mix-blend-overlay"
           style={{
-            animation: 'fadeinout 4s ease-in-out infinite'
+            animation: "fadeinout 4s ease-in-out infinite",
           }}
         />
 
         {/* Content */}
         <div className="flex flex-col items-center justify-end text-center">
-          <div className="text-[rgba(242,236,226,0.6)] text-lg leading-6 text-center mb-4" style={{ letterSpacing: '-0.18px' }}>
+          <div
+            className="text-[rgba(242,236,226,0.6)] text-lg leading-6 text-center mb-4"
+            style={{ letterSpacing: "-0.18px" }}
+          >
             Terapia basada en evidencia: segura, efectiva y personalizada
           </div>
-          <h1 className="text-[rgb(252,248,241)] font-medium text-7xl leading-[79.2px] text-center" style={{
-            fontFamily: '"saans trial", sans-serif',
-            letterSpacing: '-0.72px'
-          }}>
+          <h1
+            className="text-[rgb(252,248,241)] font-medium text-7xl leading-[79.2px] text-center"
+            style={{
+              fontFamily: '"saans trial", sans-serif',
+              letterSpacing: "-0.72px",
+            }}
+          >
             Tu bienestar, transformado
           </h1>
         </div>
       </div>
-
-
     </div>
   );
 }

@@ -4,41 +4,44 @@ export default function ProductGrid() {
       id: 1,
       title: "Construye una vida con propósito y equilibrio emocional",
       category: "Programa DBT Completo",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=600&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=600&fit=crop",
       alt: "persona en sesión de terapia individual",
       link: "/servicios/dbt-completo",
       gradient: {
         from: "#6366F1",
         via: "#E0E7FF",
-        to: "#4F46E5"
-      }
+        to: "#4F46E5",
+      },
     },
     {
       id: 2,
       title: "Terapia personalizada para tus necesidades únicas",
       category: "Terapia Individual",
-      image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=500&h=600&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=500&h=600&fit=crop",
       alt: "consultorio de psicología acogedor",
       link: "/servicios/terapia-individual",
       gradient: {
         from: "#10B981",
         via: "#D1FAE5",
-        to: "#059669"
-      }
+        to: "#059669",
+      },
     },
     {
       id: 3,
       title: "Comprende y transforma tu bienestar emocional",
       category: "Evaluaciones",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=500&h=600&fit=crop",
+      image:
+        "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=500&h=600&fit=crop",
       alt: "profesional realizando evaluación psicológica",
       link: "/servicios/evaluaciones",
       gradient: {
         from: "#F59E0B",
         via: "#FEF3C7",
-        to: "#D97706"
-      }
-    }
+        to: "#D97706",
+      },
+    },
   ];
 
   return (
@@ -83,7 +86,7 @@ export default function ProductGrid() {
                 <div
                   className="absolute left-4 w-5 h-5 rounded-full z-10 transition-all duration-600"
                   style={{
-                    background: `radial-gradient(circle, ${service.gradient.from} 0%, ${service.gradient.via} 60%, ${service.gradient.to} 100%)`
+                    background: `radial-gradient(circle, ${service.gradient.from} 0%, ${service.gradient.via} 60%, ${service.gradient.to} 100%)`,
                   }}
                 />
 

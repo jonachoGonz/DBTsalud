@@ -36,26 +36,26 @@ export default function FAQSection() {
         <div className="flex items-start justify-between gap-[110px] py-[130px] pb-[200px]">
           {/* Left Content */}
           <div className="flex flex-col items-start gap-10 w-[449px] transition-all duration-800">
-            <h4 
+            <h4
               className="text-2xl font-medium leading-[28.8px]"
               style={{ fontFamily: '"saans trial", sans-serif' }}
             >
               <span className="text-[rgba(0,0,0,0.3)]">
-                We believe in meaningful conversations. To help you out, we provide{" "}
+                Creemos en conversaciones significativas. Para ayudarte, ofrecemos{" "}
               </span>
               <span className="inline-block">
-                a free 20-minute call
+                una primera sesión gratuita
               </span>
-              <span> to answer your questions.</span>
+              <span> para conocer tus necesidades.</span>
             </h4>
-            
-            <a 
-              target="_blank" 
-              href="https://calendly.com/luminousred/20-minutes-with-the-founders"
+
+            <a
+              target="_blank"
+              href="https://wa.me/56949897699"
               className="flex items-center justify-center bg-black text-[rgb(252,248,241)] rounded-full h-[60px] px-10 gap-[10px] max-w-full transition-opacity duration-400 hover:opacity-80"
             >
               <div className="text-[15.2px] font-medium leading-[16.72px] transition-transform duration-400">
-                Book a free call
+                Contactar por WhatsApp
               </div>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

@@ -155,21 +155,21 @@ export default function BenefitsSection() {
                   <div className="bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-4 w-full h-[144px] flex flex-col justify-center gap-3">
                     <div className="relative flex items-center justify-center h-full">
                       <img
-                        src={benefit.skinDiagram}
-                        alt=""
-                        className="h-[80px] object-cover"
+                        src={therapy.mindfulnessChart}
+                        alt="Mindfulness chart"
+                        className="h-[80px] w-[80px] object-cover rounded-full"
                       />
                       <div className="absolute left-0 text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px]">
-                        skin glow
+                        mindfulness
                       </div>
                       <div className="absolute right-0 text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px] max-w-[62.4px]">
-                        skin firmness
+                        flexibilidad
                       </div>
                       <div className="absolute top-0 text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px]">
-                        skin tone evenness
+                        aceptación
                       </div>
                       <div className="absolute bottom-0 text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px]">
-                        skin tone evenness
+                        valores
                       </div>
                     </div>
                   </div>

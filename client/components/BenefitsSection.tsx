@@ -101,13 +101,13 @@ export default function BenefitsSection() {
               />
 
               {/* Metrics Overlays */}
-              {benefit.metrics && (
+              {therapy.metrics && (
                 <div className="absolute bottom-[30px] left-[30px] w-[251px] h-[103px] bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-5 flex flex-col gap-4">
                   <div className="text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px]">
-                    {benefit.metrics.title}
+                    {therapy.metrics.title}
                   </div>
                   <div className="flex gap-[26px]">
-                    {benefit.metrics.data.map((item, index) => (
+                    {therapy.metrics.data.map((item, index) => (
                       <div key={index} className="flex flex-col gap-[1.6px] w-[53px]">
                         <div className="text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] tracking-[-0.24px]">
                           {item.label}
@@ -121,7 +121,7 @@ export default function BenefitsSection() {
                 </div>
               )}
 
-              {benefit.sleepMetrics && (
+              {therapy.progressMetrics && (
                 <div className="absolute left-[40px] space-y-4">
                   {benefit.sleepMetrics.map((metric, index) => (
                     <div

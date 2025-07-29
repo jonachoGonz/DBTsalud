@@ -44,23 +44,23 @@ export default function ProductGrid() {
   return (
     <div className="bg-[rgb(252,248,241)] px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-14 mb-16 max-w-7xl mx-auto">
-        {products.map((product) => (
+        {services.map((service) => (
           <div
-            key={product.id}
+            key={service.id}
             className="bg-[rgb(252,248,241)] rounded-[40px] shadow-[rgba(197,16,16,0.03)_0px_4px_44px_10px] flex flex-col overflow-hidden relative group transition-all duration-800 hover:scale-105"
           >
-            {/* Product Link Overlay */}
+            {/* Service Link Overlay */}
             <a
-              href={product.link}
+              href={service.link}
               className="absolute inset-0 z-10 cursor-pointer"
-              aria-label={`View ${product.category} product`}
+              aria-label={`Ver servicio de ${service.category}`}
             />
 
             {/* Image Container */}
             <div className="relative rounded-[40px] overflow-hidden">
               <img
-                src={product.image}
-                alt={product.alt}
+                src={service.image}
+                alt={service.alt}
                 className="w-full h-64 lg:h-72 object-cover"
                 loading="lazy"
               />
@@ -73,26 +73,26 @@ export default function ProductGrid() {
               {/* Title */}
               <div className="max-w-[224px]">
                 <p className="text-[rgba(0,0,0,0.5)] text-base leading-[22.4px]">
-                  {product.title}
+                  {service.title}
                 </p>
               </div>
 
               {/* Category Badge */}
               <div className="relative flex items-center h-[59px] bg-[rgb(252,248,241)] border border-[rgba(194,189,181,0.5)] rounded-[30px] pl-12 overflow-hidden transition-all duration-600 hover:border-[rgba(194,189,181,0.8)]">
                 {/* Gradient Circle */}
-                <div 
+                <div
                   className="absolute left-4 w-5 h-5 rounded-full z-10 transition-all duration-600"
                   style={{
-                    background: `radial-gradient(circle, ${product.gradient.from} 0%, ${product.gradient.via} 60%, ${product.gradient.to} 100%)`
+                    background: `radial-gradient(circle, ${service.gradient.from} 0%, ${service.gradient.via} 60%, ${service.gradient.to} 100%)`
                   }}
                 />
-                
+
                 {/* Category Text */}
-                <span 
+                <span
                   className="relative z-20 font-medium text-[16.5px] leading-[21.45px]"
                   style={{ fontFamily: '"saans trial", sans-serif' }}
                 >
-                  {product.category}
+                  {service.category}
                 </span>
               </div>
             </div>

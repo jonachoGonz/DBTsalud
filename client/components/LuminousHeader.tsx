@@ -167,7 +167,7 @@ export default function LuminousHeader() {
         <img 
           src="https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673af047ffda0bac4655c97f_db80b98027f9694237c7f771a092fe61_bg-2.avif"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover -z-10 rounded-b-[40px] mix-blend-overlay animate-pulse"
+          className="absolute inset-0 w-full h-full object-cover -z-10 rounded-b-[40px] mix-blend-overlay"
           style={{
             animation: 'fadeinout 4s ease-in-out infinite'
           }}

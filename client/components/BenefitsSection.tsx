@@ -1,74 +1,60 @@
 export default function BenefitsSection() {
-  const benefits = [
+  const therapies = [
     {
       id: 1,
-      title: "Optimized female health",
-      subtitle: "Red light therapy can effectively support your fertility in the long-term.",
-      description: "By increasing blood flow, supporting tissue regeneration and balancing hormones, CellLight™ supports your uterus and ovaries naturally.",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/674033244546d6ee0abb7478_Frame%202087331480-2.webp",
-      alt: "A young girl is watching from holding a small child in her arms",
-      link: "/blog/red-light-therapy-lighting-the-road-to-fertility",
-      features: ["Promotes healthy tissue", "Balances your hormones"],
+      title: "Terapia Dialéctico-Conductual (DBT)",
+      subtitle: "Tratamiento intensivo para desregulación emocional, crisis frecuentes y relaciones conflictivas.",
+      description: "Incluye terapia individual, talleres de habilidades, coaching telefónico y trabajo en equipo para construir una vida con mayor equilibrio y sentido.",
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=400&fit=crop",
+      alt: "Persona en sesión de terapia DBT",
+      link: "/terapias/dbt",
+      features: ["Regulación emocional", "Tolerancia al malestar"],
       metrics: {
-        title: "uterine blood flow: OPtimal",
+        title: "Efectividad: ALTA",
         data: [
-          { label: "PI", value: "0.65" },
-          { label: "RI", value: "0.55" },
-          { label: "S/D", value: "2.3" }
+          { label: "Sesiones", value: "16-24" },
+          { label: "Duración", value: "6-12m" },
+          { label: "Éxito", value: "85%" }
         ]
       }
     },
     {
       id: 2,
-      title: "Enhanced deep sleep",
-      subtitle: "Near-infrared light enhances mitochondrial function in neurons, helping improve deep sleep.",
-      description: "CellLight™ will not disturb your natural sleep-wake-cycle and melatonin production.",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/67403324759d4ba06050c510_Frame%202087331480-1.webp",
-      alt: "Man is sleeping",
-      link: "/blog/the-ultimate-guide-to-better-sleep-7-tips-for-a-restful-nights-sleep",
-      features: ["Longer deep sleep", "Enhanced neuronal function", "Balances sleep hormone secretion"],
-      sleepMetrics: [
-        { label: "Deep Sleep Score", value: "Optimal", progress: 84 },
-        { label: "Sleep efficiency", value: "Optimal", progress: 84 }
+      title: "Terapia Cognitivo-Conductual (TCC)",
+      subtitle: "Enfoque directo y práctico para transformar pensamientos y comportamientos problemáticos.",
+      description: "Trabajo con metas claras, monitoreo del progreso y herramientas efectivas para ansiedad, depresión, trastornos alimentarios y más.",
+      image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=600&h=400&fit=crop",
+      alt: "Consultorio de TCC",
+      link: "/terapias/tcc",
+      features: ["Técnicas estructuradas", "Herramientas prácticas", "Monitoreo constante"],
+      progressMetrics: [
+        { label: "Progreso semanal", value: "Óptimo", progress: 88 },
+        { label: "Adherencia", value: "Excelente", progress: 92 }
       ]
     },
     {
       id: 3,
-      title: "Youthful skin",
-      subtitle: "CellLight™ accelerates cellular repair and stem cell proliferation, leading to higher natural collagen and elastin production.",
-      description: "This results in youthful, glowing and clear skin, allowing you to look as young as you feel in your heart.",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/67409518627cee8a92540085_face.webp",
-      alt: "young woman smiles",
-      link: "/blog/how-red-light-therapy-is-an-anti-aging-game-changer",
-      features: ["Accelerated cellular repair", "Non-invasively stimulated skin cell proliferation", "More natural collagen and elastin"],
-      skinDiagram: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/6745b4de9f1a61d812aad114_skin.svg"
+      title: "Terapia de Aceptación y Compromiso (ACT)",
+      subtitle: "Acepta lo que no puedes controlar y comprométete con acciones alineadas a tus valores.",
+      description: "Cultiva flexibilidad psicológica, reduce la lucha interna y avanza hacia una vida con mayor significado y autenticidad.",
+      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&h=400&fit=crop",
+      alt: "Persona en meditación mindfulness",
+      link: "/terapias/act",
+      features: ["Flexibilidad psicológica", "Aceptación radical", "Valores personales"],
+      mindfulnessChart: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop"
     },
     {
       id: 4,
-      title: "Extended longevity",
-      subtitle: "CellLight™ helps mitochondria produce more energy (ATP), supporting long-term health and protecting against chronic conditions.",
-      description: "Increasing cellular energy not only adds years to your life (lifespan) but also ensures those years are lived in good health (healthspan).",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/674033242fdd7bd921085f15_Frame%202087331480.webp",
-      alt: "The athletic girl is smiling",
-      link: "/blog/unlocking-mitochondrial-power-enhancing-resilience-and-longevity",
-      features: ["Improved cellular energy production", "Better functioning mitochondria", "Reduced aging velocity"],
-      ageMetrics: {
-        biological: "49",
-        chronological: "52"
-      }
-    },
-    {
-      id: 5,
-      title: "Boosted mental & physical resilience",
-      subtitle: "Studies show consistent use of CellLight™ improves heart rate variability (HRV) over time and reduces oxidative stress.",
-      description: "Higher HRV scores reflect greater mental and physical resilience. Lowering oxidative stress helps prevent conditions like atherosclerosis, hypertension, Alzheimer's disease, diabetes, infertility, chronic fatigue syndrome, and slows the aging process.",
-      image: "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/6740332425a33e3de6ea9d44_Frame%202087331482.webp",
-      alt: "A man is running on a treadmill",
-      link: "/blog/maximize-your-fitness-gains-pair-your-workouts-with-red-light-therapy",
-      features: ["Reduced oxidative stress", "Higher HRV"],
-      hrvMetrics: {
-        score: "152",
-        status: "Energetic"
+      title: "Process-Based Therapy (PBT)",
+      subtitle: "Enfoque innovador y personalizado que combina estrategias de distintas terapias basadas en evidencia.",
+      description: "No se basa solo en diagnósticos, sino en entender los procesos únicos que sostienen tu malestar para intervenir de manera precisa y efectiva.",
+      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=400&fit=crop",
+      alt: "Proceso terapéutico personalizado",
+      link: "/terapias/pbt",
+      features: ["Enfoque personalizado", "Procesos individuales", "Intervención precisa"],
+      processMetrics: {
+        personalization: "95%",
+        effectiveness: "90%"
       }
     }
   ];

@@ -81,12 +81,12 @@ export default function BenefitsSection() {
       <div className="flex flex-col gap-[10px] mt-10 pb-20">
         {therapies.map((therapy) => (
           <a
-            key={benefit.id}
-            href={benefit.link}
+            key={therapy.id}
+            href={therapy.link}
             className="flex bg-[rgb(242,236,226)] rounded-[40px] h-[450px] max-w-full cursor-pointer transition-all duration-800 hover:shadow-lg"
           >
             {/* Image Section */}
-            <div 
+            <div
               className="relative w-[400px] flex-shrink-0 rounded-[40px] overflow-hidden cursor-pointer"
               style={{
                 backgroundImage: 'url("https://d3e54v103j8qbb.cloudfront.net/img/background-image.svg")',
@@ -94,8 +94,8 @@ export default function BenefitsSection() {
               }}
             >
               <img
-                src={benefit.image}
-                alt={benefit.alt}
+                src={therapy.image}
+                alt={therapy.alt}
                 className="w-full h-full object-cover rounded-[40px] pointer-events-none"
                 loading="lazy"
               />

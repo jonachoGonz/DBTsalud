@@ -6,23 +6,23 @@ export default function FAQSection() {
   const faqs = [
     {
       id: 1,
-      question: "When can I see/measure effects?",
-      answer: "Consistent and correct usage is very important. Generally speaking after 3-4 weeks of use, you should be able to track the difference of the relevant biomarker for you. Contact us for more information."
+      question: "¿Cuándo puedo ver resultados en la terapia?",
+      answer: "La constancia y el compromiso son fundamentales. Generalmente, después de 3-4 semanas de terapia regular, puedes empezar a notar cambios en tu bienestar emocional. Cada proceso es único y depende de tu historia personal y objetivos."
     },
     {
       id: 2,
-      question: "What is the difference between red light and NIR light?",
-      answer: "Both Red Light and NIR light are a part of the light spectrum of the sun. Red Light emits wavelengths of between 600-700 nm and near-Infrared Light (NIR) is invisible to the naked eye and has a wavelength of 700nm to 1000nm. NIR can penetrate the skin much deeper than red light, including all soft tissue, connective tissue, and bone."
+      question: "¿Cuál es la diferencia entre DBT y TCC?",
+      answer: "DBT (Terapia Dialéctico-Conductual) está especialmente diseñada para personas con desregulación emocional intensa, incluyendo talleres de habilidades y coaching telefónico. TCC (Terapia Cognitivo-Conductual) es más directa y práctica, enfocándose en identificar y cambiar patrones de pensamiento problemáticos. Ambas son efectivas, pero para diferentes necesidades."
     },
     {
       id: 3,
-      question: "Is red light an alternative to sunlight?",
-      answer: "Natural sunlight offers massive benefits, but excess exposure to sunlight, however, can cause problems. This is where red light technology comes in. In recent years, using red light (photobiomodulation) has gained popularity as an alternative to sunlight, because of the amount of convenience and control it offers (like setting the intensity and wavelength). However, while red light is helpful for improving your overall well-being, increasing energy, and optimising sleep IT IS NOT a substitute for natural full-spectrum sunlight. Ideally, you want to get both in your daily routine – sunlight in the morning to help you wake up, boost vitamin D levels, improve mood, etc., and red light from a red light therapy device to boost mitochondrial function and improve your overall health and wellness. However, since getting regular doses of sunlight might not be possible for everyone (due to location, season, schedule, lifestyle, etc.), then red light technology is a great and convenient alternative to make up for the low amount of natural light!"
+      question: "¿Ofrecen atención en español e inglés?",
+      answer: "Sí, ofrecemos todos nuestros servicios tanto en español como en inglés. Nuestro equipo está capacitado para brindar terapia de calidad en ambos idiomas, adaptándose a tus necesidades lingüísticas y culturales."
     },
     {
       id: 4,
-      question: "Why does it look like that the LEDs are switched off in the NIR setting?",
-      answer: "The near-infrared light spectrum is not visible to the human eye, and therefore any light that has a wavelength greater than around 750nm, you will not be able to see with your naked eye. Your body will still be feeling all the powers of the light wave lengths though!"
+      question: "¿Cómo funciona la modalidad online?",
+      answer: "Nuestras sesiones online tienen la misma efectividad que las presenciales. Utilizamos plataformas seguras y confidenciales que te permiten acceder a terapia desde la comodidad de tu hogar. Solo necesitas una conexión estable a internet y un dispositivo con cámara y micrófono."
     }
   ];
 

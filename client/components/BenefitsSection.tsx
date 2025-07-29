@@ -220,19 +220,19 @@ export default function BenefitsSection() {
                     letterSpacing: '-0.36px'
                   }}
                 >
-                  {benefit.title}
+                  {therapy.title}
                 </div>
                 <p className="text-[rgba(0,0,0,0.5)] text-base leading-[22.4px]">
-                  {benefit.subtitle}
+                  {therapy.subtitle}
                 </p>
               </div>
 
               <div className="flex flex-col gap-6">
                 <p className="text-[rgba(0,0,0,0.5)] text-[13.5px] leading-[17.55px]">
-                  {benefit.description}
+                  {therapy.description}
                 </p>
                 <div className="flex gap-[10px]">
-                  {benefit.features.map((feature, index) => (
+                  {therapy.features.map((feature, index) => (
                     <div 
                       key={index}
                       className="flex-1 border-b border-[rgba(0,0,0,0.1)] rounded-b-[12px] h-[78px] px-[14px] pt-[14px] pb-8"

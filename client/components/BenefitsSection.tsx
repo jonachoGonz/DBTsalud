@@ -123,7 +123,7 @@ export default function BenefitsSection() {
 
               {therapy.progressMetrics && (
                 <div className="absolute left-[40px] space-y-4">
-                  {benefit.sleepMetrics.map((metric, index) => (
+                  {therapy.progressMetrics.map((metric, index) => (
                     <div
                       key={index}
                       className={`bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-4 w-[250.88px] ${
@@ -140,7 +140,7 @@ export default function BenefitsSection() {
                         </div>
                       </div>
                       <div className="w-full h-[3px] bg-[rgba(252,248,241,0.4)] rounded flex items-center">
-                        <div 
+                        <div
                           className="h-full bg-[rgb(252,248,241)] rounded"
                           style={{ width: `${metric.progress}%` }}
                         />
@@ -150,7 +150,7 @@ export default function BenefitsSection() {
                 </div>
               )}
 
-              {benefit.skinDiagram && (
+              {therapy.mindfulnessChart && (
                 <div className="absolute bottom-[30px] left-[30px] w-[240px] flex flex-col gap-[7px]">
                   <div className="bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-4 w-full h-[144px] flex flex-col justify-center gap-3">
                     <div className="relative flex items-center justify-center h-full">

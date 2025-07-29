@@ -187,12 +187,7 @@ export default function LuminousHeader() {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes fadeinout {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.7; }
-        }
-      `}</style>
+
     </div>
   );
 }

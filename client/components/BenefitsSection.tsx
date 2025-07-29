@@ -77,9 +77,9 @@ export default function BenefitsSection() {
         </h2>
       </div>
 
-      {/* Benefits List */}
+      {/* Therapies List */}
       <div className="flex flex-col gap-[10px] mt-10 pb-20">
-        {benefits.map((benefit) => (
+        {therapies.map((therapy) => (
           <a
             key={benefit.id}
             href={benefit.link}

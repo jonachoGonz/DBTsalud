@@ -1,20 +1,17 @@
 export default function Footer() {
   const navigationLinks = [
-    { label: "Technology", href: "/technology" },
-    { label: "Company", href: "/company" },
-    { label: "Shop", href: "/shop" },
-    { label: "Commercial", href: "/commercial" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "/get-in-touch" }
+    { label: "Nosotros", href: "/nosotros" },
+    { label: "Terapias", href: "/terapias" },
+    { label: "Servicios", href: "/servicios" },
+    { label: "Equipo", href: "/equipo" },
+    { label: "Contacto", href: "/contacto" }
   ];
 
   const legalLinks = [
-    { label: "Shipping & Delivery", href: "/shipping-delivery" },
-    { label: "Privacy Policy", href: "/privacy-policy/cookie-policy-eu" },
-    { label: "Revocation", href: "/revocation" },
-    { label: "Terms & Conditions", href: "/terms-and-conditions" },
-    { label: "Imprint", href: "/imprint" },
-    { label: "Press kit", href: "https://www.notion.so/luminouslabsgmbh/Press-kit-6b7bad337ee8446c86520f699e945887?pvs=4", external: true }
+    { label: "Política de Privacidad", href: "/privacy-policy" },
+    { label: "Términos y Condiciones", href: "/terms-conditions" },
+    { label: "Código de Ética", href: "/codigo-etica" },
+    { label: "Preguntas Frecuentes", href: "/faq" }
   ];
 
   const socialLinks = [

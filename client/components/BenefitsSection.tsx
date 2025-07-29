@@ -207,41 +207,7 @@ export default function BenefitsSection() {
                 </div>
               )}
 
-              {benefit.hrvMetrics && (
-                <div className="absolute bottom-[30px] left-[30px] w-[186px] h-[142px] bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-4 flex flex-col justify-start gap-3">
-                  <div className="flex flex-col items-center justify-start gap-3">
-                    <div className="text-[rgb(252,248,241)] font-mono text-[8px] leading-[9.6px] uppercase tracking-[-0.24px]">
-                      heart rate variability
-                    </div>
-                    <div className="relative flex items-end justify-center">
-                      {/* HRV Circle Chart */}
-                      <svg width="108" height="54" viewBox="0 0 108 54" fill="none" className="cursor-pointer">
-                        <path 
-                          opacity="0.1" 
-                          d="M3.38384 53.3387C3.38384 46.657 4.69991 40.0407 7.2569 33.8675C9.8139 27.6944 13.5617 22.0854 18.2864 17.3607C23.0111 12.636 28.6202 8.88812 34.7933 6.33112C40.9664 3.77413 47.5828 2.45806 54.2645 2.45806C60.9462 2.45806 67.5626 3.77413 73.7357 6.33112C79.9088 8.88812 85.5179 12.636 90.2426 17.3607C94.9673 22.0854 98.7151 27.6944 101.272 33.8675C103.829 40.0407 105.145 46.657 105.145 53.3387" 
-                          stroke="#FCF8F1" 
-                          strokeWidth="4.84581"
-                        />
-                        <path 
-                          d="M3.38385 53.3254C3.38725 40.3642 8.33689 27.893 17.2225 18.457C26.1081 9.02112 38.2598 3.3319 51.1974 2.55059C64.1349 1.76928 76.883 5.95479 86.8396 14.2528C96.7961 22.5509 103.211 34.3358 104.774 47.2024" 
-                          stroke="#FCF8F1" 
-                          strokeWidth="4.84581" 
-                          strokeDasharray="200" 
-                          strokeDashoffset="0"
-                        />
-                      </svg>
-                      <div className="absolute top-[28.8px] flex flex-col items-center justify-start">
-                        <div className="text-[rgb(252,248,241)] text-[26px] leading-[28.6px] tracking-[-0.78px]">
-                          {benefit.hrvMetrics.score}
-                        </div>
-                        <div className="text-[rgb(252,248,241)] text-base font-medium">
-                          {benefit.hrvMetrics.status}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+
             </div>
 
             {/* Content Section */}

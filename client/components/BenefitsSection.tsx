@@ -176,31 +176,31 @@ export default function BenefitsSection() {
                 </div>
               )}
 
-              {benefit.ageMetrics && (
+              {therapy.processMetrics && (
                 <div className="absolute bottom-[30px] left-[30px] w-[250px] h-[96px] bg-[rgba(255,255,255,0.17)] backdrop-blur-[30px] rounded-lg p-4 flex gap-5">
                   <div className="flex flex-col gap-[7px] justify-between">
                     <div className="text-[rgb(252,248,241)] font-mono text-[10px] leading-[12px] tracking-[-0.3px]">
-                      BIOLOGICAL AGE
+                      PERSONALIZACIÓN
                     </div>
                     <div className="flex items-end gap-1">
                       <div className="text-[rgb(252,248,241)] text-[26px] leading-[28.6px] tracking-[-0.78px] min-w-[29.952px]">
-                        {benefit.ageMetrics.biological}
+                        {therapy.processMetrics.personalization}
                       </div>
                       <div className="text-[rgb(252,248,241)] text-base font-medium">
-                        years
+                        único
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-[7px] justify-between">
                     <div className="text-[rgb(252,248,241)] font-mono text-[10px] leading-[12px] tracking-[-0.3px]">
-                      CHRONOLOGICAL AGE
+                      EFECTIVIDAD
                     </div>
                     <div className="flex items-end gap-1">
                       <div className="text-[rgb(252,248,241)] text-[26px] leading-[28.6px] tracking-[-0.78px] min-w-[29.952px]">
-                        {benefit.ageMetrics.chronological}
+                        {therapy.processMetrics.effectiveness}
                       </div>
                       <div className="text-[rgb(252,248,241)] text-base font-medium">
-                        years
+                        éxito
                       </div>
                     </div>
                   </div>

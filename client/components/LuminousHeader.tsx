@@ -46,41 +46,35 @@ export default function LuminousHeader() {
 
             {/* Navigation */}
             <nav className="hidden lg:flex items-center gap-1 relative">
-              <a 
-                href="/technology" 
+              <a
+                href="/nosotros"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Technology
+                Nosotros
               </a>
-              <a 
-                href="/company" 
+              <a
+                href="/terapias"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Company
+                Terapias
               </a>
-              <a 
-                href="/commercial" 
+              <a
+                href="/servicios"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Commercial
+                Servicios
               </a>
-              <a 
-                href="/blog" 
+              <a
+                href="/equipo"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Blog
+                Equipo
               </a>
-              <a 
-                href="/pop-up-store" 
-                className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
-              >
-                Pop-up Store
-              </a>
-              <a 
-                href="/shop" 
+              <a
+                href="/contacto"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 ml-6 relative border border-[rgba(242,236,226,0.5)] rounded-full transition-all duration-400 hover:bg-[rgba(242,236,226,0.1)]"
               >
-                Shop
+                Contacto
               </a>
             </nav>
 

@@ -1,21 +1,21 @@
 import TherapyHeader from '@/components/TherapyHeader';
 import TherapyHero from '@/components/TherapyHero';
-import TherapyServices from '@/components/TherapyServices';
-import TherapistFinder from '@/components/TherapistFinder';
-import TherapyTestimonials from '@/components/TherapyTestimonials';
-import TherapyCTA from '@/components/TherapyCTA';
-import TherapyFooter from '@/components/TherapyFooter';
+import TherapyArticles from '@/components/TherapyArticles';
+import TherapyHowTo from '@/components/TherapyHowTo';
+import TherapyFeatured from '@/components/TherapyFeatured';
+import TherapistSignup from '@/components/TherapistSignup';
+import TherapySimpleFooter from '@/components/TherapySimpleFooter';
 
 const Home2 = () => {
   return (
     <div className="min-h-screen bg-white">
       <TherapyHeader />
       <TherapyHero />
-      <TherapyServices />
-      <TherapistFinder />
-      <TherapyTestimonials />
-      <TherapyCTA />
-      <TherapyFooter />
+      <TherapyArticles />
+      <TherapyHowTo />
+      <TherapyFeatured />
+      <TherapistSignup />
+      <TherapySimpleFooter />
     </div>
   );
 };

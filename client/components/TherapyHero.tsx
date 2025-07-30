@@ -1,52 +1,81 @@
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, MapPin } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 
 const TherapyHero = () => {
   return (
-    <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+    <section className="relative bg-gray-50 py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Find the Right Therapist
-            <span className="block text-blue-800">in London</span>
-          </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Connect with qualified therapists and counsellors in London. 
-            Get the support you need for your mental health journey.
-          </p>
+        {/* Floating Cards */}
+        <div className="absolute top-8 left-8 md:left-16">
+          <Card className="bg-emerald-400 text-white p-6 w-72 shadow-lg transform -rotate-2">
+            <h3 className="font-semibold text-lg mb-2">What do you need help with?</h3>
+            <p className="text-sm text-emerald-100">e.g. Anxiety</p>
+          </Card>
+        </div>
 
-          {/* Search Box */}
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto mb-8">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input 
-                  placeholder="What do you need help with?" 
-                  className="pl-10 h-12"
-                />
+        <div className="absolute top-8 right-8 md:right-16">
+          <Card className="bg-blue-500 text-white p-6 w-64 shadow-lg transform rotate-3">
+            <h3 className="font-semibold text-lg mb-2">Where are you based?</h3>
+            <p className="text-sm text-blue-100">e.g. Greenwich</p>
+          </Card>
+        </div>
+
+        {/* Main Content */}
+        <div className="text-center mt-24 mb-16">
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
+            Therapy in London
+          </h1>
+
+          {/* Living Room Illustration Area */}
+          <div className="relative max-w-4xl mx-auto mb-12">
+            <div className="bg-white rounded-3xl p-8 md:p-16 shadow-sm">
+              {/* Simple Living Room SVG Illustration */}
+              <div className="relative h-64 md:h-80">
+                {/* Floor */}
+                <div className="absolute bottom-0 left-0 right-0 h-4 bg-gray-100 rounded-full"></div>
+
+                {/* Orange Chair */}
+                <div className="absolute bottom-4 left-8 w-20 h-16 bg-orange-400 rounded-lg"></div>
+                <div className="absolute bottom-20 left-10 w-16 h-12 bg-orange-500 rounded-t-lg"></div>
+
+                {/* Blue Sofa */}
+                <div className="absolute bottom-4 right-16 w-32 h-20 bg-blue-500 rounded-lg"></div>
+                <div className="absolute bottom-24 right-20 w-24 h-16 bg-blue-600 rounded-t-lg"></div>
+                <div className="absolute bottom-24 right-44 w-6 h-16 bg-blue-600 rounded-l-lg"></div>
+
+                {/* Lamp */}
+                <div className="absolute bottom-20 left-32 w-2 h-16 bg-gray-600"></div>
+                <div className="absolute bottom-36 left-28 w-10 h-8 bg-purple-300 rounded-full"></div>
+
+                {/* Plant */}
+                <div className="absolute bottom-4 right-4 w-4 h-12 bg-green-600"></div>
+                <div className="absolute bottom-16 right-2 w-8 h-8 bg-green-400 rounded-full"></div>
+
+                {/* Coffee Table */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-16 h-8 bg-gray-300 rounded-lg"></div>
               </div>
-              <div className="flex-1 relative">
-                <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <Input 
-                  placeholder="London area or postcode" 
-                  className="pl-10 h-12"
-                  defaultValue="London"
-                />
-              </div>
-              <Button className="bg-blue-800 hover:bg-blue-900 text-white h-12 px-8">
-                Search Therapists
-              </Button>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="flex flex-wrap justify-center gap-4 text-sm">
-            <span className="text-gray-600">Popular searches:</span>
-            <button className="text-blue-800 hover:text-blue-900 underline">Anxiety</button>
-            <button className="text-blue-800 hover:text-blue-900 underline">Depression</button>
-            <button className="text-blue-800 hover:text-blue-900 underline">Couples Therapy</button>
-            <button className="text-blue-800 hover:text-blue-900 underline">CBT</button>
+          {/* Real Connections Text */}
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              Real Connections.
+              <br />
+              <span className="text-emerald-500">Real Change.</span>
+            </h2>
+
+            <p className="text-gray-600 text-lg leading-relaxed mb-8">
+              Your mental health should take priority in your life. The journey to feeling better and experiencing genuine change starts with establishing a deep connection and trust with a professional who truly understands your needs.
+            </p>
+
+            <p className="text-gray-600 text-lg leading-relaxed mb-8">
+              At Therapy in London, we'll support and enable you to find the right therapist for your unique situation. Explore our therapists' profiles today to start your therapy journey.
+            </p>
+
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full">
+              Explore Therapists
+            </Button>
           </div>
         </div>
       </div>

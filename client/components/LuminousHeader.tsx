@@ -99,36 +99,13 @@ export default function LuminousHeader() {
                 </svg>
               </div>
 
-              {/* Cart */}
-              <div className="flex items-center gap-3 cursor-pointer">
-                <div className="text-[rgb(252,248,241)] text-[13.5px] leading-[17.55px] cursor-pointer">
-                  Cart
-                </div>
-                <div className="relative flex items-center justify-center w-[37px] h-[37px] border border-[rgb(252,248,241)] rounded-full transition-all duration-400">
-                  {cartCount > 0 && (
-                    <div className="absolute -right-1 -top-1 bg-[rgb(252,248,241)] text-black text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center">
-                      {cartCount}
-                    </div>
-                  )}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 37 38"
-                    fill="none"
-                    className="text-[rgb(252,248,241)]"
-                  >
-                    <path
-                      d="M22.3373 13.8193H14.6641C13.5595 13.8193 12.6641 14.7148 12.6641 15.8193V23.4926C12.6641 24.5971 13.5595 25.4926 14.6641 25.4926H22.3373C23.4419 25.4926 24.3373 24.5971 24.3373 23.4926V15.8193C24.3373 14.7148 23.4419 13.8193 22.3373 13.8193Z"
-                      stroke="currentColor"
-                    />
-                    <path
-                      d="M20.7456 15.8955V12.5078C20.7456 11.4032 19.8501 10.5078 18.7456 10.5078H18.2559C17.1513 10.5078 16.2559 11.4032 16.2559 12.5078V15.8955"
-                      stroke="currentColor"
-                    />
-                  </svg>
-                </div>
-              </div>
+              {/* CTA Button */}
+              <a
+                href="/agenda"
+                className="hidden lg:flex items-center justify-center bg-[rgb(252,248,241)] text-black text-sm font-medium px-6 py-3 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
+              >
+                {t('cta.agenda')}
+              </a>
 
               {/* Mobile menu button */}
               <button

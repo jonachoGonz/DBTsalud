@@ -28,34 +28,46 @@ export default function LuminousHeader() {
             {/* Navigation */}
             <nav className="hidden lg:flex items-center gap-1 relative">
               <a
+                href="/"
+                className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
+              >
+                {t('nav.inicio')}
+              </a>
+              <a
                 href="/nosotros"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Nosotros
+                {t('nav.nosotros')}
               </a>
               <a
                 href="/terapias"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Terapias
+                {t('nav.terapias')}
               </a>
               <a
                 href="/servicios"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Servicios
+                {t('nav.servicios')}
               </a>
               <a
                 href="/equipo"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                Equipo
+                {t('nav.equipo')}
+              </a>
+              <a
+                href="/recursos"
+                className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
+              >
+                {t('nav.recursos')}
               </a>
               <a
                 href="/contacto"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 ml-6 relative border border-[rgba(242,236,226,0.5)] rounded-full transition-all duration-400 hover:bg-[rgba(242,236,226,0.1)]"
               >
-                Contacto
+                {t('nav.contacto')}
               </a>
             </nav>
 

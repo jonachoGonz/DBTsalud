@@ -63,22 +63,21 @@ const TherapyHero = () => {
           {/* Real Connections Text */}
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              Real Connections.
-              <br />
-              <span className="text-emerald-500">Real Change.</span>
+              {t('hero.title')}
             </h2>
 
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              Your mental health should take priority in your life. The journey to feeling better and experiencing genuine change starts with establishing a deep connection and trust with a professional who truly understands your needs.
+              {t('hero.subtitle')}
             </p>
 
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              At Therapy in London, we'll support and enable you to find the right therapist for your unique situation. Explore our therapists' profiles today to start your therapy journey.
-            </p>
-
-            <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full">
-              Explore Therapists
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full">
+                {t('hero.cta1')}
+              </Button>
+              <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 text-lg rounded-full">
+                {t('hero.cta2')}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

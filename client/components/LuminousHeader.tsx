@@ -112,9 +112,9 @@ export default function LuminousHeader() {
                 className="lg:hidden flex flex-col items-center justify-center w-[37px] h-[37px] gap-1"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                <div className="w-[15px] h-[1px] bg-black transition-all duration-300"></div>
-                <div className="w-[15px] h-[1px] bg-black transition-all duration-300"></div>
-                <div className="w-[15px] h-[1px] bg-black transition-all duration-300"></div>
+                <div className="w-[15px] h-[1px] bg-[rgb(252,248,241)] transition-all duration-300"></div>
+                <div className="w-[15px] h-[1px] bg-[rgb(252,248,241)] transition-all duration-300"></div>
+                <div className="w-[15px] h-[1px] bg-[rgb(252,248,241)] transition-all duration-300"></div>
               </button>
             </div>
           </div>

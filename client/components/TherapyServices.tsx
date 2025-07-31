@@ -1,49 +1,51 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Heart, Brain, Users, Star } from 'lucide-react';
-
-const services = [
-  {
-    icon: Brain,
-    title: "Individual Therapy",
-    description: "One-on-one sessions with qualified therapists for personal growth and mental health support.",
-    categories: ["CBT", "Psychodynamic", "Humanistic", "EMDR"],
-    color: "bg-blue-100 text-blue-800"
-  },
-  {
-    icon: Users,
-    title: "Couples Therapy",
-    description: "Relationship counselling to help couples improve communication and resolve conflicts.",
-    categories: ["Gottman Method", "EFT", "Solution-Focused"],
-    color: "bg-green-100 text-green-800"
-  },
-  {
-    icon: Heart,
-    title: "Family Therapy",
-    description: "Family counselling sessions to strengthen family bonds and resolve family issues.",
-    categories: ["Systemic", "Narrative", "Structural"],
-    color: "bg-purple-100 text-purple-800"
-  },
-  {
-    icon: Star,
-    title: "Specialist Services",
-    description: "Specialized therapy for specific conditions like trauma, addiction, eating disorders.",
-    categories: ["Trauma", "Addiction", "Eating Disorders", "ADHD"],
-    color: "bg-orange-100 text-orange-800"
-  }
-];
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const TherapyServices = () => {
+  const { t } = useLanguage();
+
+  const services = [
+    {
+      icon: Brain,
+      title: t('therapies.dbt.title'),
+      description: t('therapies.dbt.desc'),
+      categories: ["Regulación Emocional", "Mindfulness", "Tolerancia al Malestar"],
+      color: "bg-blue-100 text-blue-800"
+    },
+    {
+      icon: Users,
+      title: t('therapies.tcc.title'),
+      description: t('therapies.tcc.desc'),
+      categories: ["Reestructuración", "Exposición", "Activación Conductual"],
+      color: "bg-green-100 text-green-800"
+    },
+    {
+      icon: Heart,
+      title: t('therapies.act.title'),
+      description: t('therapies.act.desc'),
+      categories: ["Valores", "Aceptación", "Compromiso"],
+      color: "bg-purple-100 text-purple-800"
+    },
+    {
+      icon: Star,
+      title: t('therapies.pbt.title'),
+      description: t('therapies.pbt.desc'),
+      categories: ["Personalizada", "Basada en Procesos", "Flexible"],
+      color: "bg-orange-100 text-orange-800"
+    }
+  ];
+
   return (
     <section id="therapy-types" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Types of Therapy Available
+            {t('therapies.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Find the right therapeutic approach for your unique needs. 
-            Our directory includes various therapy types and specializations.
+            Terapias de tercera generación con enfoque personalizado y basadas en evidencia científica.
           </p>
         </div>
 

@@ -1,0 +1,120 @@
+import { createContext, useContext, useState, ReactNode } from 'react';
+
+type Language = 'es' | 'en';
+
+interface LanguageContextType {
+  language: Language;
+  toggleLanguage: () => void;
+  t: (key: string) => string;
+}
+
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+interface Translations {
+  [key: string]: {
+    es: string;
+    en: string;
+  };
+}
+
+const translations: Translations = {
+  // Header
+  'nav.inicio': { es: 'Inicio', en: 'Home' },
+  'nav.nosotros': { es: 'Sobre Nosotros', en: 'About Us' },
+  'nav.terapias': { es: 'Terapias', en: 'Therapies' },
+  'nav.servicios': { es: 'Servicios', en: 'Services' },
+  'nav.equipo': { es: 'Equipo', en: 'Team' },
+  'nav.recursos': { es: 'Recursos', en: 'Resources' },
+  'nav.contacto': { es: 'Contacto', en: 'Contact' },
+  'cta.agenda': { es: 'Agenda tu primera sesión', en: 'Schedule your first session' },
+  
+  // Hero Section
+  'hero.title': { es: 'No necesitas tenerlo todo claro. A veces, solo hace falta tomar el primer paso.', en: 'You don\'t need to have it all figured out. Sometimes, you just need to take the first step.' },
+  'hero.subtitle': { es: 'Acompañamos procesos terapéuticos con calidez, evidencia y humanidad. Terapias presenciales y online, en español e inglés.', en: 'We accompany therapeutic processes with warmth, evidence and humanity. In-person and online therapies, in Spanish and English.' },
+  'hero.cta1': { es: 'Quiero comenzar terapia', en: 'I want to start therapy' },
+  'hero.cta2': { es: 'Conoce el Programa DBT', en: 'Learn about DBT Program' },
+  
+  // About Section
+  'about.title': { es: 'Somos DBT Salud', en: 'We are DBT Salud' },
+  'about.intro': { es: 'En DBT Salud creemos que cada persona, sin importar su historia, tiene el potencial de sanar y construir una vida con propósito.', en: 'At DBT Salud we believe that every person, regardless of their history, has the potential to heal and build a life with purpose.' },
+  'about.personalized': { es: 'Enfoque personalizado', en: 'Personalized approach' },
+  'about.therapies': { es: 'Terapias de tercera generación (DBT, TCC, ACT, PBT)', en: 'Third generation therapies (DBT, CBT, ACT, PBT)' },
+  'about.support': { es: 'Acompañamiento en procesos emocionales complejos o de crecimiento personal', en: 'Support in complex emotional processes or personal growth' },
+  'about.bilingual': { es: 'Atención bilingüe: español e inglés', en: 'Bilingual care: Spanish and English' },
+  'about.cta': { es: 'Conoce nuestra visión', en: 'Learn about our vision' },
+  
+  // Therapies Section
+  'therapies.title': { es: 'Terapias que ofrecemos', en: 'Therapies we offer' },
+  'therapies.dbt.title': { es: 'DBT (Terapia Dialéctico-Conductual)', en: 'DBT (Dialectical Behavior Therapy)' },
+  'therapies.dbt.desc': { es: 'Ideal para desregulación emocional, impulsividad, relaciones conflictivas.', en: 'Ideal for emotional dysregulation, impulsivity, conflictual relationships.' },
+  'therapies.tcc.title': { es: 'TCC (Terapia Cognitivo-Conductual)', en: 'CBT (Cognitive-Behavioral Therapy)' },
+  'therapies.tcc.desc': { es: 'Transformación de patrones de pensamiento.', en: 'Transformation of thought patterns.' },
+  'therapies.act.title': { es: 'ACT (Aceptación y Compromiso)', en: 'ACT (Acceptance and Commitment)' },
+  'therapies.act.desc': { es: 'Vida con sentido y valores personales.', en: 'Life with meaning and personal values.' },
+  'therapies.pbt.title': { es: 'PBT (Process-Based Therapy)', en: 'PBT (Process-Based Therapy)' },
+  'therapies.pbt.desc': { es: 'Terapia ajustada a tu historia única.', en: 'Therapy tailored to your unique story.' },
+  'therapies.cta': { es: 'Más sobre nuestras terapias', en: 'More about our therapies' },
+  
+  // Services Section
+  'services.title': { es: 'Nuestros servicios', en: 'Our services' },
+  'services.flexibility': { es: 'Destacar la flexibilidad: online / presencial - español / inglés', en: 'Highlighting flexibility: online / in-person - Spanish / English' },
+  'services.dbt.complete': { es: 'Programa DBT completo (sesiones individuales + talleres grupales + coaching + consultoría de equipo)', en: 'Complete DBT program (individual sessions + group workshops + coaching + team consultation)' },
+  'services.dbt.sud': { es: 'DBT-SUD: para tratamiento de consumo problemático de sustancias', en: 'DBT-SUD: for problematic substance use treatment' },
+  'services.individual': { es: 'Sesiones individuales personalizadas', en: 'Personalized individual sessions' },
+  'services.evaluations': { es: 'Evaluaciones psicológicas (con informes adaptados)', en: 'Psychological evaluations (with adapted reports)' },
+  'services.cta': { es: 'Ver todos los servicios', en: 'See all services' },
+  
+  // Process Section
+  'process.title': { es: 'Nuestro proceso', en: 'Our process' },
+  'process.step1': { es: 'Primer contacto', en: 'First contact' },
+  'process.step2': { es: 'Cuestionario de ingreso', en: 'Intake questionnaire' },
+  'process.step3': { es: 'Evaluación inicial', en: 'Initial evaluation' },
+  'process.step4': { es: 'Derivación o plan de tratamiento', en: 'Referral or treatment plan' },
+  'process.step5': { es: 'Inicio del proceso terapéutico', en: 'Start of therapeutic process' },
+  'process.quote': { es: 'Queremos que te sientas acompañado desde el primer momento.', en: 'We want you to feel supported from the first moment.' },
+  'process.cta': { es: 'Empieza tu proceso', en: 'Start your process' },
+  
+  // Team Section
+  'team.title': { es: 'Conoce al equipo', en: 'Meet the team' },
+  'team.karla.name': { es: 'Karla González Guerra', en: 'Karla González Guerra' },
+  'team.karla.desc': { es: 'Psicóloga clínica – Especialista en DBT, TCA, ACT, formación constante.', en: 'Clinical Psychologist – Specialist in DBT, ED, ACT, continuous training.' },
+  'team.daniel.name': { es: 'Daniel Henríquez Uribe', en: 'Daniel Henríquez Uribe' },
+  'team.daniel.desc': { es: 'Psicólogo clínico – Formación en DBT, psicopatología, TCC.', en: 'Clinical Psychologist – Training in DBT, psychopathology, CBT.' },
+  'team.cta': { es: 'Ver perfil completo', en: 'View full profile' },
+  
+  // Contact Section
+  'contact.title': { es: 'Contacto directo', en: 'Direct contact' },
+  'contact.address': { es: 'Dirección: Almirante Pastene 185, Providencia, oficina 204', en: 'Address: Almirante Pastene 185, Providencia, office 204' },
+  'contact.whatsapp': { es: 'WhatsApp: +569 4989 7699', en: 'WhatsApp: +569 4989 7699' },
+  'contact.instagram': { es: 'Instagram: @psi.karlagg', en: 'Instagram: @psi.karlagg' },
+  
+  // Footer
+  'footer.quote': { es: 'Tu historia merece ser escuchada. Tu vida merece ser vivida con sentido.', en: 'Your story deserves to be heard. Your life deserves to be lived with meaning.' },
+  'footer.privacy': { es: 'Políticas de privacidad', en: 'Privacy policies' }
+};
+
+export const LanguageProvider = ({ children }: { children: ReactNode }) => {
+  const [language, setLanguage] = useState<Language>('es');
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'es' ? 'en' : 'es');
+  };
+
+  const t = (key: string): string => {
+    return translations[key]?.[language] || key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};

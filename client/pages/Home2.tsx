@@ -1,23 +1,23 @@
-import DBTHeader from '@/components/DBTHeader';
-import DBTAbout from '@/components/DBTAbout';
-import DBTTherapies from '@/components/DBTTherapies';
-import DBTServices from '@/components/DBTServices';
-import DBTProcess from '@/components/DBTProcess';
-import DBTTeam from '@/components/DBTTeam';
-import DBTContact from '@/components/DBTContact';
-import DBTFooter from '@/components/DBTFooter';
+import TherapyHeader from '@/components/TherapyHeader';
+import TherapyHero from '@/components/TherapyHero';
+import TherapyServices from '@/components/TherapyServices';
+import TherapyArticles from '@/components/TherapyArticles';
+import TherapyHowTo from '@/components/TherapyHowTo';
+import TherapyTestimonials from '@/components/TherapyTestimonials';
+import TherapyCTA from '@/components/TherapyCTA';
+import TherapySimpleFooter from '@/components/TherapySimpleFooter';
 
 const Home2 = () => {
   return (
     <div className="min-h-screen bg-white">
-      <DBTHeader />
-      <DBTAbout />
-      <DBTTherapies />
-      <DBTServices />
-      <DBTProcess />
-      <DBTTeam />
-      <DBTContact />
-      <DBTFooter />
+      <TherapyHeader />
+      <TherapyHero />
+      <TherapyServices />
+      <TherapyArticles />
+      <TherapyHowTo />
+      <TherapyTestimonials />
+      <TherapyCTA />
+      <TherapySimpleFooter />
     </div>
   );
 };

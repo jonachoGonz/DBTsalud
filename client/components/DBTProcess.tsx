@@ -8,29 +8,29 @@ export default function DBTProcess() {
   const steps = [
     {
       icon: PhoneCall,
-      title: t('process.step1'),
-      number: "01"
+      title: t("process.step1"),
+      number: "01",
     },
     {
       icon: FileCheck,
-      title: t('process.step2'),
-      number: "02"
+      title: t("process.step2"),
+      number: "02",
     },
     {
       icon: Search,
-      title: t('process.step3'),
-      number: "03"
+      title: t("process.step3"),
+      number: "03",
     },
     {
       icon: Route,
-      title: t('process.step4'),
-      number: "04"
+      title: t("process.step4"),
+      number: "04",
     },
     {
       icon: Play,
-      title: t('process.step5'),
-      number: "05"
-    }
+      title: t("process.step5"),
+      number: "05",
+    },
   ];
 
   return (
@@ -38,7 +38,7 @@ export default function DBTProcess() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t('process.title')}
+            {t("process.title")}
           </h2>
         </div>
 
@@ -68,10 +68,10 @@ export default function DBTProcess() {
 
         <div className="text-center">
           <blockquote className="text-2xl md:text-3xl font-medium text-gray-900 mb-8 italic">
-            "{t('process.quote')}"
+            "{t("process.quote")}"
           </blockquote>
           <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
-            {t('process.cta')}
+            {t("process.cta")}
           </Button>
         </div>
       </div>

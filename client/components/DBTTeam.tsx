@@ -7,17 +7,19 @@ export default function DBTTeam() {
 
   const team = [
     {
-      name: t('team.karla.name'),
-      description: t('team.karla.desc'),
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
-      specialties: ["DBT", "TCA", "ACT"]
+      name: t("team.karla.name"),
+      description: t("team.karla.desc"),
+      image:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
+      specialties: ["DBT", "TCA", "ACT"],
     },
     {
-      name: t('team.daniel.name'),
-      description: t('team.daniel.desc'),
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
-      specialties: ["DBT", "TCC", "Psicopatología"]
-    }
+      name: t("team.daniel.name"),
+      description: t("team.daniel.desc"),
+      image:
+        "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
+      specialties: ["DBT", "TCC", "Psicopatología"],
+    },
   ];
 
   return (
@@ -25,13 +27,16 @@ export default function DBTTeam() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t('team.title')}
+            {t("team.title")}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
           {team.map((member, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-0 shadow-md">
+            <Card
+              key={index}
+              className="hover:shadow-lg transition-shadow duration-300 border-0 shadow-md"
+            >
               <CardContent className="p-8 text-center">
                 <div className="mb-6">
                   <img
@@ -56,11 +61,11 @@ export default function DBTTeam() {
                     ))}
                   </div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="border-blue-600 text-blue-600 hover:bg-blue-50"
                 >
-                  {t('team.cta')}
+                  {t("team.cta")}
                 </Button>
               </CardContent>
             </Card>

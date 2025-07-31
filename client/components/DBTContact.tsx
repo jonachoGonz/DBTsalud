@@ -11,19 +11,19 @@ export default function DBTContact() {
   const contactInfo = [
     {
       icon: MapPin,
-      title: t('contact.address'),
-      color: "text-blue-600"
+      title: t("contact.address"),
+      color: "text-blue-600",
     },
     {
       icon: MessageCircle,
-      title: t('contact.whatsapp'),
-      color: "text-green-600"
+      title: t("contact.whatsapp"),
+      color: "text-green-600",
     },
     {
       icon: Instagram,
-      title: t('contact.instagram'),
-      color: "text-pink-600"
-    }
+      title: t("contact.instagram"),
+      color: "text-pink-600",
+    },
   ];
 
   return (
@@ -31,7 +31,7 @@ export default function DBTContact() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t('contact.title')}
+            {t("contact.title")}
           </h2>
         </div>
 
@@ -42,13 +42,13 @@ export default function DBTContact() {
               const IconComponent = info.icon;
               return (
                 <div key={index} className="flex items-start space-x-4">
-                  <div className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center ${info.color}`}>
+                  <div
+                    className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center ${info.color}`}
+                  >
                     <IconComponent className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-lg text-gray-700">
-                      {info.title}
-                    </p>
+                    <p className="text-lg text-gray-700">{info.title}</p>
                   </div>
                 </div>
               );
@@ -74,10 +74,7 @@ export default function DBTContact() {
               </h3>
               <form className="space-y-6">
                 <div>
-                  <Input
-                    placeholder="Nombre completo"
-                    className="h-12"
-                  />
+                  <Input placeholder="Nombre completo" className="h-12" />
                 </div>
                 <div>
                   <Input
@@ -87,11 +84,7 @@ export default function DBTContact() {
                   />
                 </div>
                 <div>
-                  <Input
-                    type="tel"
-                    placeholder="Teléfono"
-                    className="h-12"
-                  />
+                  <Input type="tel" placeholder="Teléfono" className="h-12" />
                 </div>
                 <div>
                   <Textarea
@@ -106,14 +99,14 @@ export default function DBTContact() {
 
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="flex-1 border-green-600 text-green-600 hover:bg-green-50"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
                     WhatsApp
                   </Button>
-                  <Button 
+                  <Button
                     variant="outline"
                     className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50"
                   >

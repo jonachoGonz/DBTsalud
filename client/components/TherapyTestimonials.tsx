@@ -1,6 +1,6 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Star, Quote } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Card, CardContent } from "@/components/ui/card";
+import { Star, Quote } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const testimonials = [
   {
@@ -8,29 +8,29 @@ const testimonials = [
     location: "South London",
     rating: 5,
     text: "Finding my therapist through this platform was life-changing. The process was simple, and I was matched with someone who truly understood my needs.",
-    therapy: "Anxiety & Depression"
+    therapy: "Anxiety & Depression",
   },
   {
     name: "Michael Chen",
-    location: "East London", 
+    location: "East London",
     rating: 5,
     text: "The quality of therapists on this platform is exceptional. My couples therapist helped us transform our relationship in just a few months.",
-    therapy: "Couples Therapy"
+    therapy: "Couples Therapy",
   },
   {
     name: "Sophie Williams",
     location: "West London",
     rating: 5,
     text: "I was skeptical about online therapy directories, but this platform made it so easy to find a specialist who deals with trauma. Highly recommend!",
-    therapy: "Trauma Therapy"
-  }
+    therapy: "Trauma Therapy",
+  },
 ];
 
 const stats = [
   { number: "500+", label: "Sesiones Realizadas" },
   { number: "150+", label: "Pacientes Atendidos" },
   { number: "4.9/5", label: "Satisfacción" },
-  { number: "2", label: "Especialistas Certificados" }
+  { number: "2", label: "Especialistas Certificados" },
 ];
 
 const TherapyTestimonials = () => {
@@ -38,17 +38,19 @@ const TherapyTestimonials = () => {
 
   const team = [
     {
-      name: t('team.karla.name'),
-      description: t('team.karla.desc'),
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
-      specialties: ["DBT", "TCA", "ACT"]
+      name: t("team.karla.name"),
+      description: t("team.karla.desc"),
+      image:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
+      specialties: ["DBT", "TCA", "ACT"],
     },
     {
-      name: t('team.daniel.name'),
-      description: t('team.daniel.desc'),
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
-      specialties: ["DBT", "TCC", "Psicopatología"]
-    }
+      name: t("team.daniel.name"),
+      description: t("team.daniel.desc"),
+      image:
+        "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
+      specialties: ["DBT", "TCC", "Psicopatología"],
+    },
   ];
 
   return (
@@ -70,7 +72,7 @@ const TherapyTestimonials = () => {
 
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('team.title')}
+            {t("team.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Profesionales especializados en terapias de tercera generación.
@@ -79,7 +81,10 @@ const TherapyTestimonials = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
           {team.map((member, index) => (
-            <Card key={index} className="bg-white hover:shadow-lg transition-shadow duration-300 border-0 shadow-md">
+            <Card
+              key={index}
+              className="bg-white hover:shadow-lg transition-shadow duration-300 border-0 shadow-md"
+            >
               <CardContent className="p-8 text-center">
                 <div className="mb-6">
                   <img

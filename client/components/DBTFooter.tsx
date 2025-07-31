@@ -10,20 +10,53 @@ export default function DBTFooter() {
           {/* Logo and Description */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold">DBT Salud</h3>
-            <p className="text-gray-300 leading-relaxed">
-              {t('footer.quote')}
-            </p>
+            <p className="text-gray-300 leading-relaxed">{t("footer.quote")}</p>
           </div>
 
           {/* Navigation Links */}
           <div>
             <h4 className="text-lg font-semibold mb-6">Navegación</h4>
             <ul className="space-y-3">
-              <li><a href="/" className="text-gray-300 hover:text-white transition-colors">{t('nav.inicio')}</a></li>
-              <li><a href="/terapias" className="text-gray-300 hover:text-white transition-colors">{t('nav.terapias')}</a></li>
-              <li><a href="/equipo" className="text-gray-300 hover:text-white transition-colors">{t('nav.equipo')}</a></li>
-              <li><a href="/recursos" className="text-gray-300 hover:text-white transition-colors">{t('nav.recursos')}</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white transition-colors">{t('footer.privacy')}</a></li>
+              <li>
+                <a
+                  href="/"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("nav.inicio")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terapias"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("nav.terapias")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/equipo"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("nav.equipo")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/recursos"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("nav.recursos")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
+                  {t("footer.privacy")}
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -34,12 +67,18 @@ export default function DBTFooter() {
               <p>Almirante Pastene 185</p>
               <p>Providencia, oficina 204</p>
               <p className="pt-2">
-                <a href="https://wa.me/56949897699" className="hover:text-white transition-colors">
+                <a
+                  href="https://wa.me/56949897699"
+                  className="hover:text-white transition-colors"
+                >
                   WhatsApp: +569 4989 7699
                 </a>
               </p>
               <p>
-                <a href="https://instagram.com/psi.karlagg" className="hover:text-white transition-colors">
+                <a
+                  href="https://instagram.com/psi.karlagg"
+                  className="hover:text-white transition-colors"
+                >
                   Instagram: @psi.karlagg
                 </a>
               </p>

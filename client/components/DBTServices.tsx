@@ -10,32 +10,32 @@ export default function DBTServices() {
   const services = [
     {
       icon: Users,
-      title: t('services.dbt.complete'),
+      title: t("services.dbt.complete"),
       features: ["Individual", "Grupal", "Coaching", "Consultoría"],
       color: "bg-blue-100 text-blue-800",
-      iconColor: "text-blue-600"
+      iconColor: "text-blue-600",
     },
     {
       icon: Monitor,
-      title: t('services.dbt.sud'),
+      title: t("services.dbt.sud"),
       features: ["Especializado", "Evidencia", "Personalizado"],
-      color: "bg-green-100 text-green-800", 
-      iconColor: "text-green-600"
+      color: "bg-green-100 text-green-800",
+      iconColor: "text-green-600",
     },
     {
       icon: User,
-      title: t('services.individual'),
+      title: t("services.individual"),
       features: ["Presencial", "Online", "Bilingüe"],
       color: "bg-purple-100 text-purple-800",
-      iconColor: "text-purple-600"
+      iconColor: "text-purple-600",
     },
     {
       icon: FileText,
-      title: t('services.evaluations'),
+      title: t("services.evaluations"),
       features: ["Completas", "Adaptadas", "Profesionales"],
       color: "bg-orange-100 text-orange-800",
-      iconColor: "text-orange-600"
-    }
+      iconColor: "text-orange-600",
+    },
   ];
 
   return (
@@ -43,10 +43,10 @@ export default function DBTServices() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t('services.title')}
+            {t("services.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('services.flexibility')}
+            {t("services.flexibility")}
           </p>
         </div>
 
@@ -54,10 +54,15 @@ export default function DBTServices() {
           {services.map((service, index) => {
             const IconComponent = service.icon;
             return (
-              <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+              <Card
+                key={index}
+                className="hover:shadow-lg transition-shadow duration-300"
+              >
                 <CardHeader>
                   <div className="flex items-start space-x-4">
-                    <div className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center ${service.iconColor}`}>
+                    <div
+                      className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center ${service.iconColor}`}
+                    >
                       <IconComponent className="w-6 h-6" />
                     </div>
                     <div className="flex-1">
@@ -83,7 +88,7 @@ export default function DBTServices() {
 
         <div className="text-center">
           <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
-            {t('services.cta')}
+            {t("services.cta")}
           </Button>
         </div>
       </div>

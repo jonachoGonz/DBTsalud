@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { Phone, Mail, MessageCircle, Clock, Shield, Heart } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Phone, Mail, MessageCircle, Clock, Shield, Heart } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const TherapyCTA = () => {
   const { t } = useLanguage();
@@ -12,10 +12,10 @@ const TherapyCTA = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center text-white mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            {t('process.quote')}
+            {t("process.quote")}
           </h2>
           <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-            {t('process.cta')} - Inicia tu proceso terapéutico con nosotros.
+            {t("process.cta")} - Inicia tu proceso terapéutico con nosotros.
           </p>
         </div>
 
@@ -27,8 +27,13 @@ const TherapyCTA = () => {
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-2">Verified Professionals</h3>
-                <p className="text-blue-100">All therapists are qualified, registered, and background-checked.</p>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Verified Professionals
+                </h3>
+                <p className="text-blue-100">
+                  All therapists are qualified, registered, and
+                  background-checked.
+                </p>
               </div>
             </div>
 
@@ -37,8 +42,13 @@ const TherapyCTA = () => {
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-2">Flexible Scheduling</h3>
-                <p className="text-blue-100">Book sessions that fit your schedule, including evenings and weekends.</p>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Flexible Scheduling
+                </h3>
+                <p className="text-blue-100">
+                  Book sessions that fit your schedule, including evenings and
+                  weekends.
+                </p>
               </div>
             </div>
 
@@ -47,13 +57,21 @@ const TherapyCTA = () => {
                 <Heart className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-2">Personalized Matching</h3>
-                <p className="text-blue-100">We help match you with therapists who specialize in your specific needs.</p>
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  Personalized Matching
+                </h3>
+                <p className="text-blue-100">
+                  We help match you with therapists who specialize in your
+                  specific needs.
+                </p>
               </div>
             </div>
 
             <div className="pt-6">
-              <Button size="lg" className="bg-white text-blue-800 hover:bg-gray-100">
+              <Button
+                size="lg"
+                className="bg-white text-blue-800 hover:bg-gray-100"
+              >
                 Find Your Therapist Now
               </Button>
             </div>
@@ -65,30 +83,24 @@ const TherapyCTA = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
                 Get Started Today
               </h3>
-              
+
               <form className="space-y-4">
                 <div>
-                  <Input 
-                    placeholder="Your Name" 
+                  <Input placeholder="Your Name" className="h-12" />
+                </div>
+                <div>
+                  <Input
+                    type="email"
+                    placeholder="Email Address"
                     className="h-12"
                   />
                 </div>
                 <div>
-                  <Input 
-                    type="email" 
-                    placeholder="Email Address" 
-                    className="h-12"
-                  />
+                  <Input placeholder="Phone Number" className="h-12" />
                 </div>
                 <div>
-                  <Input 
-                    placeholder="Phone Number" 
-                    className="h-12"
-                  />
-                </div>
-                <div>
-                  <Input 
-                    placeholder="What would you like help with?" 
+                  <Input
+                    placeholder="What would you like help with?"
                     className="h-12"
                   />
                 </div>
@@ -98,7 +110,9 @@ const TherapyCTA = () => {
               </form>
 
               <div className="mt-8 pt-6 border-t">
-                <p className="text-center text-gray-600 mb-4">O contáctanos directamente:</p>
+                <p className="text-center text-gray-600 mb-4">
+                  O contáctanos directamente:
+                </p>
                 <div className="space-y-3">
                   <div className="flex items-center justify-center space-x-2 text-gray-700">
                     <MessageCircle className="h-4 w-4" />
@@ -124,13 +138,11 @@ const TherapyCTA = () => {
             Mental Health Tips & Resources
           </h3>
           <p className="text-blue-100 mb-6">
-            Subscribe to receive helpful articles and updates from mental health professionals.
+            Subscribe to receive helpful articles and updates from mental health
+            professionals.
           </p>
           <div className="flex flex-col md:flex-row gap-4 max-w-md mx-auto">
-            <Input 
-              placeholder="Enter your email" 
-              className="h-12 bg-white"
-            />
+            <Input placeholder="Enter your email" className="h-12 bg-white" />
             <Button className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-8">
               Subscribe
             </Button>

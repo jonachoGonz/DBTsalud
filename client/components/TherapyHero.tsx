@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const TherapyHero = () => {
   const { t } = useLanguage();
@@ -11,14 +11,18 @@ const TherapyHero = () => {
         {/* Floating Cards */}
         <div className="absolute top-8 left-8 md:left-16">
           <Card className="bg-emerald-400 text-white p-6 w-72 shadow-lg transform -rotate-2">
-            <h3 className="font-semibold text-lg mb-2">¿En qué te podemos ayudar?</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              ¿En qué te podemos ayudar?
+            </h3>
             <p className="text-sm text-emerald-100">ej. Ansiedad, Depresión</p>
           </Card>
         </div>
 
         <div className="absolute top-8 right-8 md:right-16">
           <Card className="bg-blue-500 text-white p-6 w-64 shadow-lg transform rotate-3">
-            <h3 className="font-semibold text-lg mb-2">¿Dónde te encuentras?</h3>
+            <h3 className="font-semibold text-lg mb-2">
+              ¿Dónde te encuentras?
+            </h3>
             <p className="text-sm text-blue-100">ej. Providencia, Santiago</p>
           </Card>
         </div>
@@ -63,19 +67,22 @@ const TherapyHero = () => {
           {/* Real Connections Text */}
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              {t('hero.title')}
+              {t("hero.title")}
             </h2>
 
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              {t('hero.subtitle')}
+              {t("hero.subtitle")}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full">
-                {t('hero.cta1')}
+                {t("hero.cta1")}
               </Button>
-              <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 text-lg rounded-full">
-                {t('hero.cta2')}
+              <Button
+                variant="outline"
+                className="border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 text-lg rounded-full"
+              >
+                {t("hero.cta2")}
               </Button>
             </div>
           </div>

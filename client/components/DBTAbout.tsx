@@ -8,24 +8,24 @@ export default function DBTAbout() {
   const features = [
     {
       icon: Check,
-      text: t('about.personalized'),
-      color: "text-blue-600"
+      text: t("about.personalized"),
+      color: "text-blue-600",
     },
     {
       icon: Heart,
-      text: t('about.therapies'),
-      color: "text-red-500"
+      text: t("about.therapies"),
+      color: "text-red-500",
     },
     {
       icon: Users,
-      text: t('about.support'),
-      color: "text-green-600"
+      text: t("about.support"),
+      color: "text-green-600",
     },
     {
       icon: Globe,
-      text: t('about.bilingual'),
-      color: "text-purple-600"
-    }
+      text: t("about.bilingual"),
+      color: "text-purple-600",
+    },
   ];
 
   return (
@@ -33,10 +33,10 @@ export default function DBTAbout() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t('about.title')}
+            {t("about.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {t('about.intro')}
+            {t("about.intro")}
           </p>
         </div>
 
@@ -44,7 +44,10 @@ export default function DBTAbout() {
           {features.map((feature, index) => {
             const IconComponent = feature.icon;
             return (
-              <div key={index} className="flex items-start space-x-4 p-6 rounded-lg hover:bg-gray-50 transition-colors">
+              <div
+                key={index}
+                className="flex items-start space-x-4 p-6 rounded-lg hover:bg-gray-50 transition-colors"
+              >
                 <div className={`flex-shrink-0 w-8 h-8 ${feature.color}`}>
                   <IconComponent className="w-full h-full" />
                 </div>
@@ -58,7 +61,7 @@ export default function DBTAbout() {
 
         <div className="text-center">
           <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
-            {t('about.cta')}
+            {t("about.cta")}
           </Button>
         </div>
       </div>

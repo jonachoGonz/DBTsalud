@@ -1,4 +1,4 @@
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const TherapySimpleFooter = () => {
   const { t } = useLanguage();
@@ -14,9 +14,7 @@ const TherapySimpleFooter = () => {
               <br />
               <span className="text-blue-200">Tu bienestar transformado</span>
             </h2>
-            <p className="text-blue-100 text-lg mb-6">
-              {t('footer.quote')}
-            </p>
+            <p className="text-blue-100 text-lg mb-6">{t("footer.quote")}</p>
           </div>
 
           {/* Right side - Navigation dots and links */}
@@ -27,12 +25,28 @@ const TherapySimpleFooter = () => {
               <div className="w-3 h-3 bg-blue-300 rounded-full"></div>
               <div className="w-3 h-3 bg-blue-300 rounded-full"></div>
             </div>
-            
+
             <div className="space-y-2">
-              <div><a href="/" className="text-blue-100 hover:text-white">{t('nav.inicio')}</a></div>
-              <div><a href="/terapias" className="text-blue-100 hover:text-white">{t('nav.terapias')}</a></div>
-              <div><a href="/equipo" className="text-blue-100 hover:text-white">{t('nav.equipo')}</a></div>
-              <div><a href="#" className="text-blue-100 hover:text-white">{t('footer.privacy')}</a></div>
+              <div>
+                <a href="/" className="text-blue-100 hover:text-white">
+                  {t("nav.inicio")}
+                </a>
+              </div>
+              <div>
+                <a href="/terapias" className="text-blue-100 hover:text-white">
+                  {t("nav.terapias")}
+                </a>
+              </div>
+              <div>
+                <a href="/equipo" className="text-blue-100 hover:text-white">
+                  {t("nav.equipo")}
+                </a>
+              </div>
+              <div>
+                <a href="#" className="text-blue-100 hover:text-white">
+                  {t("footer.privacy")}
+                </a>
+              </div>
             </div>
           </div>
         </div>

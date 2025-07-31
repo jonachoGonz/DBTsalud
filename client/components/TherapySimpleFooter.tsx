@@ -1,4 +1,8 @@
+import { useLanguage } from '@/contexts/LanguageContext';
+
 const TherapySimpleFooter = () => {
+  const { t } = useLanguage();
+
   return (
     <footer className="bg-blue-500 text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -6,12 +10,12 @@ const TherapySimpleFooter = () => {
           {/* Left side - CTA */}
           <div>
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Real Connection
+              DBT Salud
               <br />
-              <span className="text-blue-200">Real Change</span>
+              <span className="text-blue-200">Tu bienestar transformado</span>
             </h2>
             <p className="text-blue-100 text-lg mb-6">
-              Start your journey to better mental health today.
+              {t('footer.quote')}
             </p>
           </div>
 

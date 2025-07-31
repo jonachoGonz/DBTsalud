@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LuminousHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount] = useState(0);
+  const { language, toggleLanguage, t } = useLanguage();
 
   return (
     <div className="bg-[rgb(252,248,241)] flex flex-col h-[928px] max-h-[928px] max-w-[1800px] min-h-[600px] pb-[30px] px-[30px] pt-[30px] relative z-[99]">

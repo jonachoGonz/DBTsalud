@@ -39,7 +39,7 @@ const TherapySimpleFooter = () => {
 
         <div className="border-t border-blue-400 mt-12 pt-8 text-center">
           <p className="text-blue-100">
-            &copy; 2024 Therapy in London. All rights reserved.
+            &copy; 2024 DBT Salud. Todos los derechos reservados.
           </p>
         </div>
       </div>

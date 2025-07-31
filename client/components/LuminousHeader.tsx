@@ -75,8 +75,11 @@ export default function LuminousHeader() {
             <div className="flex items-center gap-6">
               {/* Language Selector */}
               <div className="flex items-center gap-1 relative">
-                <div className="text-[rgb(252,248,241)] text-[13.5px] leading-[17.55px] cursor-pointer">
-                  EN
+                <div
+                  className="text-[rgb(252,248,241)] text-[13.5px] leading-[17.55px] cursor-pointer"
+                  onClick={toggleLanguage}
+                >
+                  {language === 'es' ? 'EN' : 'ES'}
                 </div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

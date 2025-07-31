@@ -2,18 +2,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Phone, Mail, MessageCircle, Clock, Shield, Heart } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const TherapyCTA = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="py-20 bg-gradient-to-br from-blue-800 to-blue-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center text-white mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Start Your Journey?
+            {t('process.quote')}
           </h2>
           <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-            Take the first step towards better mental health. 
-            Find qualified therapists in London who can support you.
+            {t('process.cta')} - Inicia tu proceso terapéutico con nosotros.
           </p>
         </div>
 

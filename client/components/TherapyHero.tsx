@@ -1,29 +1,32 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const TherapyHero = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative bg-gray-50 py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Floating Cards */}
         <div className="absolute top-8 left-8 md:left-16">
           <Card className="bg-emerald-400 text-white p-6 w-72 shadow-lg transform -rotate-2">
-            <h3 className="font-semibold text-lg mb-2">What do you need help with?</h3>
-            <p className="text-sm text-emerald-100">e.g. Anxiety</p>
+            <h3 className="font-semibold text-lg mb-2">¿En qué te podemos ayudar?</h3>
+            <p className="text-sm text-emerald-100">ej. Ansiedad, Depresión</p>
           </Card>
         </div>
 
         <div className="absolute top-8 right-8 md:right-16">
           <Card className="bg-blue-500 text-white p-6 w-64 shadow-lg transform rotate-3">
-            <h3 className="font-semibold text-lg mb-2">Where are you based?</h3>
-            <p className="text-sm text-blue-100">e.g. Greenwich</p>
+            <h3 className="font-semibold text-lg mb-2">¿Dónde te encuentras?</h3>
+            <p className="text-sm text-blue-100">ej. Providencia, Santiago</p>
           </Card>
         </div>
 
         {/* Main Content */}
         <div className="text-center mt-24 mb-16">
           <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-8">
-            Therapy in London
+            DBT Salud
           </h1>
 
           {/* Living Room Illustration Area */}

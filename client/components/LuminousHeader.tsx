@@ -141,22 +141,38 @@ export default function LuminousHeader() {
         />
 
         {/* Content */}
-        <div className="flex flex-col items-center justify-end text-center">
+        <div className="flex flex-col items-center justify-end text-center max-w-4xl mx-auto px-6">
           <div
-            className="text-[rgba(242,236,226,0.6)] text-lg leading-6 text-center mb-4"
+            className="text-[rgba(242,236,226,0.6)] text-lg leading-6 text-center mb-6"
             style={{ letterSpacing: "-0.18px" }}
           >
-            Terapia basada en evidencia: segura, efectiva y personalizada
+            {t('hero.subtitle')}
           </div>
           <h1
-            className="text-[rgb(252,248,241)] font-medium text-7xl leading-[79.2px] text-center"
+            className="text-[rgb(252,248,241)] font-medium text-6xl md:text-7xl leading-tight text-center mb-8"
             style={{
               fontFamily: '"saans trial", sans-serif',
               letterSpacing: "-0.72px",
             }}
           >
-            Tu bienestar, transformado
+            {t('hero.title')}
           </h1>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <a
+              href="/comenzar"
+              className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
+            >
+              {t('hero.cta1')}
+            </a>
+            <a
+              href="/programa-dbt"
+              className="inline-flex items-center justify-center border-2 border-[rgb(252,248,241)] text-[rgb(252,248,241)] text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.1)]"
+            >
+              {t('hero.cta2')}
+            </a>
+          </div>
         </div>
       </div>
     </div>

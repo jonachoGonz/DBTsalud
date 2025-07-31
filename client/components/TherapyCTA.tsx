@@ -98,19 +98,19 @@ const TherapyCTA = () => {
               </form>
 
               <div className="mt-8 pt-6 border-t">
-                <p className="text-center text-gray-600 mb-4">Or contact us directly:</p>
+                <p className="text-center text-gray-600 mb-4">O contáctanos directamente:</p>
                 <div className="space-y-3">
                   <div className="flex items-center justify-center space-x-2 text-gray-700">
-                    <Phone className="h-4 w-4" />
-                    <span>020 7123 4567</span>
+                    <MessageCircle className="h-4 w-4" />
+                    <span>WhatsApp: +569 4989 7699</span>
                   </div>
                   <div className="flex items-center justify-center space-x-2 text-gray-700">
                     <Mail className="h-4 w-4" />
-                    <span>hello@therapyin.london</span>
+                    <span>Instagram: @psi.karlagg</span>
                   </div>
                   <div className="flex items-center justify-center space-x-2 text-gray-700">
-                    <MessageCircle className="h-4 w-4" />
-                    <span>Live Chat Available 9AM-6PM</span>
+                    <Clock className="h-4 w-4" />
+                    <span>Almirante Pastene 185, Providencia, oficina 204</span>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, Quote } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const testimonials = [
   {
@@ -26,13 +27,30 @@ const testimonials = [
 ];
 
 const stats = [
-  { number: "2,500+", label: "Verified Therapists" },
-  { number: "15,000+", label: "Successful Sessions" },
-  { number: "4.8/5", label: "Average Rating" },
-  { number: "95%", label: "Client Satisfaction" }
+  { number: "500+", label: "Sesiones Realizadas" },
+  { number: "150+", label: "Pacientes Atendidos" },
+  { number: "4.9/5", label: "Satisfacción" },
+  { number: "2", label: "Especialistas Certificados" }
 ];
 
 const TherapyTestimonials = () => {
+  const { t } = useLanguage();
+
+  const team = [
+    {
+      name: t('team.karla.name'),
+      description: t('team.karla.desc'),
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
+      specialties: ["DBT", "TCA", "ACT"]
+    },
+    {
+      name: t('team.daniel.name'),
+      description: t('team.daniel.desc'),
+      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
+      specialties: ["DBT", "TCC", "Psicopatología"]
+    }
+  ];
+
   return (
     <section className="py-20 bg-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,39 +70,38 @@ const TherapyTestimonials = () => {
 
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            What Our Clients Say
+            {t('team.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Real stories from people who found the right therapist through our platform.
+            Profesionales especializados en terapias de tercera generación.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-white hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, starIndex) => (
-                    <Star key={starIndex} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
-                </div>
-                
-                <div className="relative mb-6">
-                  <Quote className="h-8 w-8 text-blue-200 absolute -top-2 -left-2" />
-                  <p className="text-gray-700 italic pl-6">
-                    "{testimonial.text}"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+          {team.map((member, index) => (
+            <Card key={index} className="bg-white hover:shadow-lg transition-shadow duration-300 border-0 shadow-md">
+              <CardContent className="p-8 text-center">
+                <div className="mb-6">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg"
+                  />
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed mb-4">
+                    {member.description}
                   </p>
-                </div>
-
-                <div className="border-t pt-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
-                      <p className="text-sm text-gray-600">{testimonial.location}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm text-blue-800 font-medium">{testimonial.therapy}</p>
-                    </div>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {member.specialties.map((specialty, specIndex) => (
+                      <span
+                        key={specIndex}
+                        className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+                      >
+                        {specialty}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </CardContent>
@@ -94,20 +111,20 @@ const TherapyTestimonials = () => {
 
         <div className="text-center mt-12">
           <p className="text-gray-600 mb-4">
-            Join thousands of people who found the right therapist
+            Profesionales certificados en terapias especializadas
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <div className="flex items-center space-x-1 text-sm text-gray-600">
               <Star className="h-4 w-4 text-yellow-400 fill-current" />
-              <span>Trusted by 15,000+ clients</span>
+              <span>Certificados en DBT</span>
             </div>
             <div className="flex items-center space-x-1 text-sm text-gray-600">
               <span>•</span>
-              <span>CQC Regulated Therapists</span>
+              <span>Atención Bilingüe</span>
             </div>
             <div className="flex items-center space-x-1 text-sm text-gray-600">
               <span>•</span>
-              <span>100% Confidential</span>
+              <span>100% Confidencial</span>
             </div>
           </div>
         </div>

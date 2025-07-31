@@ -29,9 +29,10 @@ const TherapySimpleFooter = () => {
             </div>
             
             <div className="space-y-2">
-              <div><a href="#" className="text-blue-100 hover:text-white">Privacy Policy</a></div>
-              <div><a href="#" className="text-blue-100 hover:text-white">Terms of Service</a></div>
-              <div><a href="#" className="text-blue-100 hover:text-white">Contact Us</a></div>
+              <div><a href="/" className="text-blue-100 hover:text-white">{t('nav.inicio')}</a></div>
+              <div><a href="/terapias" className="text-blue-100 hover:text-white">{t('nav.terapias')}</a></div>
+              <div><a href="/equipo" className="text-blue-100 hover:text-white">{t('nav.equipo')}</a></div>
+              <div><a href="#" className="text-blue-100 hover:text-white">{t('footer.privacy')}</a></div>
             </div>
           </div>
         </div>

@@ -83,7 +83,7 @@ const TherapyServices = () => {
 
         <div className="text-center mt-12">
           <Button className="bg-blue-800 hover:bg-blue-900 text-white">
-            View All Therapy Types
+            {t('therapies.cta')}
           </Button>
         </div>
       </div>

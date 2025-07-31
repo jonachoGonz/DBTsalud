@@ -1,28 +1,43 @@
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const TherapyHeader = () => {
+  const { language, toggleLanguage, t } = useLanguage();
+
   return (
     <header className="bg-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-xl font-semibold text-gray-900">Therapy</h1>
+            <h1 className="text-xl font-semibold text-gray-900">DBT Salud</h1>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#articles" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
-              Articles
+            <a href="/" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              {t('nav.inicio')}
             </a>
-            <a href="#find-therapist" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
-              Find Therapist
+            <a href="/nosotros" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              {t('nav.nosotros')}
             </a>
-            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
-              How it works
+            <a href="/terapias" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              {t('nav.terapias')}
             </a>
-            <Button variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-50">
-              For Therapists
+            <a href="/servicios" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              {t('nav.servicios')}
+            </a>
+            <a href="/equipo" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              {t('nav.equipo')}
+            </a>
+            <div
+              className="text-gray-600 hover:text-gray-900 text-sm font-medium cursor-pointer transition-colors"
+              onClick={toggleLanguage}
+            >
+              {language === 'es' ? 'EN' : 'ES'}
+            </div>
+            <Button className="bg-blue-500 text-white hover:bg-blue-600">
+              {t('cta.agenda')}
             </Button>
           </nav>
 

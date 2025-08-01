@@ -6,7 +6,7 @@ export default function DBTHeader() {
   const { language, toggleLanguage, t } = useLanguage();
 
   return (
-    <div className="bg-[rgb(252,248,241)] flex flex-col h-[928px] max-h-[928px] max-w-[1800px] min-h-[600px] pb-[30px] px-[30px] pt-[30px] relative z-[99]">
+    <div className="bg-[rgb(252,248,241)] flex flex-col h-[928px] max-h-[928px] max-w-[1800px] min-h-[600px] pb-[15px] px-[15px] pt-[15px] relative z-[99]">
       {/* Header Section */}
       <section className="absolute left-0 right-0 top-[30px] mx-auto max-w-[calc(100%-60px)] z-[98]">
         <div className="relative z-[99]">
@@ -80,22 +80,7 @@ export default function DBTHeader() {
                 >
                   {language === "es" ? "EN" : "ES"}
                 </div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="6"
-                  viewBox="0 0 12 6"
-                  fill="none"
-                  className="text-[rgb(252,248,241)]"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M0.130033 0.163667C0.315787 -0.0406617 0.632011 -0.05572 0.83634 0.130033L6 4.82427L11.1637 0.130033C11.368 -0.05572 11.6842 -0.0406617 11.87 0.163667C12.0557 0.367996 12.0407 0.68422 11.8363 0.869974L6.33634 5.86997C6.14563 6.04335 5.85438 6.04335 5.66367 5.86997L0.163667 0.869974C-0.0406617 0.68422 -0.05572 0.367996 0.130033 0.163667Z"
-                    fill="currentColor"
-                    fillOpacity="0.5"
-                  />
-                </svg>
+                
               </div>
 
               {/* CTA Button */}
@@ -173,19 +158,19 @@ export default function DBTHeader() {
       )}
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-end h-full relative rounded-b-[40px] overflow-hidden pb-16 mb-0">
+      <div className="flex flex-col items-center justify-end h-full relative rounded-[20px] overflow-hidden pb-16 mb-0">
         {/* Background Image */}
         <img
           src="https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp"
           alt="Terapia DBT Salud"
-          className="absolute inset-0 w-full h-full object-cover -z-20 rounded-b-[40px]"
+          className="absolute inset-0 w-full h-full object-cover -z-20 rounded-[20px]"
         />
 
         {/* Overlay Image with Animation */}
         <img
           src="https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673af047ffda0bac4655c97f_db80b98027f9694237c7f771a092fe61_bg-2.avif"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover -z-10 rounded-b-[40px] mix-blend-overlay"
+          className="absolute inset-0 w-full h-full object-cover -z-10 rounded-[20px] mix-blend-overlay"
           style={{
             animation: "fadeinout 4s ease-in-out infinite",
           }}

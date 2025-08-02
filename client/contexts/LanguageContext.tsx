@@ -224,16 +224,32 @@ const translations: Translations = {
   // Contact Section
   "contact.title": { es: "Contacto directo", en: "Direct contact" },
   "contact.address": {
-    es: "Dirección: Almirante Pastene 185, Providencia, oficina 204",
-    en: "Address: Almirante Pastene 185, Providencia, office 204",
+    es: "Almirante Pastene 185, Providencia, oficina 204",
+    en: "Almirante Pastene 185, Providencia, office 204",
   },
   "contact.whatsapp": {
-    es: "WhatsApp: +569 4989 7699",
-    en: "WhatsApp: +569 4989 7699",
+    es: "+56 9 4989 7699",
+    en: "+56 9 4989 7699",
   },
   "contact.instagram": {
-    es: "Instagram: @psi.karlagg",
-    en: "Instagram: @psi.karlagg",
+    es: "@psi.karlagg",
+    en: "@psi.karlagg",
+  },
+  "contact.hours.title": {
+    es: "Horarios de atención:",
+    en: "Office hours:",
+  },
+  "contact.hours.weekdays": {
+    es: "Lunes a viernes: 10:00 - 19:00",
+    en: "Monday to Friday: 10:00 - 19:00",
+  },
+  "contact.hours.saturday": {
+    es: "Sábado: 9:00 - 14:00",
+    en: "Saturday: 9:00 - 14:00",
+  },
+  "contact.hours.sunday": {
+    es: "Domingo: Cerrado",
+    en: "Sunday: Closed",
   },
 
   // Footer

@@ -228,8 +228,8 @@ const translations: Translations = {
     en: "Almirante Pastene 185, Providencia, office 204",
   },
   "contact.whatsapp": {
-    es: "+56 9 9474 8507",
-    en: "+56 9 9474 8507",
+    es: "+56 9 4989 7699",
+    en: "+56 9 4989 7699",
   },
   "contact.instagram": {
     es: "@psi.karlagg",

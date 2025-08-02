@@ -73,13 +73,9 @@ export default function DBTServices() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {service.features.map((feature, featureIndex) => (
-                      <Badge key={featureIndex} className={service.color}>
-                        {feature}
-                      </Badge>
-                    ))}
-                  </div>
+                  <p className="text-gray-600 leading-relaxed">
+                    {service.description}
+                  </p>
                 </CardContent>
               </Card>
             );

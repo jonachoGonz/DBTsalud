@@ -35,9 +35,13 @@ export default function DBTAbout() {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t("about.title")}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {t("about.intro")}
-          </p>
+          <div className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            {t("about.intro").split('\n\n').map((paragraph, index) => (
+              <p key={index} className={index > 0 ? 'mt-6' : ''}>
+                {paragraph}
+              </p>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">

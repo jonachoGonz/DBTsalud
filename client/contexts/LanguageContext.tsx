@@ -114,25 +114,41 @@ const translations: Translations = {
 
   // Services Section
   "services.title": { es: "Nuestros servicios", en: "Our services" },
-  "services.flexibility": {
-    es: "Destacar la flexibilidad: online / presencial - español / inglés",
-    en: "Highlighting flexibility: online / in-person - Spanish / English",
+  "services.subtitle": {
+    es: "Atención online y presencial | Español e inglés",
+    en: "Online and in-person care | Spanish and English",
   },
   "services.dbt.complete": {
-    es: "Programa DBT completo (sesiones individuales + talleres grupales + coaching + consultoría de equipo)",
-    en: "Complete DBT program (individual sessions + group workshops + coaching + team consultation)",
+    es: "Programa DBT Completo",
+    en: "Complete DBT Program",
+  },
+  "services.dbt.complete.desc": {
+    es: "Incluye sesiones individuales, talleres de habilidades, coaching entre sesiones y equipo clínico.",
+    en: "Includes individual sessions, skills workshops, between-session coaching and clinical team.",
   },
   "services.dbt.sud": {
-    es: "DBT-SUD: para tratamiento de consumo problemático de sustancias",
-    en: "DBT-SUD: for problematic substance use treatment",
+    es: "DBT-SUD (Consumo problemático de sustancias)",
+    en: "DBT-SUD (Problematic substance use)",
+  },
+  "services.dbt.sud.desc": {
+    es: "Programa especializado para quienes enfrentan adicción y desregulación emocional.",
+    en: "Specialized program for those facing addiction and emotional dysregulation.",
   },
   "services.individual": {
     es: "Sesiones individuales personalizadas",
     en: "Personalized individual sessions",
   },
+  "services.individual.desc": {
+    es: "Espacios de psicoterapia flexibles, empáticos y confidenciales.",
+    en: "Flexible, empathetic and confidential psychotherapy spaces.",
+  },
   "services.evaluations": {
-    es: "Evaluaciones psicológicas (con informes adaptados)",
-    en: "Psychological evaluations (with adapted reports)",
+    es: "Evaluaciones psicológicas",
+    en: "Psychological evaluations",
+  },
+  "services.evaluations.desc": {
+    es: "Informes clínicos claros, adaptados a contextos escolares, médicos o familiares.",
+    en: "Clear clinical reports, adapted to school, medical or family contexts.",
   },
   "services.cta": { es: "Ver todos los servicios", en: "See all services" },
 

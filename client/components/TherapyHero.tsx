@@ -6,7 +6,7 @@ const TherapyHero = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="relative bg-gray-50 py-16 overflow-hidden">
+    <section id="inicio" className="relative bg-gray-50 py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Floating Cards */}
         <div className="absolute top-8 left-8 md:left-16">

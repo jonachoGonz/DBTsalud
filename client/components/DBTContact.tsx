@@ -70,7 +70,7 @@ export default function DBTContact() {
           {/* WhatsApp CTA */}
           <div className="text-center">
             <a
-              href="https://wa.me/56994748507"
+              href="https://wa.me/56949897699"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg rounded-full transition-colors"

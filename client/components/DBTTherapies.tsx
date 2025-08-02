@@ -33,46 +33,276 @@ export default function DBTTherapies() {
   ];
 
   return (
-    <section id="terapias" className="py-20 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+    <section id="terapias" className="py-20 bg-[rgb(252,248,241)]">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="flex flex-col items-center gap-2 text-center pt-[120px] mb-10">
+          <div className="text-[13.5px] font-medium leading-[17.55px] text-center opacity-70 transition-all duration-700">
+            Terapias
+          </div>
+          <h2 className="font-medium text-2xl leading-[28.8px] text-center transition-all duration-700"
+              style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.24px' }}>
             {t("therapies.title")}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("therapies.intro")}
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {therapies.map((therapy, index) => (
-            <Card
-              key={index}
-              className="hover:shadow-lg transition-shadow duration-300 border-0"
-            >
-              <CardHeader className="text-center pb-4">
-                <div
-                  className={`w-16 h-16 rounded-full bg-gradient-to-r ${therapy.color} flex items-center justify-center mx-auto mb-4 text-2xl`}
-                >
-                  {therapy.icon}
+        {/* Therapy Cards */}
+        <div className="flex flex-col gap-[10px] pb-[80px]">
+          {/* DBT Card */}
+          <div className="bg-[rgb(242,236,226)] rounded-[40px] flex h-[450px] max-w-full cursor-pointer transition-all duration-700 hover:shadow-lg">
+            <div className="relative w-[400px] flex-shrink-0 overflow-hidden rounded-[40px]"
+                 style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop")', backgroundPosition: '0px 0px' }}>
+              <img
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop"
+                alt="DBT Therapy"
+                className="w-full h-full object-cover rounded-[40px]"
+              />
+
+              {/* Overlay with metrics */}
+              <div className="absolute bottom-[30px] left-[30px] backdrop-blur-[30px] bg-white/17 rounded-lg p-5 w-[251px] h-[103px] flex flex-col justify-between">
+                <div className="text-xs uppercase tracking-wide text-[rgb(252,248,241)] font-mono opacity-80">
+                  Regulación Emocional: ÓPTIMA
                 </div>
-                <CardTitle className="text-lg font-semibold text-gray-900 leading-tight">
-                  {therapy.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                <p className="text-gray-600 leading-relaxed">
-                  {therapy.description}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <div className="flex gap-[26px]">
+                  <div className="flex flex-col gap-[1.6px] w-[53px]">
+                    <div className="text-xs text-[rgb(252,248,241)] font-mono">DBT</div>
+                    <div className="text-[13.5px] font-medium text-[rgb(252,248,241)]">95%</div>
+                  </div>
+                  <div className="flex flex-col gap-[1.6px] w-[53px]">
+                    <div className="text-xs text-[rgb(252,248,241)] font-mono">MIN</div>
+                    <div className="text-[13.5px] font-medium text-[rgb(252,248,241)]">8.5</div>
+                  </div>
+                  <div className="flex flex-col gap-[1.6px] w-[53px]">
+                    <div className="text-xs text-[rgb(252,248,241)] font-mono">TOL</div>
+                    <div className="text-[13.5px] font-medium text-[rgb(252,248,241)]">9.2</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        <div className="text-center">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
-            {t("therapies.cta")}
-          </Button>
+            <div className="flex flex-col justify-between flex-1 px-[40px] py-[40px]">
+              <div className="flex flex-col gap-3 pr-[60px]">
+                <h3 className="text-[36px] font-medium leading-[39.6px]"
+                    style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.36px' }}>
+                  {therapies[0].title}
+                </h3>
+                <p className="text-base leading-[22.4px] text-gray-700">
+                  {therapies[0].description}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <p className="text-[13.5px] leading-[17.55px] text-gray-600">
+                  La Terapia Dialéctico-Conductual es especialmente efectiva para crisis emocionales y relaciones interpersonales complejas.
+                </p>
+                <div className="flex gap-[10px]">
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Mindfulness & Tolerancia
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Regulación Emocional
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* TCC Card */}
+          <div className="bg-[rgb(242,236,226)] rounded-[40px] flex h-[450px] max-w-full cursor-pointer transition-all duration-700 hover:shadow-lg">
+            <div className="relative w-[400px] flex-shrink-0 overflow-hidden rounded-[40px]"
+                 style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop")', backgroundPosition: '0px 0px' }}>
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop"
+                alt="TCC Therapy"
+                className="w-full h-full object-cover rounded-[40px]"
+              />
+
+              {/* Progress bars overlay */}
+              <div className="absolute bottom-[104px] left-[40px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[250px]">
+                <div className="flex justify-between items-center mb-3">
+                  <div className="text-xs uppercase text-[rgb(252,248,241)] font-mono">Pensamientos Negativos</div>
+                  <div className="text-xs text-[rgb(252,248,241)] font-mono">Óptimo</div>
+                </div>
+                <div className="bg-white/40 rounded h-[3px] w-full">
+                  <div className="bg-[rgb(252,248,241)] rounded h-full w-[84%]"></div>
+                </div>
+              </div>
+
+              <div className="absolute bottom-[40px] left-[40px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[250px]">
+                <div className="flex justify-between items-center mb-3">
+                  <div className="text-xs uppercase text-[rgb(252,248,241)] font-mono">Reestructuración</div>
+                  <div className="text-xs text-[rgb(252,248,241)] font-mono">Óptimo</div>
+                </div>
+                <div className="bg-white/40 rounded h-[3px] w-full">
+                  <div className="bg-[rgb(252,248,241)] rounded h-full w-[90%]"></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between flex-1 px-[40px] py-[40px]">
+              <div className="flex flex-col gap-3 pr-[60px]">
+                <h3 className="text-[36px] font-medium leading-[39.6px]"
+                    style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.36px' }}>
+                  {therapies[1].title}
+                </h3>
+                <p className="text-base leading-[22.4px] text-gray-700">
+                  {therapies[1].description}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <p className="text-[13.5px] leading-[17.55px] text-gray-600">
+                  La TCC te ayuda a identificar patrones de pensamiento y desarrollar estrategias prácticas para el cambio.
+                </p>
+                <div className="flex gap-[10px]">
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Reestructuración Cognitiva
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Activación Conductual
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Técnicas de Exposición
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ACT Card */}
+          <div className="bg-[rgb(242,236,226)] rounded-[40px] flex h-[450px] max-w-full cursor-pointer transition-all duration-700 hover:shadow-lg">
+            <div className="relative w-[400px] flex-shrink-0 overflow-hidden rounded-[40px]">
+              <img
+                src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=450&fit=crop"
+                alt="ACT Therapy"
+                className="w-full h-full object-cover rounded-[40px]"
+              />
+
+              {/* Values diagram overlay */}
+              <div className="absolute bottom-[30px] left-[30px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[240px] flex flex-col gap-2">
+                <div className="flex items-center justify-center h-full relative">
+                  <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono top-0">Valores Personales</div>
+                  <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono left-0">Aceptación</div>
+                  <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono right-0 max-w-[62px]">Flexibilidad</div>
+                  <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono bottom-0">Compromiso</div>
+
+                  <div className="flex flex-col items-center">
+                    <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)]">8.9</div>
+                    <div className="text-base font-medium text-[rgb(252,248,241)]">Propósito</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between flex-1 px-[40px] py-[40px]">
+              <div className="flex flex-col gap-3">
+                <h3 className="text-[36px] font-medium leading-[39.6px]"
+                    style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.36px' }}>
+                  {therapies[2].title}
+                </h3>
+                <p className="text-base leading-[22.4px] text-gray-700">
+                  {therapies[2].description}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <p className="text-[13.5px] leading-[17.55px] text-gray-600">
+                  ACT te ayuda a aceptar las experiencias difíciles mientras te conectas con lo que realmente valoras en la vida.
+                </p>
+                <div className="flex gap-[10px]">
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Aceptación Radical
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Clarificación de Valores
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Compromiso y Acción
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* PBT Card */}
+          <div className="bg-[rgb(242,236,226)] rounded-[40px] flex h-[450px] max-w-full cursor-pointer transition-all duration-700 hover:shadow-lg">
+            <div className="relative w-[400px] flex-shrink-0 overflow-hidden rounded-[40px]">
+              <img
+                src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=450&fit=crop"
+                alt="PBT Therapy"
+                className="w-full h-full object-cover rounded-[40px]"
+              />
+
+              {/* Age comparison overlay */}
+              <div className="absolute bottom-[30px] left-[30px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[250px] h-[96px] flex justify-between">
+                <div className="flex flex-col justify-between">
+                  <div className="text-[10px] leading-3 text-[rgb(252,248,241)] font-mono">PROCESO ACTUAL</div>
+                  <div className="flex items-end gap-1">
+                    <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)] min-w-[30px]">A</div>
+                    <div className="text-base font-medium text-[rgb(252,248,241)]">Personalizado</div>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-between">
+                  <div className="text-[10px] leading-3 text-[rgb(252,248,241)] font-mono">PROCESO ESTÁNDAR</div>
+                  <div className="flex items-end gap-1">
+                    <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)] min-w-[30px]">B</div>
+                    <div className="text-base font-medium text-[rgb(252,248,241)]">Genérico</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between flex-1 px-[40px] py-[40px]">
+              <div className="flex flex-col gap-3">
+                <h3 className="text-[36px] font-medium leading-[39.6px]"
+                    style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.36px' }}>
+                  {therapies[3].title}
+                </h3>
+                <p className="text-base leading-[22.4px] text-gray-700">
+                  {therapies[3].description}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-6">
+                <p className="text-[13.5px] leading-[17.55px] text-gray-600">
+                  La terapia basada en procesos se centra en los mecanismos específicos de cambio más que en protocolos rígidos.
+                </p>
+                <div className="flex gap-[10px]">
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700 w-full">
+                      Procesos de Cambio Personalizados
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Flexibilidad Terapéutica
+                    </div>
+                  </div>
+                  <div className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                    <div className="text-[13.5px] leading-[17.55px] text-gray-700">
+                      Adaptación Continua
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

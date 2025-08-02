@@ -9,26 +9,31 @@ export default function DBTProcess() {
     {
       icon: PhoneCall,
       title: t("process.step1"),
+      description: t("process.step1.desc"),
       number: "01",
     },
     {
       icon: FileCheck,
       title: t("process.step2"),
+      description: t("process.step2.desc"),
       number: "02",
     },
     {
       icon: Search,
       title: t("process.step3"),
+      description: t("process.step3.desc"),
       number: "03",
     },
     {
       icon: Route,
       title: t("process.step4"),
+      description: t("process.step4.desc"),
       number: "04",
     },
     {
       icon: Play,
       title: t("process.step5"),
+      description: t("process.step5.desc"),
       number: "05",
     },
   ];

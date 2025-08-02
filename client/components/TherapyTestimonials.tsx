@@ -54,7 +54,7 @@ const TherapyTestimonials = () => {
   ];
 
   return (
-    <section className="py-20 bg-blue-50">
+    <section id="equipo" className="py-20 bg-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Stats Section */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">

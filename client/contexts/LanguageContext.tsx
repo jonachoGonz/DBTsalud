@@ -71,37 +71,41 @@ const translations: Translations = {
 
   // Therapies Section
   "therapies.title": { es: "Terapias que ofrecemos", en: "Therapies we offer" },
+  "therapies.intro": {
+    es: "Sabemos que cada proceso terapéutico es único. Por eso, adaptamos las terapias a tu historia y necesidades personales.",
+    en: "We know that each therapeutic process is unique. That's why we adapt therapies to your history and personal needs.",
+  },
   "therapies.dbt.title": {
     es: "DBT (Terapia Dialéctico-Conductual)",
     en: "DBT (Dialectical Behavior Therapy)",
   },
   "therapies.dbt.desc": {
-    es: "Ideal para desregulación emocional, impulsividad, relaciones conflictivas.",
-    en: "Ideal for emotional dysregulation, impulsivity, conflictual relationships.",
+    es: "Enfoque intensivo ideal para crisis emocionales, impulsividad y relaciones conflictivas.",
+    en: "Intensive approach ideal for emotional crises, impulsivity and conflictual relationships.",
   },
   "therapies.tcc.title": {
     es: "TCC (Terapia Cognitivo-Conductual)",
     en: "CBT (Cognitive-Behavioral Therapy)",
   },
   "therapies.tcc.desc": {
-    es: "Transformación de patrones de pensamiento.",
-    en: "Transformation of thought patterns.",
+    es: "Identifica y transforma pensamientos y conductas que afectan tu bienestar.",
+    en: "Identifies and transforms thoughts and behaviors that affect your well-being.",
   },
   "therapies.act.title": {
     es: "ACT (Aceptación y Compromiso)",
     en: "ACT (Acceptance and Commitment)",
   },
   "therapies.act.desc": {
-    es: "Vida con sentido y valores personales.",
-    en: "Life with meaning and personal values.",
+    es: "Conecta con tus valores y aprende a vivir con sentido, incluso en la dificultad.",
+    en: "Connect with your values and learn to live meaningfully, even in difficulty.",
   },
   "therapies.pbt.title": {
     es: "PBT (Process-Based Therapy)",
     en: "PBT (Process-Based Therapy)",
   },
   "therapies.pbt.desc": {
-    es: "Terapia ajustada a tu historia única.",
-    en: "Therapy tailored to your unique story.",
+    es: "Terapia flexible centrada en procesos específicos, no solo en diagnósticos.",
+    en: "Flexible therapy focused on specific processes, not just diagnoses.",
   },
   "therapies.cta": {
     es: "Más sobre nuestras terapias",

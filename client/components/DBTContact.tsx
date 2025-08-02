@@ -56,12 +56,12 @@ export default function DBTContact() {
 
             <div className="pt-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Horarios de atención
+                {t("contact.hours.title")}
               </h3>
               <div className="space-y-2 text-gray-600">
-                <p>Lunes a Viernes: 9:00 - 19:00</p>
-                <p>Sábados: 9:00 - 14:00</p>
-                <p>Domingos: Cerrado</p>
+                <p>{t("contact.hours.weekdays")}</p>
+                <p>{t("contact.hours.saturday")}</p>
+                <p>{t("contact.hours.sunday")}</p>
               </div>
             </div>
           </div>

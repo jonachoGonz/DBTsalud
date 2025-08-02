@@ -68,12 +68,12 @@ export default function DBTFooter() {
               <p>Providencia, oficina 204</p>
               <p className="pt-2">
                 <a
-                  href="https://wa.me/56994748507"
+                  href="https://wa.me/56949897699"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
-                  WhatsApp: +56 9 9474 8507
+                  WhatsApp: +56 9 4989 7699
                 </a>
               </p>
               <p>

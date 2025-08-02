@@ -75,15 +75,20 @@ const TherapyHero = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full">
+              <a
+                href="https://wa.me/56994748507"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full transition-colors"
+              >
                 {t("hero.cta1")}
-              </Button>
-              <Button
-                variant="outline"
-                className="border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 text-lg rounded-full"
+              </a>
+              <a
+                href="#servicios"
+                className="inline-flex items-center justify-center border-2 border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 text-lg rounded-full transition-colors"
               >
                 {t("hero.cta2")}
-              </Button>
+              </a>
             </div>
           </div>
         </div>

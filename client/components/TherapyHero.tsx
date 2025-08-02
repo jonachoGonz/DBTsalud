@@ -76,7 +76,7 @@ const TherapyHero = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="https://wa.me/56994748507"
+                href="https://wa.me/56949897699"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg rounded-full transition-colors"

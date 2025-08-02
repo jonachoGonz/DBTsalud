@@ -22,28 +22,22 @@ const TherapyHeader = () => {
               {t("nav.inicio")}
             </a>
             <a
-              href="#nosotros"
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-            >
-              {t("nav.nosotros")}
-            </a>
-            <a
               href="#terapias"
               className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
             >
               {t("nav.terapias")}
             </a>
             <a
-              href="#servicios"
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-            >
-              {t("nav.servicios")}
-            </a>
-            <a
               href="#equipo"
               className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
             >
               {t("nav.equipo")}
+            </a>
+            <a
+              href="#contacto"
+              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+            >
+              {t("nav.contacto")}
             </a>
             <div
               className="text-gray-600 hover:text-gray-900 text-sm font-medium cursor-pointer transition-colors"

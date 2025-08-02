@@ -154,19 +154,46 @@ const translations: Translations = {
 
   // Process Section
   "process.title": { es: "Nuestro proceso", en: "Our process" },
+  "process.intro": {
+    es: "Iniciar terapia puede generar dudas. En DBT Salud queremos que te sientas acompañado desde el primer contacto.",
+    en: "Starting therapy can generate doubts. At DBT Salud we want you to feel supported from the first contact.",
+  },
   "process.step1": { es: "Primer contacto", en: "First contact" },
+  "process.step1.desc": {
+    es: "Escríbenos por WhatsApp o correo para orientación o agendar sesión.",
+    en: "Write to us via WhatsApp or email for guidance or to schedule a session.",
+  },
   "process.step2": {
     es: "Cuestionario de ingreso",
     en: "Intake questionnaire",
   },
-  "process.step3": { es: "Evaluación inicial", en: "Initial evaluation" },
+  "process.step2.desc": {
+    es: "Breve formulario para conocerte mejor.",
+    en: "Brief form to get to know you better.",
+  },
+  "process.step3": {
+    es: "Primera sesión de evaluación",
+    en: "First evaluation session"
+  },
+  "process.step3.desc": {
+    es: "Exploramos tu historia, necesidades y objetivos.",
+    en: "We explore your history, needs and objectives.",
+  },
   "process.step4": {
-    es: "Derivación o plan de tratamiento",
-    en: "Referral or treatment plan",
+    es: "Derivación o plan terapéutico",
+    en: "Referral or therapeutic plan",
+  },
+  "process.step4.desc": {
+    es: "Definimos el tipo de terapia y frecuencia.",
+    en: "We define the type of therapy and frequency.",
   },
   "process.step5": {
-    es: "Inicio del proceso terapéutico",
-    en: "Start of therapeutic process",
+    es: "Inicio del tratamiento",
+    en: "Start of treatment",
+  },
+  "process.step5.desc": {
+    es: "Trabajamos tus objetivos con herramientas basadas en evidencia.",
+    en: "We work on your goals with evidence-based tools.",
   },
   "process.quote": {
     es: "Queremos que te sientas acompañado desde el primer momento.",

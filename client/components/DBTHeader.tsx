@@ -126,45 +126,47 @@ export default function DBTHeader() {
       {isMenuOpen && (
         <div className="lg:hidden absolute top-[120px] left-0 right-0 bg-[rgb(252,248,241)] mx-[30px] rounded-lg p-6 z-[97]">
           <nav className="flex flex-col gap-4">
-            <a href="/" className="text-black text-base font-medium py-2">
+            <a href="#inicio" className="text-black text-base font-medium py-2">
               {t("nav.inicio")}
             </a>
             <a
-              href="/nosotros"
+              href="#nosotros"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.nosotros")}
             </a>
             <a
-              href="/terapias"
+              href="#terapias"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.terapias")}
             </a>
             <a
-              href="/servicios"
+              href="#servicios"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.servicios")}
             </a>
-            <a href="/equipo" className="text-black text-base font-medium py-2">
+            <a href="#equipo" className="text-black text-base font-medium py-2">
               {t("nav.equipo")}
             </a>
             <a
-              href="/recursos"
+              href="#proceso"
               className="text-black text-base font-medium py-2"
             >
-              {t("nav.recursos")}
+              Proceso
             </a>
             <a
-              href="/contacto"
+              href="#contacto"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.contacto")}
             </a>
             <div className="pt-4 border-t border-gray-200">
               <a
-                href="/agenda"
+                href="https://wa.me/56994748507"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center justify-center bg-black text-white text-sm font-medium px-6 py-3 rounded-full"
               >
                 {t("cta.agenda")}

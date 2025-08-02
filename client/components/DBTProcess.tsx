@@ -81,9 +81,14 @@ export default function DBTProcess() {
           <blockquote className="text-2xl md:text-3xl font-medium text-gray-900 mb-8 italic">
             "{t("process.quote")}"
           </blockquote>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
+          <a
+            href="https://wa.me/56994748507"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full transition-colors"
+          >
             {t("process.cta")}
-          </Button>
+          </a>
         </div>
       </div>
     </section>

@@ -208,16 +208,16 @@ const translations: Translations = {
     en: "Karla González Guerra",
   },
   "team.karla.desc": {
-    es: "Psicóloga clínica – Especialista en DBT, TCA, ACT, formación constante.",
-    en: "Clinical Psychologist – Specialist in DBT, ED, ACT, continuous training.",
+    es: "Psicóloga clínica con formación en DBT, ACT y TCA. Magíster en Psicología Clínica (UAI).",
+    en: "Clinical psychologist with training in DBT, ACT and ED. Master's in Clinical Psychology (UAI).",
   },
   "team.daniel.name": {
     es: "Daniel Henríquez Uribe",
     en: "Daniel Henríquez Uribe",
   },
   "team.daniel.desc": {
-    es: "Psicólogo clínico – Formación en DBT, psicopatología, TCC.",
-    en: "Clinical Psychologist – Training in DBT, psychopathology, CBT.",
+    es: "Psicólogo clínico con formación en DBT y TCC. Magíster en Psicología Clínica (UAI).",
+    en: "Clinical psychologist with training in DBT and CBT. Master's in Clinical Psychology (UAI).",
   },
   "team.cta": { es: "Ver perfil completo", en: "View full profile" },
 

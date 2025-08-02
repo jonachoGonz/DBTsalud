@@ -100,7 +100,7 @@ export default function DBTHeader() {
 
               {/* CTA Button */}
               <a
-                href="https://wa.me/56994748507"
+                href="https://wa.me/56949897699"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden lg:flex items-center justify-center bg-[rgb(252,248,241)] text-black text-sm font-medium px-6 py-3 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"

@@ -216,13 +216,15 @@ export default function DBTHeader() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href="/comenzar"
+              href="https://wa.me/56994748507"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
             >
               {t("hero.cta1")}
             </a>
             <a
-              href="/programa-dbt"
+              href="#servicios"
               className="inline-flex items-center justify-center border-2 border-[rgb(252,248,241)] text-[rgb(252,248,241)] text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.1)]"
             >
               {t("hero.cta2")}

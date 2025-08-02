@@ -164,7 +164,7 @@ export default function DBTHeader() {
             </a>
             <div className="pt-4 border-t border-gray-200">
               <a
-                href="https://wa.me/56994748507"
+                href="https://wa.me/56949897699"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center bg-black text-white text-sm font-medium px-6 py-3 rounded-full"

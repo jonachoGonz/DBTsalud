@@ -62,7 +62,7 @@ const TherapyCTA = () => {
           {/* WhatsApp CTA */}
           <div className="pt-6">
             <a
-              href="https://wa.me/56994748507"
+              href="https://wa.me/56949897699"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-white text-blue-800 hover:bg-gray-100 px-8 py-4 text-lg font-medium rounded-full transition-colors"

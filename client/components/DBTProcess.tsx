@@ -40,6 +40,9 @@ export default function DBTProcess() {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t("process.title")}
           </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            {t("process.intro")}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-16">

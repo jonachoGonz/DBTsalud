@@ -56,16 +56,16 @@ const translations: Translations = {
     en: "Personalized approach",
   },
   "about.therapies": {
-    es: "Terapias de tercera generación (DBT, TCC, ACT, PBT)",
-    en: "Third generation therapies (DBT, CBT, ACT, PBT)",
+    es: "Terapias de tercera generación",
+    en: "Third generation therapies",
   },
   "about.support": {
-    es: "Acompañamiento en procesos emocionales complejos o de crecimiento personal",
-    en: "Support in complex emotional processes or personal growth",
+    es: "Acompañamiento empático en procesos complejos",
+    en: "Empathetic accompaniment in complex processes",
   },
   "about.bilingual": {
-    es: "Atención bilingüe: español e inglés",
-    en: "Bilingual care: Spanish and English",
+    es: "Atención en español e inglés",
+    en: "Care in Spanish and English",
   },
   "about.cta": { es: "Conoce nuestra visión", en: "Learn about our vision" },
 

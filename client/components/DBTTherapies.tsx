@@ -39,6 +39,9 @@ export default function DBTTherapies() {
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t("therapies.title")}
           </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            {t("therapies.intro")}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

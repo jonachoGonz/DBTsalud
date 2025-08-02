@@ -77,6 +77,54 @@ const SEOHead = ({
     // Canonical link
     setCanonical(canonical);
 
+    // JSON-LD Structured Data
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "MedicalBusiness",
+      "name": "DBT Salud",
+      "description": "Centro de terapias psicológicas especializadas en DBT, TCC, ACT y PBT en Chile",
+      "url": "https://www.dbtsalud.cl",
+      "telephone": "+56949897699",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Almirante Pastene 185, oficina 204",
+        "addressLocality": "Providencia",
+        "addressRegion": "Región Metropolitana",
+        "addressCountry": "CL"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "-33.4489",
+        "longitude": "-70.6693"
+      },
+      "openingHours": [
+        "Mo-Fr 09:00-19:00",
+        "Sa 09:00-14:00"
+      ],
+      "medicalSpecialty": [
+        "Terapia Dialéctico-Conductual (DBT)",
+        "Terapia Cognitivo-Conductual (TCC)",
+        "Terapia de Aceptación y Compromiso (ACT)",
+        "Terapia Basada en Procesos (PBT)"
+      ],
+      "serviceType": "Psicoterapia",
+      "paymentAccepted": ["Cash", "Credit Card", "Transfer"],
+      "currenciesAccepted": "CLP",
+      "availableLanguage": ["Spanish", "English"],
+      "sameAs": [
+        "https://instagram.com/psi.karlagg"
+      ]
+    };
+
+    // Add or update JSON-LD script
+    let jsonLdScript = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement;
+    if (!jsonLdScript) {
+      jsonLdScript = document.createElement('script');
+      jsonLdScript.type = 'application/ld+json';
+      document.head.appendChild(jsonLdScript);
+    }
+    jsonLdScript.textContent = JSON.stringify(structuredData);
+
     // Cleanup function
     return () => {
       // We don't remove meta tags on cleanup to avoid flickering

@@ -49,8 +49,7 @@ const TherapyServices = () => {
             {t("therapies.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Terapias de tercera generación con enfoque personalizado y basadas
-            en evidencia científica.
+            {t("therapies.intro")}
           </p>
         </div>
 

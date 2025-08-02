@@ -30,7 +30,7 @@ const TherapyCTA = () => {
                 WhatsApp
               </h3>
               <p className="text-blue-100">
-                +56 9 9474 8507
+                +56 9 4989 7699
               </p>
             </div>
 

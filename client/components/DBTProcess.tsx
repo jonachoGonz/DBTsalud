@@ -82,7 +82,7 @@ export default function DBTProcess() {
             "{t("process.quote")}"
           </blockquote>
           <a
-            href="https://wa.me/56994748507"
+            href="https://wa.me/56949897699"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full transition-colors"

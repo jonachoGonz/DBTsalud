@@ -46,7 +46,7 @@ export default function DBTServices() {
             {t("services.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("services.flexibility")}
+            {t("services.subtitle")}
           </p>
         </div>
 

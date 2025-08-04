@@ -11,42 +11,42 @@ export default function DBTServices() {
     {
       icon: Users,
       title: t("services.dbt.complete"),
-      features: ["Individual", "Grupal", "Coaching", "Consultoría"],
+      description: t("services.dbt.complete.desc"),
       color: "bg-blue-100 text-blue-800",
       iconColor: "text-blue-600",
     },
     {
       icon: Monitor,
       title: t("services.dbt.sud"),
-      features: ["Especializado", "Evidencia", "Personalizado"],
+      description: t("services.dbt.sud.desc"),
       color: "bg-green-100 text-green-800",
       iconColor: "text-green-600",
     },
     {
       icon: User,
       title: t("services.individual"),
-      features: ["Presencial", "Online", "Bilingüe"],
+      description: t("services.individual.desc"),
       color: "bg-purple-100 text-purple-800",
       iconColor: "text-purple-600",
     },
     {
       icon: FileText,
       title: t("services.evaluations"),
-      features: ["Completas", "Adaptadas", "Profesionales"],
+      description: t("services.evaluations.desc"),
       color: "bg-orange-100 text-orange-800",
       iconColor: "text-orange-600",
     },
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section id="servicios" className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t("services.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("services.flexibility")}
+            {t("services.subtitle")}
           </p>
         </div>
 
@@ -73,13 +73,9 @@ export default function DBTServices() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {service.features.map((feature, featureIndex) => (
-                      <Badge key={featureIndex} className={service.color}>
-                        {feature}
-                      </Badge>
-                    ))}
-                  </div>
+                  <p className="text-gray-600 leading-relaxed">
+                    {service.description}
+                  </p>
                 </CardContent>
               </Card>
             );

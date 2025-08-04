@@ -8,7 +8,7 @@ const TherapyCTA = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-800 to-blue-900">
+    <section id="contacto" className="py-20 bg-gradient-to-br from-blue-800 to-blue-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center text-white mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -19,117 +19,58 @@ const TherapyCTA = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left side - Benefits */}
-          <div className="space-y-8">
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Shield className="h-6 w-6 text-white" />
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Contact Information Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="flex flex-col items-center">
+              <div className="flex-shrink-0 w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                <MessageCircle className="h-8 w-8 text-white" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Verified Professionals
-                </h3>
-                <p className="text-blue-100">
-                  All therapists are qualified, registered, and
-                  background-checked.
-                </p>
-              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                WhatsApp
+              </h3>
+              <p className="text-blue-100">
+                +56 9 4989 7699
+              </p>
             </div>
 
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Clock className="h-6 w-6 text-white" />
+            <div className="flex flex-col items-center">
+              <div className="flex-shrink-0 w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                <Mail className="h-8 w-8 text-white" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Flexible Scheduling
-                </h3>
-                <p className="text-blue-100">
-                  Book sessions that fit your schedule, including evenings and
-                  weekends.
-                </p>
-              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Instagram
+              </h3>
+              <p className="text-blue-100">
+                @psi.karlagg
+              </p>
             </div>
 
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
+            <div className="flex flex-col items-center">
+              <div className="flex-shrink-0 w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                <Clock className="h-8 w-8 text-white" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Personalized Matching
-                </h3>
-                <p className="text-blue-100">
-                  We help match you with therapists who specialize in your
-                  specific needs.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-6">
-              <Button
-                size="lg"
-                className="bg-white text-blue-800 hover:bg-gray-100"
-              >
-                Find Your Therapist Now
-              </Button>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Dirección
+              </h3>
+              <p className="text-blue-100">
+                Almirante Pastene 185, Providencia, oficina 204
+              </p>
             </div>
           </div>
 
-          {/* Right side - Contact Form */}
-          <Card className="bg-white">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                Get Started Today
-              </h3>
-
-              <form className="space-y-4">
-                <div>
-                  <Input placeholder="Your Name" className="h-12" />
-                </div>
-                <div>
-                  <Input
-                    type="email"
-                    placeholder="Email Address"
-                    className="h-12"
-                  />
-                </div>
-                <div>
-                  <Input placeholder="Phone Number" className="h-12" />
-                </div>
-                <div>
-                  <Input
-                    placeholder="What would you like help with?"
-                    className="h-12"
-                  />
-                </div>
-                <Button className="w-full h-12 bg-blue-800 hover:bg-blue-900 text-white">
-                  Request a Call Back
-                </Button>
-              </form>
-
-              <div className="mt-8 pt-6 border-t">
-                <p className="text-center text-gray-600 mb-4">
-                  O contáctanos directamente:
-                </p>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-center space-x-2 text-gray-700">
-                    <MessageCircle className="h-4 w-4" />
-                    <span>WhatsApp: +569 4989 7699</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2 text-gray-700">
-                    <Mail className="h-4 w-4" />
-                    <span>Instagram: @psi.karlagg</span>
-                  </div>
-                  <div className="flex items-center justify-center space-x-2 text-gray-700">
-                    <Clock className="h-4 w-4" />
-                    <span>Almirante Pastene 185, Providencia, oficina 204</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* WhatsApp CTA */}
+          <div className="pt-6">
+            <a
+              href="https://wa.me/56949897699"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-white text-blue-800 hover:bg-gray-100 px-8 py-4 text-lg font-medium rounded-full transition-colors"
+            >
+              <MessageCircle className="h-5 w-5 mr-2" />
+              Contactar por WhatsApp
+            </a>
+          </div>
         </div>
 
         {/* Newsletter */}

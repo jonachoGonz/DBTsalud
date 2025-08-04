@@ -29,38 +29,101 @@ export default function DBTAbout() {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section id="nosotros" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t("about.title")}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {t("about.intro")}
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Creemos que cada persona tiene el potencial de sanar y construir una vida con propósito.
+            Te ayudamos a encontrar tu camino hacia el bienestar emocional.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {features.map((feature, index) => {
-            const IconComponent = feature.icon;
-            return (
-              <div
-                key={index}
-                className="flex items-start space-x-4 p-6 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className={`flex-shrink-0 w-8 h-8 ${feature.color}`}>
-                  <IconComponent className="w-full h-full" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {/* Card 1 - Enfoque Profesional */}
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl p-8 text-white relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="text-sm opacity-80 mb-4">Nuestro Enfoque</div>
+              <h3 className="text-2xl font-bold mb-4 leading-tight">
+                Espacio Profesional y Humano
+              </h3>
+              <p className="text-blue-100 leading-relaxed mb-6">
+                Creamos un ambiente donde puedas sentirte escuchado, acompañado y comprendido desde el primer momento.
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex space-x-2">
+                  {features.slice(0, 2).map((feature, index) => {
+                    const IconComponent = feature.icon;
+                    return (
+                      <div key={index} className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                    );
+                  })}
                 </div>
-                <p className="text-lg text-gray-700 leading-relaxed">
-                  {feature.text}
-                </p>
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center cursor-pointer hover:bg-white/30 transition-colors">
+                  <span className="text-white text-xl">→</span>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          </div>
+
+          {/* Card 2 - Especialización */}
+          <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="text-sm text-gray-500 mb-4">Nuestra Especialidad</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
+                Dificultades Emocionales Complejas
+              </h3>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Especializados en desregulación emocional, ansiedad, trastornos de personalidad, depresión y relaciones conflictivas.
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex space-x-2">
+                  <div className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">DBT</div>
+                  <div className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">TCC</div>
+                  <div className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">ACT</div>
+                </div>
+                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors">
+                  <span className="text-gray-700 text-xl">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 3 - Enfoque Terapéutico */}
+          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-3xl p-8 border border-green-200 relative overflow-hidden">
+            <div className="relative z-10">
+              <div className="text-sm text-green-600 mb-4">Nuestro Método</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
+                Psicoterapia Basada en Evidencia
+              </h3>
+              <p className="text-gray-700 leading-relaxed mb-6">
+                Enfoque flexible y adaptado a tus necesidades. Integramos terapias de tercera generación: DBT, TCC, ACT y PBT.
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex space-x-2">
+                  {features.slice(2, 4).map((feature, index) => {
+                    const IconComponent = feature.icon;
+                    return (
+                      <div key={index} className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center">
+                        <IconComponent className="w-4 h-4 text-green-700" />
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="w-10 h-10 bg-green-200 rounded-full flex items-center justify-center cursor-pointer hover:bg-green-300 transition-colors">
+                  <span className="text-green-700 text-xl">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="text-center">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
+          <Button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 text-lg rounded-full">
             {t("about.cta")}
           </Button>
         </div>

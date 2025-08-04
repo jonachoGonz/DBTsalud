@@ -27,7 +27,7 @@ export default function DBTContact() {
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section id="contacto" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -35,88 +35,50 @@ export default function DBTContact() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="max-w-4xl mx-auto">
           {/* Contact Information */}
-          <div className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {contactInfo.map((info, index) => {
               const IconComponent = info.icon;
               return (
-                <div key={index} className="flex items-start space-x-4">
+                <div key={index} className="text-center">
                   <div
-                    className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center ${info.color}`}
+                    className={`w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4 ${info.color}`}
                   >
-                    <IconComponent className="w-6 h-6" />
+                    <IconComponent className="w-8 h-8" />
                   </div>
                   <div>
-                    <p className="text-lg text-gray-700">{info.title}</p>
+                    <p className="text-lg text-gray-700 font-medium">{info.title}</p>
                   </div>
                 </div>
               );
             })}
+          </div>
 
-            <div className="pt-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Horarios de atención
-              </h3>
-              <div className="space-y-2 text-gray-600">
-                <p>Lunes a Viernes: 9:00 - 19:00</p>
-                <p>Sábados: 9:00 - 14:00</p>
-                <p>Domingos: Cerrado</p>
-              </div>
+          {/* Hours */}
+          <div className="text-center mb-12">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              {t("contact.hours.title")}
+            </h3>
+            <div className="space-y-2 text-gray-600">
+              <p>{t("contact.hours.weekdays")}</p>
+              <p>{t("contact.hours.saturday")}</p>
+              <p>{t("contact.hours.sunday")}</p>
             </div>
           </div>
 
-          {/* Contact Form */}
-          <Card>
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Agenda tu primera consulta
-              </h3>
-              <form className="space-y-6">
-                <div>
-                  <Input placeholder="Nombre completo" className="h-12" />
-                </div>
-                <div>
-                  <Input
-                    type="email"
-                    placeholder="Correo electrónico"
-                    className="h-12"
-                  />
-                </div>
-                <div>
-                  <Input type="tel" placeholder="Teléfono" className="h-12" />
-                </div>
-                <div>
-                  <Textarea
-                    placeholder="Cuéntanos brevemente qué te trae por aquí..."
-                    className="min-h-[120px]"
-                  />
-                </div>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-lg">
-                  Enviar mensaje
-                </Button>
-              </form>
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-green-600 text-green-600 hover:bg-green-50"
-                  >
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50"
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Llamar
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* WhatsApp CTA */}
+          <div className="text-center">
+            <a
+              href="https://wa.me/56949897699"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-lg rounded-full transition-colors"
+            >
+              <MessageCircle className="w-5 h-5 mr-2" />
+              Contactar por WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </section>

@@ -69,9 +69,11 @@ export default function DBTFooter() {
               <p className="pt-2">
                 <a
                   href="https://wa.me/56949897699"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
-                  WhatsApp: +569 4989 7699
+                  WhatsApp: +56 9 4989 7699
                 </a>
               </p>
               <p>

@@ -16,34 +16,28 @@ const TherapyHeader = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a
-              href="/"
+              href="#inicio"
               className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
             >
               {t("nav.inicio")}
             </a>
             <a
-              href="/nosotros"
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-            >
-              {t("nav.nosotros")}
-            </a>
-            <a
-              href="/terapias"
+              href="#terapias"
               className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
             >
               {t("nav.terapias")}
             </a>
             <a
-              href="/servicios"
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-            >
-              {t("nav.servicios")}
-            </a>
-            <a
-              href="/equipo"
+              href="#equipo"
               className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
             >
               {t("nav.equipo")}
+            </a>
+            <a
+              href="#contacto"
+              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+            >
+              {t("nav.contacto")}
             </a>
             <div
               className="text-gray-600 hover:text-gray-900 text-sm font-medium cursor-pointer transition-colors"
@@ -51,9 +45,14 @@ const TherapyHeader = () => {
             >
               {language === "es" ? "EN" : "ES"}
             </div>
-            <Button className="bg-blue-500 text-white hover:bg-blue-600">
+            <a
+              href="https://wa.me/56949897699"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-blue-500 text-white hover:bg-blue-600 px-4 py-2 rounded text-sm font-medium transition-colors"
+            >
               {t("cta.agenda")}
-            </Button>
+            </a>
           </nav>
 
           {/* Mobile - simplified */}

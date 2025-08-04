@@ -27,43 +27,43 @@ export default function DBTHeader() {
             {/* Navigation */}
             <nav className="hidden lg:flex items-center gap-1 relative">
               <a
-                href="/"
+                href="#inicio"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
                 {t("nav.inicio")}
               </a>
               <a
-                href="/nosotros"
+                href="#nosotros"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
                 {t("nav.nosotros")}
               </a>
               <a
-                href="/terapias"
+                href="#terapias"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
                 {t("nav.terapias")}
               </a>
               <a
-                href="/servicios"
+                href="#servicios"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
                 {t("nav.servicios")}
               </a>
               <a
-                href="/equipo"
+                href="#equipo"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
                 {t("nav.equipo")}
               </a>
               <a
-                href="/recursos"
+                href="#proceso"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
               >
-                {t("nav.recursos")}
+                Proceso
               </a>
               <a
-                href="/contacto"
+                href="#contacto"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 ml-6 relative border border-[rgba(242,236,226,0.5)] rounded-full transition-all duration-400 hover:bg-[rgba(242,236,226,0.1)]"
               >
                 {t("nav.contacto")}
@@ -85,7 +85,9 @@ export default function DBTHeader() {
 
               {/* CTA Button */}
               <a
-                href="/agenda"
+                href="https://wa.me/56949897699"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hidden lg:flex items-center justify-center bg-[rgb(252,248,241)] text-black text-sm font-medium px-6 py-3 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
               >
                 {t("cta.agenda")}
@@ -109,45 +111,47 @@ export default function DBTHeader() {
       {isMenuOpen && (
         <div className="lg:hidden absolute top-[120px] left-0 right-0 bg-[rgb(252,248,241)] mx-[30px] rounded-lg p-6 z-[97]">
           <nav className="flex flex-col gap-4">
-            <a href="/" className="text-black text-base font-medium py-2">
+            <a href="#inicio" className="text-black text-base font-medium py-2">
               {t("nav.inicio")}
             </a>
             <a
-              href="/nosotros"
+              href="#nosotros"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.nosotros")}
             </a>
             <a
-              href="/terapias"
+              href="#terapias"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.terapias")}
             </a>
             <a
-              href="/servicios"
+              href="#servicios"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.servicios")}
             </a>
-            <a href="/equipo" className="text-black text-base font-medium py-2">
+            <a href="#equipo" className="text-black text-base font-medium py-2">
               {t("nav.equipo")}
             </a>
             <a
-              href="/recursos"
+              href="#proceso"
               className="text-black text-base font-medium py-2"
             >
-              {t("nav.recursos")}
+              Proceso
             </a>
             <a
-              href="/contacto"
+              href="#contacto"
               className="text-black text-base font-medium py-2"
             >
               {t("nav.contacto")}
             </a>
             <div className="pt-4 border-t border-gray-200">
               <a
-                href="/agenda"
+                href="https://wa.me/56949897699"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center justify-center bg-black text-white text-sm font-medium px-6 py-3 rounded-full"
               >
                 {t("cta.agenda")}
@@ -197,13 +201,15 @@ export default function DBTHeader() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href="/comenzar"
+              href="https://wa.me/56949897699"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
             >
               {t("hero.cta1")}
             </a>
             <a
-              href="/programa-dbt"
+              href="#servicios"
               className="inline-flex items-center justify-center border-2 border-[rgb(252,248,241)] text-[rgb(252,248,241)] text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.1)]"
             >
               {t("hero.cta2")}

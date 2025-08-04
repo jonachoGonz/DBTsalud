@@ -39,8 +39,8 @@ const translations: Translations = {
     en: "You don't need to have it all figured out. Sometimes, you just need to take the first step.",
   },
   "hero.subtitle": {
-    es: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad. Terapias presenciales y online, en español e inglés.",
-    en: "We accompany therapeutic processes with warmth, evidence and humanity. In-person and online therapies, in Spanish and English.",
+    es: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad. Atención psicológica online y presencial, en español e inglés, desde Chile.",
+    en: "We accompany therapeutic processes with warmth, evidence and humanity. Online and in-person psychological care, in Spanish and English, from Chile.",
   },
   "hero.cta1": { es: "Quiero comenzar terapia", en: "I want to start therapy" },
   "hero.cta2": { es: "Conoce el Programa DBT", en: "Learn about DBT Program" },
@@ -48,60 +48,64 @@ const translations: Translations = {
   // About Section
   "about.title": { es: "Somos DBT Salud", en: "We are DBT Salud" },
   "about.intro": {
-    es: "En DBT Salud creemos que cada persona, sin importar su historia, tiene el potencial de sanar y construir una vida con propósito.",
-    en: "At DBT Salud we believe that every person, regardless of their history, has the potential to heal and build a life with purpose.",
+    es: "En DBT Salud creemos que cada persona, sin importar su historia, tiene el potencial de sanar y construir una vida con propósito. Por eso creamos un espacio profesional, humano y cercano, donde puedas sentirte escuchado, acompañado y comprendido.\n\nNos especializamos en tratar dificultades emocionales complejas como desregulación emocional, ansiedad, trastornos de personalidad, depresión, relaciones conflictivas y más. También acompañamos procesos de crecimiento personal, toma de decisiones importantes y desarrollo emocional.\n\nOfrecemos psicoterapia basada en evidencia, con un enfoque flexible y adaptado a tus necesidades. Integramos terapias como DBT, TCC, ACT y PBT.",
+    en: "At DBT Salud we believe that every person, regardless of their history, has the potential to heal and build a life with purpose. That's why we create a professional, human and close space, where you can feel heard, accompanied and understood.\n\nWe specialize in treating complex emotional difficulties such as emotional dysregulation, anxiety, personality disorders, depression, conflictual relationships and more. We also accompany personal growth processes, important decision making and emotional development.\n\nWe offer evidence-based psychotherapy, with a flexible approach adapted to your needs. We integrate therapies such as DBT, CBT, ACT and PBT.",
   },
   "about.personalized": {
     es: "Enfoque personalizado",
     en: "Personalized approach",
   },
   "about.therapies": {
-    es: "Terapias de tercera generación (DBT, TCC, ACT, PBT)",
-    en: "Third generation therapies (DBT, CBT, ACT, PBT)",
+    es: "Terapias de tercera generación",
+    en: "Third generation therapies",
   },
   "about.support": {
-    es: "Acompañamiento en procesos emocionales complejos o de crecimiento personal",
-    en: "Support in complex emotional processes or personal growth",
+    es: "Acompañamiento empático en procesos complejos",
+    en: "Empathetic accompaniment in complex processes",
   },
   "about.bilingual": {
-    es: "Atención bilingüe: español e inglés",
-    en: "Bilingual care: Spanish and English",
+    es: "Atención en español e inglés",
+    en: "Care in Spanish and English",
   },
   "about.cta": { es: "Conoce nuestra visión", en: "Learn about our vision" },
 
   // Therapies Section
   "therapies.title": { es: "Terapias que ofrecemos", en: "Therapies we offer" },
+  "therapies.intro": {
+    es: "Sabemos que cada proceso terapéutico es único. Por eso, adaptamos las terapias a tu historia y necesidades personales.",
+    en: "We know that each therapeutic process is unique. That's why we adapt therapies to your history and personal needs.",
+  },
   "therapies.dbt.title": {
     es: "DBT (Terapia Dialéctico-Conductual)",
     en: "DBT (Dialectical Behavior Therapy)",
   },
   "therapies.dbt.desc": {
-    es: "Ideal para desregulación emocional, impulsividad, relaciones conflictivas.",
-    en: "Ideal for emotional dysregulation, impulsivity, conflictual relationships.",
+    es: "Enfoque intensivo ideal para crisis emocionales, impulsividad y relaciones conflictivas.",
+    en: "Intensive approach ideal for emotional crises, impulsivity and conflictual relationships.",
   },
   "therapies.tcc.title": {
     es: "TCC (Terapia Cognitivo-Conductual)",
     en: "CBT (Cognitive-Behavioral Therapy)",
   },
   "therapies.tcc.desc": {
-    es: "Transformación de patrones de pensamiento.",
-    en: "Transformation of thought patterns.",
+    es: "Identifica y transforma pensamientos y conductas que afectan tu bienestar.",
+    en: "Identifies and transforms thoughts and behaviors that affect your well-being.",
   },
   "therapies.act.title": {
     es: "ACT (Aceptación y Compromiso)",
     en: "ACT (Acceptance and Commitment)",
   },
   "therapies.act.desc": {
-    es: "Vida con sentido y valores personales.",
-    en: "Life with meaning and personal values.",
+    es: "Conecta con tus valores y aprende a vivir con sentido, incluso en la dificultad.",
+    en: "Connect with your values and learn to live meaningfully, even in difficulty.",
   },
   "therapies.pbt.title": {
     es: "PBT (Process-Based Therapy)",
     en: "PBT (Process-Based Therapy)",
   },
   "therapies.pbt.desc": {
-    es: "Terapia ajustada a tu historia única.",
-    en: "Therapy tailored to your unique story.",
+    es: "Terapia flexible centrada en procesos específicos, no solo en diagnósticos.",
+    en: "Flexible therapy focused on specific processes, not just diagnoses.",
   },
   "therapies.cta": {
     es: "Más sobre nuestras terapias",
@@ -110,43 +114,86 @@ const translations: Translations = {
 
   // Services Section
   "services.title": { es: "Nuestros servicios", en: "Our services" },
-  "services.flexibility": {
-    es: "Destacar la flexibilidad: online / presencial - español / inglés",
-    en: "Highlighting flexibility: online / in-person - Spanish / English",
+  "services.subtitle": {
+    es: "Atención online y presencial | Español e inglés",
+    en: "Online and in-person care | Spanish and English",
   },
   "services.dbt.complete": {
-    es: "Programa DBT completo (sesiones individuales + talleres grupales + coaching + consultoría de equipo)",
-    en: "Complete DBT program (individual sessions + group workshops + coaching + team consultation)",
+    es: "Programa DBT Completo",
+    en: "Complete DBT Program",
+  },
+  "services.dbt.complete.desc": {
+    es: "Incluye sesiones individuales, talleres de habilidades, coaching entre sesiones y equipo clínico.",
+    en: "Includes individual sessions, skills workshops, between-session coaching and clinical team.",
   },
   "services.dbt.sud": {
-    es: "DBT-SUD: para tratamiento de consumo problemático de sustancias",
-    en: "DBT-SUD: for problematic substance use treatment",
+    es: "DBT-SUD (Consumo problemático de sustancias)",
+    en: "DBT-SUD (Problematic substance use)",
+  },
+  "services.dbt.sud.desc": {
+    es: "Programa especializado para quienes enfrentan adicción y desregulación emocional.",
+    en: "Specialized program for those facing addiction and emotional dysregulation.",
   },
   "services.individual": {
     es: "Sesiones individuales personalizadas",
     en: "Personalized individual sessions",
   },
+  "services.individual.desc": {
+    es: "Espacios de psicoterapia flexibles, empáticos y confidenciales.",
+    en: "Flexible, empathetic and confidential psychotherapy spaces.",
+  },
   "services.evaluations": {
-    es: "Evaluaciones psicológicas (con informes adaptados)",
-    en: "Psychological evaluations (with adapted reports)",
+    es: "Evaluaciones psicológicas",
+    en: "Psychological evaluations",
+  },
+  "services.evaluations.desc": {
+    es: "Informes clínicos claros, adaptados a contextos escolares, médicos o familiares.",
+    en: "Clear clinical reports, adapted to school, medical or family contexts.",
   },
   "services.cta": { es: "Ver todos los servicios", en: "See all services" },
 
   // Process Section
   "process.title": { es: "Nuestro proceso", en: "Our process" },
+  "process.intro": {
+    es: "Iniciar terapia puede generar dudas. En DBT Salud queremos que te sientas acompañado desde el primer contacto.",
+    en: "Starting therapy can generate doubts. At DBT Salud we want you to feel supported from the first contact.",
+  },
   "process.step1": { es: "Primer contacto", en: "First contact" },
+  "process.step1.desc": {
+    es: "Escríbenos por WhatsApp o correo para orientación o agendar sesión.",
+    en: "Write to us via WhatsApp or email for guidance or to schedule a session.",
+  },
   "process.step2": {
     es: "Cuestionario de ingreso",
     en: "Intake questionnaire",
   },
-  "process.step3": { es: "Evaluación inicial", en: "Initial evaluation" },
+  "process.step2.desc": {
+    es: "Breve formulario para conocerte mejor.",
+    en: "Brief form to get to know you better.",
+  },
+  "process.step3": {
+    es: "Primera sesión de evaluación",
+    en: "First evaluation session"
+  },
+  "process.step3.desc": {
+    es: "Exploramos tu historia, necesidades y objetivos.",
+    en: "We explore your history, needs and objectives.",
+  },
   "process.step4": {
-    es: "Derivación o plan de tratamiento",
-    en: "Referral or treatment plan",
+    es: "Derivación o plan terapéutico",
+    en: "Referral or therapeutic plan",
+  },
+  "process.step4.desc": {
+    es: "Definimos el tipo de terapia y frecuencia.",
+    en: "We define the type of therapy and frequency.",
   },
   "process.step5": {
-    es: "Inicio del proceso terapéutico",
-    en: "Start of therapeutic process",
+    es: "Inicio del tratamiento",
+    en: "Start of treatment",
+  },
+  "process.step5.desc": {
+    es: "Trabajamos tus objetivos con herramientas basadas en evidencia.",
+    en: "We work on your goals with evidence-based tools.",
   },
   "process.quote": {
     es: "Queremos que te sientas acompañado desde el primer momento.",
@@ -161,32 +208,48 @@ const translations: Translations = {
     en: "Karla González Guerra",
   },
   "team.karla.desc": {
-    es: "Psicóloga clínica – Especialista en DBT, TCA, ACT, formación constante.",
-    en: "Clinical Psychologist – Specialist in DBT, ED, ACT, continuous training.",
+    es: "Psicóloga clínica con formación en DBT, ACT y TCA. Magíster en Psicología Clínica (UAI).",
+    en: "Clinical psychologist with training in DBT, ACT and ED. Master's in Clinical Psychology (UAI).",
   },
   "team.daniel.name": {
     es: "Daniel Henríquez Uribe",
     en: "Daniel Henríquez Uribe",
   },
   "team.daniel.desc": {
-    es: "Psicólogo clínico – Formación en DBT, psicopatología, TCC.",
-    en: "Clinical Psychologist – Training in DBT, psychopathology, CBT.",
+    es: "Psicólogo clínico con formación en DBT y TCC. Magíster en Psicología Clínica (UAI).",
+    en: "Clinical psychologist with training in DBT and CBT. Master's in Clinical Psychology (UAI).",
   },
   "team.cta": { es: "Ver perfil completo", en: "View full profile" },
 
   // Contact Section
   "contact.title": { es: "Contacto directo", en: "Direct contact" },
   "contact.address": {
-    es: "Dirección: Almirante Pastene 185, Providencia, oficina 204",
-    en: "Address: Almirante Pastene 185, Providencia, office 204",
+    es: "Almirante Pastene 185, Providencia, oficina 204",
+    en: "Almirante Pastene 185, Providencia, office 204",
   },
   "contact.whatsapp": {
-    es: "WhatsApp: +569 4989 7699",
-    en: "WhatsApp: +569 4989 7699",
+    es: "+56 9 4989 7699",
+    en: "+56 9 4989 7699",
   },
   "contact.instagram": {
-    es: "Instagram: @psi.karlagg",
-    en: "Instagram: @psi.karlagg",
+    es: "@psi.karlagg",
+    en: "@psi.karlagg",
+  },
+  "contact.hours.title": {
+    es: "Horarios de atención:",
+    en: "Office hours:",
+  },
+  "contact.hours.weekdays": {
+    es: "Lunes a viernes: 10:00 - 19:00",
+    en: "Monday to Friday: 10:00 - 19:00",
+  },
+  "contact.hours.saturday": {
+    es: "Sábado: 9:00 - 14:00",
+    en: "Saturday: 9:00 - 14:00",
+  },
+  "contact.hours.sunday": {
+    es: "Domingo: Cerrado",
+    en: "Sunday: Closed",
   },
 
   // Footer

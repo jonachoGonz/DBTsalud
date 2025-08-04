@@ -9,37 +9,45 @@ export default function DBTProcess() {
     {
       icon: PhoneCall,
       title: t("process.step1"),
+      description: t("process.step1.desc"),
       number: "01",
     },
     {
       icon: FileCheck,
       title: t("process.step2"),
+      description: t("process.step2.desc"),
       number: "02",
     },
     {
       icon: Search,
       title: t("process.step3"),
+      description: t("process.step3.desc"),
       number: "03",
     },
     {
       icon: Route,
       title: t("process.step4"),
+      description: t("process.step4.desc"),
       number: "04",
     },
     {
       icon: Play,
       title: t("process.step5"),
+      description: t("process.step5.desc"),
       number: "05",
     },
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+    <section id="proceso" className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             {t("process.title")}
           </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            {t("process.intro")}
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-16">
@@ -58,9 +66,12 @@ export default function DBTProcess() {
                     <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-blue-200 -translate-y-1/2"></div>
                   )}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   {step.title}
                 </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {step.description}
+                </p>
               </div>
             );
           })}
@@ -70,9 +81,14 @@ export default function DBTProcess() {
           <blockquote className="text-2xl md:text-3xl font-medium text-gray-900 mb-8 italic">
             "{t("process.quote")}"
           </blockquote>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
+          <a
+            href="https://wa.me/56949897699"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full transition-colors"
+          >
             {t("process.cta")}
-          </Button>
+          </a>
         </div>
       </div>
     </section>

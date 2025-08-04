@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        alegreya: ['alegreya', 'serif'],
+        alegreya: ["alegreya", "serif"],
       },
       colors: {
         border: "hsl(var(--border))",

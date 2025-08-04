@@ -29,18 +29,26 @@ const translations: Translations = {
   "nav.recursos": { es: "Recursos", en: "Resources" },
   "nav.contacto": { es: "Contacto", en: "Contact" },
   "cta.agenda": {
-    es: "Agenda tu primera sesión",
-    en: "Schedule your first session",
+    es: "Agenda tu sesión",
+    en: "Schedule your session",
   },
 
   // Hero Section
-  "hero.title": {
-    es: "No necesitas tenerlo todo claro. A veces, solo hace falta tomar el primer paso.",
-    en: "You don't need to have it all figured out. Sometimes, you just need to take the first step.",
+  "hero.title1": {
+    es: "No necesitas tenerlo todo claro.",
+    en: "You don't need to have it all figured out.",
   },
-  "hero.subtitle": {
-    es: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad. Atención psicológica online y presencial, en español e inglés, desde Chile.",
-    en: "We accompany therapeutic processes with warmth, evidence and humanity. Online and in-person psychological care, in Spanish and English, from Chile.",
+  "hero.title2": {
+    es: "A veces, solo hace falta tomar el primer paso.",
+    en: "Sometimes, you just need to take the first step.",
+  },
+  "hero.subtitle1": {
+    es: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.",
+    en: "We accompany therapeutic processes with warmth, evidence and humanity.",
+  },
+  "hero.subtitle2": {
+    es: "Atención psicológica online y presencial, en español e inglés, desde Chile.",
+    en: "Online and in-person psychological care, in Spanish and English, from Chile.",
   },
   "hero.cta1": { es: "Quiero comenzar terapia", en: "I want to start therapy" },
   "hero.cta2": { es: "Conoce el Programa DBT", en: "Learn about DBT Program" },

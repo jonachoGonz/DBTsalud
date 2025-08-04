@@ -211,12 +211,8 @@ export default function DBTTherapies() {
     <section id="terapias" className="py-20 bg-[rgb(252,248,241)]">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
-        <div className="flex flex-col items-center gap-2 text-center pt-[120px] mb-10">
-          <div className="text-[13.5px] font-medium leading-[17.55px] text-center opacity-70 transition-all duration-700">
-            Terapias
-          </div>
-          <h2 className="font-medium text-2xl leading-[28.8px] text-center transition-all duration-700"
-              style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.24px' }}>
+        <div className="flex flex-col items-center gap-2 text-center pt-[120px] mb-20">
+          <h2 className="font-bold text-stone-700 text-5xl text-center transition-all duration-700 tk-alegreya">
             {t("therapies.title")}
           </h2>
         </div>

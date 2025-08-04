@@ -25,7 +25,7 @@ export default function DBTHeader() {
             </a>
 
             {/* Navigation */}
-            <nav className="hidden lg:flex items-center gap-1 relative">
+            <nav className="hidden lg:flex items-center gap-1 relative tk-alegreya">
               <a
                 href="#inicio"
                 className="flex items-center justify-center text-[rgb(252,248,241)] text-base leading-[20.8px] px-5 py-2.5 relative border border-transparent rounded-full transition-all duration-400 hover:border-[rgba(242,236,226,0.5)]"
@@ -75,7 +75,7 @@ export default function DBTHeader() {
               {/* Language Selector */}
               <div className="flex items-center gap-1 relative">
                 <div
-                  className="text-[rgb(252,248,241)] text-[13.5px] leading-[17.55px] cursor-pointer"
+                  className="text-[rgb(252,248,241)] text-[13.5px] leading-[17.55px] cursor-pointer tk-alegreya"
                   onClick={toggleLanguage}
                 >
                   {language === "es" ? "EN" : "ES"}
@@ -88,7 +88,7 @@ export default function DBTHeader() {
                 href="https://wa.me/56949897699"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden lg:flex items-center justify-center bg-[rgb(252,248,241)] text-black text-sm font-medium px-6 py-3 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
+                className="hidden lg:flex items-center justify-center bg-[rgb(252,248,241)] text-black text-md font-medium px-6 py-3 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)] tk-alegreya"
               >
                 {t("cta.agenda")}
               </a>
@@ -181,22 +181,18 @@ export default function DBTHeader() {
         />
 
         {/* Content */}
-        <div className="flex flex-col items-center justify-end text-center max-w-4xl mx-auto px-6">
-          <div
-            className="text-[rgba(242,236,226,0.6)] text-lg leading-6 text-center mb-6"
-            style={{ letterSpacing: "-0.18px" }}
-          >
-            {t("hero.subtitle")}
-          </div>
-          <h1
-            className="text-[rgb(252,248,241)] font-medium text-6xl md:text-7xl leading-tight text-center mb-8"
-            style={{
-              fontFamily: '"saans trial", sans-serif',
-              letterSpacing: "-0.72px",
-            }}
-          >
-            {t("hero.title")}
+        <div className="flex flex-col items-center justify-end text-center max-w-6xl mx-auto px-6">
+          <h1 className="text-white font-bold text-5xl md:text-6xl leading-tight text-center mb-5 tk-alegreya" >
+            {t("hero.title1")}
+            <br />
+            {t("hero.title2")}
           </h1>
+          <div className="text-white font-light text-3xl text-center mb-20 tk-alegreya">
+            {t("hero.subtitle1")}
+          </div>
+          <div className="text-white font-thin text-2xl text-center mb-8 tk-alegreya">
+            {t("hero.subtitle2")}
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
@@ -204,13 +200,13 @@ export default function DBTHeader() {
               href="https://wa.me/56949897699"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)]"
+              className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)] tk-alegreya"
             >
               {t("hero.cta1")}
             </a>
             <a
               href="#servicios"
-              className="inline-flex items-center justify-center border-2 border-[rgb(252,248,241)] text-[rgb(252,248,241)] text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.1)]"
+              className="inline-flex items-center justify-center border-2 border-[rgb(252,248,241)] text-[rgb(252,248,241)] text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.1)] tk-alegreya"
             >
               {t("hero.cta2")}
             </a>

@@ -28,7 +28,8 @@ export default function Index() {
             ¡Proyecto conectado a Supabase!
           </h1>
           <p className="text-slate-600 max-w-md mx-auto mb-8">
-            Tu proyecto ya está configurado y listo para usar Supabase. Prueba la autenticación a continuación.
+            Tu proyecto ya está configurado y listo para usar Supabase. Prueba
+            la autenticación a continuación.
           </p>
         </div>
 

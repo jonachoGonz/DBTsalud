@@ -1,62 +1,70 @@
-import { useState } from 'react'
-import { useSupabase } from '@/hooks/use-supabase'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useState } from "react";
+import { useSupabase } from "@/hooks/use-supabase";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function SupabaseTest() {
-  const { user, loading, supabase, signOut } = useSupabase()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const { user, loading, supabase, signOut } = useSupabase();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setMessage('')
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
 
     try {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-      })
+      });
 
       if (error) {
-        setMessage(`Error: ${error.message}`)
+        setMessage(`Error: ${error.message}`);
       } else {
-        setMessage('¡Registro exitoso! Revisa tu email para confirmar tu cuenta.')
+        setMessage(
+          "¡Registro exitoso! Revisa tu email para confirmar tu cuenta.",
+        );
       }
     } catch (error) {
-      setMessage(`Error: ${error}`)
+      setMessage(`Error: ${error}`);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setMessage('')
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage("");
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-      })
+      });
 
       if (error) {
-        setMessage(`Error: ${error.message}`)
+        setMessage(`Error: ${error.message}`);
       } else {
-        setMessage('¡Inicio de sesión exitoso!')
+        setMessage("¡Inicio de sesión exitoso!");
       }
     } catch (error) {
-      setMessage(`Error: ${error}`)
+      setMessage(`Error: ${error}`);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -65,7 +73,7 @@ export function SupabaseTest() {
           <div className="text-center">Cargando...</div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (user) {
@@ -77,24 +85,26 @@ export function SupabaseTest() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>ID:</strong> {user.id}</p>
+            <p>
+              <strong>Email:</strong> {user.email}
+            </p>
+            <p>
+              <strong>ID:</strong> {user.id}
+            </p>
           </div>
           <Button onClick={signOut} className="w-full">
             Cerrar Sesión
           </Button>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle>Prueba de Supabase</CardTitle>
-        <CardDescription>
-          Conecta con tu base de datos Supabase
-        </CardDescription>
+        <CardDescription>Conecta con tu base de datos Supabase</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="space-y-4">
@@ -143,5 +153,5 @@ export function SupabaseTest() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

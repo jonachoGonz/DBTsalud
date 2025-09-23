@@ -106,6 +106,103 @@ export default function Admin() {
     alert('Estilos aplicados');
   };
 
+  async function migrateFromLuminous() {
+    const es = {
+      header: {
+        title1: "No necesitas tenerlo todo claro.",
+        title2: "A veces, solo hace falta tomar el primer paso.",
+        subtitle1: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.",
+        subtitle2: "Atención psicológica online y presencial, en español e inglés, desde Chile.",
+        cta1: "Quiero comenzar terapia",
+        cta2: "Conoce el Programa DBT",
+      },
+      about: {
+        title: "Somos DBT Salud",
+        body: "En DBT Salud creemos que cada persona, sin importar su historia, tiene el potencial de sanar y construir una vida con propósito. Por eso creamos un espacio profesional, humano y cercano, donde puedas sentirte escuchado, acompañado y comprendido.\n\nNos especializamos en tratar dificultades emocionales complejas como desregulación emocional, ansiedad, trastornos de personalidad, depresión, relaciones conflictivas y más. También acompañamos procesos de crecimiento personal, toma de decisiones importantes y desarrollo emocional.\n\nOfrecemos psicoterapia basada en evidencia, con un enfoque flexible y adaptado a tus necesidades. Integramos terapias como DBT, TCC, ACT y PBT.",
+        linkText: "Conócenos",
+        linkUrl: "/#nosotros",
+      },
+      therapies: {
+        title: "Terapias que ofrecemos",
+        items: [
+          { title: "DBT (Terapia Dialéctico-Conductual)", desc: "Enfoque intensivo ideal para crisis emocionales, impulsividad y relaciones conflictivas.", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop" },
+          { title: "TCC (Terapia Cognitivo-Conductual)", desc: "Identifica y transforma pensamientos y conductas que afectan tu bienestar.", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop" },
+          { title: "ACT (Aceptación y Compromiso)", desc: "Conecta con tus valores y aprende a vivir con sentido, incluso en la dificultad.", image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=450&fit=crop" },
+          { title: "PBT (Process-Based Therapy)", desc: "Terapia flexible centrada en procesos específicos, no solo en diagnósticos.", image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=450&fit=crop" },
+        ]
+      },
+      services: {
+        title: "Nuestros servicios",
+        subtitle: "Atención online y presencial | Español e inglés",
+        items: [
+          { title: "Programa DBT Completo", desc: "Incluye sesiones individuales, talleres de habilidades, coaching entre sesiones y equipo clínico." },
+          { title: "DBT-SUD (Consumo problemático de sustancias)", desc: "Programa especializado para quienes enfrentan adicción y desregulación emocional." },
+          { title: "Sesiones individuales personalizadas", desc: "Espacios de psicoterapia flexibles, empáticos y confidenciales." },
+          { title: "Evaluaciones psicológicas", desc: "Informes clínicos claros, adaptados a contextos escolares, médicos o familiares." },
+        ]
+      },
+      footer: { text: "© 2025 DBT Salud", quote: "Tu historia merece ser escuchada. Tu vida merece ser vivida con sentido." }
+    };
+
+    const en = {
+      header: {
+        title1: "You don't need to have it all figured out.",
+        title2: "Sometimes, you just need to take the first step.",
+        subtitle1: "We accompany therapeutic processes with warmth, evidence and humanity.",
+        subtitle2: "Online and in-person psychological care, in Spanish and English, from Chile.",
+        cta1: "I want to start therapy",
+        cta2: "Learn about DBT Program",
+      },
+      about: {
+        title: "We are DBT Salud",
+        body: "At DBT Salud we believe that every person, regardless of their history, has the potential to heal and build a life with purpose. That's why we create a professional, human and close space, where you can feel heard, accompanied and understood.\n\nWe specialize in treating complex emotional difficulties such as emotional dysregulation, anxiety, personality disorders, depression, conflictual relationships and more. We also accompany personal growth processes, important decision making and emotional development.\n\nWe offer evidence-based psychotherapy, with a flexible approach adapted to your needs. We integrate therapies such as DBT, CBT, ACT and PBT.",
+        linkText: "About us",
+        linkUrl: "/#nosotros",
+      },
+      therapies: {
+        title: "Therapies we offer",
+        items: [
+          { title: "DBT (Dialectical Behavior Therapy)", desc: "Intensive approach ideal for emotional crises, impulsivity and conflictual relationships.", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop" },
+          { title: "CBT (Cognitive-Behavioral Therapy)", desc: "Identifies and transforms thoughts and behaviors that affect your well-being.", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop" },
+          { title: "ACT (Acceptance and Commitment)", desc: "Connect with your values and learn to live meaningfully, even in difficulty.", image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=450&fit=crop" },
+          { title: "PBT (Process-Based Therapy)", desc: "Flexible therapy focused on specific processes, not just diagnoses.", image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=450&fit=crop" },
+        ]
+      },
+      services: {
+        title: "Our services",
+        subtitle: "Online and in-person care | Spanish and English",
+        items: [
+          { title: "Complete DBT Program", desc: "Includes individual sessions, skills workshops, between-session coaching and clinical team." },
+          { title: "DBT-SUD (Problematic substance use)", desc: "Specialized program for those facing addiction and emotional dysregulation." },
+          { title: "Personalized individual sessions", desc: "Flexible, empathetic and confidential psychotherapy spaces." },
+          { title: "Psychological evaluations", desc: "Clear clinical reports, adapted to school, medical or family contexts." },
+        ]
+      },
+      footer: { text: "© 2025 DBT Salud", quote: "Your story deserves to be heard. Your life deserves to be lived with meaning." }
+    };
+
+    try {
+      // Upsert ES
+      await upsertContent('luminous.header', 'es', es.header);
+      await upsertContent('luminous.about', 'es', es.about);
+      await upsertContent('luminous.therapies', 'es', es.therapies);
+      await upsertContent('luminous.services', 'es', es.services);
+      await upsertContent('luminous.footer', 'es', es.footer);
+      // Upsert EN
+      await upsertContent('luminous.header', 'en', en.header);
+      await upsertContent('luminous.about', 'en', en.about);
+      await upsertContent('luminous.therapies', 'en', en.therapies);
+      await upsertContent('luminous.services', 'en', en.services);
+      await upsertContent('luminous.footer', 'en', en.footer);
+
+      const keys = await listContentKeys('luminous.');
+      if (keys.length) setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
+      alert('Contenido migrado desde Luminous');
+    } catch (e:any) {
+      alert('Error en migración: ' + e.message);
+    }
+  }
+
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[rgb(252,248,241)] p-6">

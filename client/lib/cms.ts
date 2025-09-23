@@ -102,7 +102,7 @@ create table if not exists public.content_entries (
 create table if not exists public.site_settings (
   id uuid primary key default gen_random_uuid(),
   theme jsonb not null default jsonb_build_object(
-    'colors', jsonb_build_object('primary','#2e4c47','secondary','#cbed e0'),
+    'colors', jsonb_build_object('primary','#2e4c47','secondary','#CBEDE0'),
     'typography', jsonb_build_object('fontFamily','alegreya-sans, sans-serif','baseSize',16),
     'assets', jsonb_build_object('logoUrl','', 'faviconUrl','', 'images', '{}')
   ),

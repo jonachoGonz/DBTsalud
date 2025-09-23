@@ -9,10 +9,14 @@ const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'qpsych2025!';
 type Tab = 'content' | 'styles' | 'translate';
 
 const defaultKeys = [
+  'luminous.seo',
   'luminous.header',
   'luminous.about',
   'luminous.therapies',
   'luminous.services',
+  'luminous.process',
+  'luminous.team',
+  'luminous.contact',
   'luminous.footer'
 ];
 
@@ -327,6 +331,8 @@ export default function Admin() {
 
 function defaultContent(key: string) {
   switch (key) {
+    case 'luminous.seo':
+      return { title: 'Terapia DBT en Chile | DBT Salud', description: 'Psicoterapia DBT, TCC, ACT y PBT en Chile. Online y presencial.', canonical: 'https://www.dbtsalud.cl/', ogUrl: 'https://www.dbtsalud.cl/', ogImage: 'https://www.dbtsalud.cl/assets/og-image.jpg', keywords: 'terapia DBT, psicólogos Chile, TCC, ACT' };
     case 'luminous.header':
       return { title1: 'No necesitas tenerlo todo claro.', title2: 'A veces, solo hace falta tomar el primer paso.', subtitle1: 'Psicoterapia DBT basada en evidencia', subtitle2: 'Acompañamiento humano y profesional', cta1: 'Quiero comenzar terapia', cta2: 'Conoce el Programa DBT' };
     case 'luminous.about':
@@ -335,6 +341,20 @@ function defaultContent(key: string) {
       return { title: 'Terapias', items: [{ title: 'DBT', desc: 'Terapia dialéctico-conductual' }, { title: 'TCC', desc: 'Terapia cognitivo-conductual' }] };
     case 'luminous.services':
       return { title: 'Servicios', items: [{ title: 'Evaluaciones' }, { title: 'Sesiones Individuales' }] };
+    case 'luminous.process':
+      return { title: 'Nuestro proceso', steps: [
+        { title: 'Primer contacto', desc: 'Escríbenos por WhatsApp o correo.' },
+        { title: 'Cuestionario de ingreso', desc: 'Breve formulario para conocerte mejor.' },
+        { title: 'Primera sesión', desc: 'Exploramos tu historia y objetivos.' },
+        { title: 'Plan terapéutico', desc: 'Definimos tipo de terapia y frecuencia.' },
+      ] };
+    case 'luminous.team':
+      return { title: 'Conoce al equipo', members: [
+        { name: 'Karla González', role: 'Psicóloga clínica', bio: 'Formación en DBT, ACT y TCA.' },
+        { name: 'Daniel Henríquez', role: 'Psicólogo clínico', bio: 'Formación en DBT y TCC.' },
+      ] };
+    case 'luminous.contact':
+      return { title: 'Contacto directo', address: 'Almirante Pastene 185, Providencia, oficina 204', whatsapp: '+56 9 4989 7699', instagram: '@psi.karlagg', email: 'contacto@dbtsalud.cl', hours: { weekdays: 'Lun-Vie 10:00-19:00', saturday: 'Sáb 9:00-14:00', sunday: 'Domingo: Cerrado' } };
     case 'luminous.footer':
       return { text: '© 2025 DBT Salud' };
     default:
@@ -348,6 +368,16 @@ function Small({children}:{children:any}){return <div className="text-xs text-gr
 function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
   let data: any = {};
   try { data = JSON.parse(jsonText || '{}'); } catch { data = {}; }
+  if (k === 'luminous.seo') {
+    return (
+      <div className="space-y-2">
+        <Heading>SEO</Heading>
+        <Small>Título: {data.title}</Small>
+        <Small>Descripción: {data.description}</Small>
+        <Small>Canonical: {data.canonical}</Small>
+      </div>
+    );
+  }
   if (k === 'luminous.header') {
     return (
       <div className="h-full flex flex-col">
@@ -403,6 +433,47 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+  if (k === 'luminous.process') {
+    return (
+      <div>
+        <Heading>Proceso</Heading>
+        <ol className="space-y-2 list-decimal pl-5">
+          {(data.steps || []).map((s:any, idx:number) => (
+            <li key={idx}>
+              <div className="font-medium">{s.title}</div>
+              <Small>{s.desc}</Small>
+            </li>
+          ))}
+        </ol>
+      </div>
+    );
+  }
+  if (k === 'luminous.team') {
+    return (
+      <div>
+        <Heading>Equipo</Heading>
+        <div className="grid grid-cols-2 gap-3">
+          {(data.members || []).map((m:any, idx:number) => (
+            <div key={idx} className="border rounded-lg p-3 bg-white">
+              <div className="font-medium">{m.name}</div>
+              <Small>{m.role}</Small>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (k === 'luminous.contact') {
+    return (
+      <div>
+        <Heading>Contacto</Heading>
+        <Small>{data.address}</Small>
+        <Small>{data.whatsapp}</Small>
+        <Small>{data.instagram}</Small>
+        <Small>{data.email}</Small>
       </div>
     );
   }

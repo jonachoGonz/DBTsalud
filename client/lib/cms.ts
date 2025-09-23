@@ -43,7 +43,7 @@ export async function fetchContent<T = any>(key: string, locale: Locale): Promis
     .maybeSingle();
 
   if (error) {
-    console.error("fetchContent error", error);
+    console.error("fetchContent error", error?.message || JSON.stringify(error));
     return null;
   }
   return (data?.data as T) ?? null;
@@ -75,7 +75,7 @@ export async function fetchSiteSettings(): Promise<SiteSettings | null> {
     .limit(1)
     .maybeSingle();
   if (error) {
-    console.error("fetchSiteSettings error", error);
+    console.error("fetchSiteSettings error", error?.message || JSON.stringify(error));
     return null;
   }
   return (data as SiteSettings) ?? null;
@@ -88,6 +88,9 @@ export async function upsertSiteSettings(settings: Partial<SiteSettings>["theme"
 }
 
 export const SUPABASE_SCHEMA_SQL = `
+-- enable extension for uuid
+create extension if not exists pgcrypto;
+
 -- content entries table
 create table if not exists public.content_entries (
   id uuid primary key default gen_random_uuid(),
@@ -108,6 +111,20 @@ create table if not exists public.site_settings (
   ),
   updated_at timestamptz not null default now()
 );
+
+-- RLS and policies
+alter table public.content_entries enable row level security;
+alter table public.site_settings enable row level security;
+
+-- public read policies
+create policy if not exists public_read_content on public.content_entries for select using (true);
+create policy if not exists public_read_settings on public.site_settings for select using (true);
+
+-- temporary write policies (optional, can tighten later)
+create policy if not exists admin_write_content on public.content_entries for insert with check (true);
+create policy if not exists admin_update_content on public.content_entries for update using (true) with check (true);
+create policy if not exists admin_write_settings on public.site_settings for insert with check (true);
+create policy if not exists admin_update_settings on public.site_settings for update using (true) with check (true);
 
 -- helper to upsert settings (single row)
 create or replace function upsert_site_settings(payload jsonb)

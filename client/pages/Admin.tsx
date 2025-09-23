@@ -149,12 +149,13 @@ export default function Admin() {
 
         {tab === 'content' && (
           <section className="space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <label className="text-sm">Sección</label>
               <select value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)} className="border rounded-md px-3 py-2">
                 {availableKeys.map(k => <option key={k} value={k}>{k}</option>)}
               </select>
               <button onClick={() => setRawJson(JSON.stringify(defaultContent(selectedKey), null, 2))} className="px-3 py-2 border rounded-md">Cargar plantilla</button>
+              <button onClick={migrateFromLuminous} className="px-3 py-2 border rounded-md bg-stone-900 text-white">Migrar desde Luminous</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>

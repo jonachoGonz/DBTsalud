@@ -27,7 +27,7 @@ export default function Admin() {
 
   // styles state
   const [primary, setPrimary] = useState('#2e4c47');
-  const [secondary, setSecondary] = useState('#cbed e0');
+  const [secondary, setSecondary] = useState('#CBEDE0');
   const [fontFamily, setFontFamily] = useState('alegreya-sans, sans-serif');
   const [baseSize, setBaseSize] = useState(16);
   const [logoUrl, setLogoUrl] = useState('');

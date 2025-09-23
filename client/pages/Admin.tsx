@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { fetchContent, upsertContent, fetchSiteSettings, upsertSiteSettings, type Locale } from '@/lib/cms';
+import { fetchContent, upsertContent, fetchSiteSettings, upsertSiteSettings, listContentKeys, type Locale } from '@/lib/cms';
 import { applyTheme } from '@/lib/theme';
 import { autoTranslate } from '@/lib/translate';
 
@@ -8,19 +8,20 @@ const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'qpsych2025!';
 
 type Tab = 'content' | 'styles' | 'translate';
 
-const sectionKeys = [
-  'header.hero',
-  'about.section',
-  'therapies.section',
-  'services.section',
-  'footer.section'
+const defaultKeys = [
+  'luminous.header',
+  'luminous.about',
+  'luminous.therapies',
+  'luminous.services',
+  'luminous.footer'
 ];
 
 export default function Admin() {
   const [authed, setAuthed] = useState<boolean>(() => sessionStorage.getItem('adminAuthed') === '1');
   const [tab, setTab] = useState<Tab>('content');
   const [locale, setLocale] = useState<Locale>('es');
-  const [selectedKey, setSelectedKey] = useState<string>(sectionKeys[0]);
+  const [availableKeys, setAvailableKeys] = useState<string[]>(defaultKeys);
+  const [selectedKey, setSelectedKey] = useState<string>(defaultKeys[0]);
   const [content, setContent] = useState<any>({});
   const [rawJson, setRawJson] = useState<string>('{}');
   const [saving, setSaving] = useState(false);
@@ -35,6 +36,12 @@ export default function Admin() {
   useEffect(() => {
     if (!authed) return;
     loadSettings();
+    (async () => {
+      try {
+        const keys = await listContentKeys('luminous.');
+        if (keys.length) setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
+      } catch {}
+    })();
   }, [authed]);
 
   async function loadSettings() {
@@ -145,7 +152,7 @@ export default function Admin() {
             <div className="flex items-center gap-3">
               <label className="text-sm">Sección</label>
               <select value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)} className="border rounded-md px-3 py-2">
-                {sectionKeys.map(k => <option key={k} value={k}>{k}</option>)}
+                {availableKeys.map(k => <option key={k} value={k}>{k}</option>)}
               </select>
               <button onClick={() => setRawJson(JSON.stringify(defaultContent(selectedKey), null, 2))} className="px-3 py-2 border rounded-md">Cargar plantilla</button>
             </div>
@@ -159,7 +166,9 @@ export default function Admin() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Vista previa</label>
-                <pre className="w-full h-[460px] border rounded-md p-3 bg-gray-50 overflow-auto text-xs">{rawJson}</pre>
+                <div className="w-full h-[460px] border rounded-md p-3 bg-gray-50 overflow-auto text-xs">
+                  <ComponentPreview k={selectedKey} jsonText={rawJson} />
+                </div>
               </div>
             </div>
           </section>
@@ -220,19 +229,94 @@ export default function Admin() {
 
 function defaultContent(key: string) {
   switch (key) {
-    case 'header.hero':
-      return { title: 'No necesitas tenerlo todo claro.', cta: 'Quiero comenzar terapia' };
-    case 'about.section':
-      return { title: 'Nosotros', body: 'Creemos que cada persona tiene el potencial de sanar.' };
-    case 'therapies.section':
-      return { title: 'Terapias', items: [] };
-    case 'services.section':
-      return { title: 'Servicios', items: [] };
-    case 'footer.section':
-      return { text: '© 2025' };
+    case 'luminous.header':
+      return { title1: 'No necesitas tenerlo todo claro.', title2: 'A veces, solo hace falta tomar el primer paso.', subtitle1: 'Psicoterapia DBT basada en evidencia', subtitle2: 'Acompañamiento humano y profesional', cta1: 'Quiero comenzar terapia', cta2: 'Conoce el Programa DBT' };
+    case 'luminous.about':
+      return { title: 'Nosotros', body: 'Creemos que cada persona tiene el potencial de sanar.', linkText: 'Conócenos', linkUrl: '/#nosotros' };
+    case 'luminous.therapies':
+      return { title: 'Terapias', items: [{ title: 'DBT', desc: 'Terapia dialéctico-conductual' }, { title: 'TCC', desc: 'Terapia cognitivo-conductual' }] };
+    case 'luminous.services':
+      return { title: 'Servicios', items: [{ title: 'Evaluaciones' }, { title: 'Sesiones Individuales' }] };
+    case 'luminous.footer':
+      return { text: '© 2025 DBT Salud' };
     default:
       return {};
   }
+}
+
+function Heading({children}:{children:any}){return <div className="text-lg font-semibold mb-2">{children}</div>}
+function Small({children}:{children:any}){return <div className="text-xs text-gray-500">{children}</div>}
+
+function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
+  let data: any = {};
+  try { data = JSON.parse(jsonText || '{}'); } catch { data = {}; }
+  if (k === 'luminous.header') {
+    return (
+      <div className="h-full flex flex-col">
+        <Heading>Header</Heading>
+        <div className="relative flex-1 rounded-lg overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-stone-700 to-stone-900" />
+          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center p-6">
+            <div className="text-white text-3xl font-bold tk-alegreya">{data.title1}</div>
+            <div className="text-white text-2xl mt-2 tk-alegreya">{data.title2}</div>
+            <div className="mt-6 flex gap-3">
+              <span className="bg-white text-black rounded-full px-4 py-2 text-sm">{data.cta1}</span>
+              <span className="border border-white text-white rounded-full px-4 py-2 text-sm">{data.cta2}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (k === 'luminous.about') {
+    return (
+      <div>
+        <Heading>Nosotros</Heading>
+        <div className="bg-[rgb(253,251,245)] rounded-lg p-4">
+          <div className="text-xl font-medium mb-2 tk-alegreya">{data.title}</div>
+          <Small>{data.body}</Small>
+        </div>
+      </div>
+    );
+  }
+  if (k === 'luminous.therapies') {
+    return (
+      <div>
+        <Heading>Terapias</Heading>
+        <div className="grid grid-cols-2 gap-3">
+          {(data.items || []).slice(0,4).map((it:any,idx:number)=> (
+            <div key={idx} className="border rounded-lg p-3 bg-white">
+              <div className="font-medium">{it.title}</div>
+              <Small>{it.desc}</Small>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (k === 'luminous.services') {
+    return (
+      <div>
+        <Heading>Servicios</Heading>
+        <div className="grid grid-cols-2 gap-3">
+          {(data.items || []).slice(0,4).map((it:any,idx:number)=> (
+            <div key={idx} className="border rounded-lg p-3 bg-white">
+              <div className="font-medium">{it.title}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  if (k === 'luminous.footer') {
+    return (
+      <div>
+        <Heading>Footer</Heading>
+        <Small>{data.text}</Small>
+      </div>
+    );
+  }
+  return <pre className="text-[10px]">{jsonText}</pre>;
 }
 
 function TranslatorTool() {

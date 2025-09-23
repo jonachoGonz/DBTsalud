@@ -187,16 +187,24 @@ export default function Admin() {
 
     try {
       // Upsert ES
+      await upsertContent('luminous.seo', 'es', { title: 'Terapia DBT en Chile | DBT Salud', description: 'Psicoterapia DBT, TCC, ACT y PBT en Chile. Online y presencial.', canonical: 'https://www.dbtsalud.cl/', ogUrl: 'https://www.dbtsalud.cl/', ogImage: 'https://www.dbtsalud.cl/assets/og-image.jpg' });
       await upsertContent('luminous.header', 'es', es.header);
       await upsertContent('luminous.about', 'es', es.about);
       await upsertContent('luminous.therapies', 'es', es.therapies);
       await upsertContent('luminous.services', 'es', es.services);
+      await upsertContent('luminous.process', 'es', defaultContent('luminous.process'));
+      await upsertContent('luminous.team', 'es', defaultContent('luminous.team'));
+      await upsertContent('luminous.contact', 'es', defaultContent('luminous.contact'));
       await upsertContent('luminous.footer', 'es', es.footer);
       // Upsert EN
+      await upsertContent('luminous.seo', 'en', { title: 'DBT therapy in Chile | DBT Salud', description: 'DBT, CBT, ACT and PBT in Chile. Online and in-person.', canonical: 'https://www.dbtsalud.cl/', ogUrl: 'https://www.dbtsalud.cl/', ogImage: 'https://www.dbtsalud.cl/assets/og-image.jpg' });
       await upsertContent('luminous.header', 'en', en.header);
       await upsertContent('luminous.about', 'en', en.about);
       await upsertContent('luminous.therapies', 'en', en.therapies);
       await upsertContent('luminous.services', 'en', en.services);
+      await upsertContent('luminous.process', 'en', defaultContent('luminous.process'));
+      await upsertContent('luminous.team', 'en', defaultContent('luminous.team'));
+      await upsertContent('luminous.contact', 'en', defaultContent('luminous.contact'));
       await upsertContent('luminous.footer', 'en', en.footer);
 
       const keys = await listContentKeys('luminous.');

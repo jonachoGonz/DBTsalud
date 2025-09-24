@@ -35,18 +35,23 @@ export type SiteSettings = {
 
 // CONTENT
 export async function fetchContent<T = any>(key: string, locale: Locale): Promise<T | null> {
-  const { data, error } = await supabase
-    .from("content_entries")
-    .select("data")
-    .eq("key", key)
-    .eq("locale", locale)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabase
+      .from("content_entries")
+      .select("data")
+      .eq("key", key)
+      .eq("locale", locale)
+      .maybeSingle();
 
-  if (error) {
-    console.error("fetchContent error", error?.message || JSON.stringify(error));
+    if (error) {
+      console.error("fetchContent error", error?.message || JSON.stringify(error));
+      return null;
+    }
+    return (data?.data as T) ?? null;
+  } catch (e: any) {
+    console.error("fetchContent error", e?.message || e);
     return null;
   }
-  return (data?.data as T) ?? null;
 }
 
 export async function upsertContent<T = any>(key: string, locale: Locale, data: T) {
@@ -69,16 +74,21 @@ export async function listContentKeys(prefix?: string): Promise<string[]> {
 
 // SETTINGS
 export async function fetchSiteSettings(): Promise<SiteSettings | null> {
-  const { data, error } = await supabase
-    .from("site_settings")
-    .select("*")
-    .limit(1)
-    .maybeSingle();
-  if (error) {
-    console.error("fetchSiteSettings error", error?.message || JSON.stringify(error));
+  try {
+    const { data, error } = await supabase
+      .from("site_settings")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+    if (error) {
+      console.error("fetchSiteSettings error", error?.message || JSON.stringify(error));
+      return null;
+    }
+    return (data as SiteSettings) ?? null;
+  } catch (e: any) {
+    console.error("fetchSiteSettings error", e?.message || e);
     return null;
   }
-  return (data as SiteSettings) ?? null;
 }
 
 export async function upsertSiteSettings(settings: Partial<SiteSettings>["theme"]) {

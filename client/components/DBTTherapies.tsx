@@ -2,83 +2,31 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState, useEffect, useRef } from "react";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTTherapies() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: content } = useContent<any>("luminous.therapies", language);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const therapies = [
-    {
-      title: t("therapies.dbt.title"),
-      description: t("therapies.dbt.desc"),
-      color: "from-blue-500 to-blue-600",
-      icon: "🧠",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop",
-      altText: "DBT Therapy",
-      benefits: ["Mindfulness & Tolerancia", "Regulación Emocional"],
-      details: "La Terapia Dialéctico-Conductual es especialmente efectiva para crisis emocionales y relaciones interpersonales complejas.",
-      overlay: {
-        title: "Regulación Emocional: ÓPTIMA",
-        metrics: [
-          { label: "DBT", value: "95%" },
-          { label: "MIN", value: "8.5" },
-          { label: "TOL", value: "9.2" }
-        ]
-      }
-    },
-    {
-      title: t("therapies.tcc.title"),
-      description: t("therapies.tcc.desc"),
-      color: "from-green-500 to-green-600",
-      icon: "💭",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop",
-      altText: "TCC Therapy",
-      benefits: ["Reestructuración Cognitiva", "Activación Conductual", "Técnicas de Exposición"],
-      details: "La TCC te ayuda a identificar patrones de pensamiento y desarrollar estrategias prácticas para el cambio.",
-      overlay: {
-        type: "progress",
-        bars: [
-          { label: "Pensamientos Negativos", percentage: 84, status: "Óptimo" },
-          { label: "Reestructuración", percentage: 90, status: "Óptimo" }
-        ]
-      }
-    },
-    {
-      title: t("therapies.act.title"),
-      description: t("therapies.act.desc"),
-      color: "from-purple-500 to-purple-600",
-      icon: "🎯",
-      image: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=400&h=450&fit=crop",
-      altText: "ACT Therapy",
-      benefits: ["Aceptación Radical", "Clarificación de Valores", "Compromiso y Acción"],
-      details: "ACT te ayuda a aceptar las experiencias difíciles mientras te conectas con lo que realmente valoras en la vida.",
-      overlay: {
-        type: "values",
-        score: "8.9",
-        label: "Propósito",
-        directions: ["Valores Personales", "Aceptación", "Flexibilidad", "Compromiso"]
-      }
-    },
-    {
-      title: t("therapies.pbt.title"),
-      description: t("therapies.pbt.desc"),
-      color: "from-orange-500 to-orange-600",
-      icon: "🔄",
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=450&fit=crop",
-      altText: "PBT Therapy",
-      benefits: ["Procesos de Cambio Personalizados", "Flexibilidad Terapéutica", "Adaptación Continua"],
-      details: "La terapia basada en procesos se centra en los mecanismos específicos de cambio más que en protocolos rígidos.",
-      overlay: {
-        type: "comparison",
-        items: [
-          { label: "PROCESO ACTUAL", icon: "A", text: "Personalizado" },
-          { label: "PROCESO ESTÁNDAR", icon: "B", text: "Genérico" }
-        ]
-      }
-    },
-  ];
+  const therapies = (content?.items || []).map((it: any) => ({
+    title: it.title,
+    description: it.desc,
+    image: it.image,
+    altText: it.title,
+    benefits: [],
+    details: it.desc,
+    overlay: { title: it.title, metrics: [{ label: 'INFO', value: '' }] }
+  }));
+  if (!therapies.length) {
+    // fallback minimal items
+    therapies.push(
+      { title: t("therapies.dbt.title"), description: t("therapies.dbt.desc"), image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop", altText: 'DBT', benefits: [], details: t("therapies.dbt.desc"), overlay: { title: 'DBT', metrics: [{ label: 'INFO', value: '' }] } },
+      { title: t("therapies.tcc.title"), description: t("therapies.tcc.desc"), image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop", altText: 'CBT', benefits: [], details: t("therapies.tcc.desc"), overlay: { title: 'CBT', metrics: [{ label: 'INFO', value: '' }] } }
+    );
+  }
 
   // Auto-slide functionality
   useEffect(() => {
@@ -213,7 +161,7 @@ export default function DBTTherapies() {
         {/* Header Section */}
         <div className="flex flex-col items-center gap-2 text-center pt-[120px] mb-20">
           <h2 className="font-bold text-stone-700 text-5xl text-center transition-all duration-700 tk-alegreya">
-            {t("therapies.title")}
+            {content?.title || t("therapies.title")}
           </h2>
         </div>
 

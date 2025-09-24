@@ -285,7 +285,7 @@ export default function Admin() {
         )}
 
         {tab === 'styles' && (
-          <section className="space-y-6">
+          <section className="space-y-6 bg-white rounded-xl border shadow-sm p-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>

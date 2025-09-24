@@ -11,11 +11,16 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useContent } from "@/hooks/use-content";
 
 export default function Luminous() {
+  const { language } = useLanguage();
+  const { data: seo } = useContent<any>("luminous.seo", language);
   return (
     <div className="min-h-screen bg-white">
       <SEOHead
-        canonical="https://www.dbtsalud.cl/luminous"
-        ogUrl="https://www.dbtsalud.cl/luminous"
+        title={seo?.title}
+        description={seo?.description}
+        canonical={seo?.canonical || "https://www.dbtsalud.cl/"}
+        ogUrl={seo?.ogUrl || seo?.canonical}
+        ogImage={seo?.ogImage}
       />
       <DBTHeader />
       <DBTAbout />

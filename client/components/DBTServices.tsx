@@ -1,91 +1,344 @@
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Monitor, Users, User, FileText } from "lucide-react";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTServices() {
-  const { t } = useLanguage();
+  const { language } = useLanguage();
+  const { data: services } = useContent<any>("luminous.services", language);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const services = [
+  const slides = ((services?.items || [])
+    .slice(0, 3)
+    .map((s: any, idx: number) => ({
+      id: idx + 1,
+      title: s.title,
+      description: s.desc,
+      image:
+        s.image ||
+        "https://images.unsplash.com/photo-1520975682031-5cd7e05fbc6f?w=800&h=600&fit=crop",
+      overlay:
+        idx === 0
+          ? { title: s.title, subtitle: services?.subtitle || "", items: [] }
+          : idx === 1
+            ? { type: "age", age: "25" }
+            : { type: "plan" },
+    })) as any[]) || [
     {
-      icon: Users,
-      title: t("services.dbt.complete"),
-      description: t("services.dbt.complete.desc"),
-      color: "bg-blue-100 text-blue-800",
-      iconColor: "text-blue-600",
+      id: 1,
+      title: "Your health, quantified",
+      description:
+        "Get insights into your heart, hormones, metabolism, and more – know exactly what's happening across your whole body.",
+      image:
+        "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f766efbcbe63d20869_how-it-works-health.avif",
+      overlay: {
+        title: "Health score",
+        subtitle: "100+ markers",
+        items: [
+          {
+            icon: "A",
+            label: "Liver health",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "C",
+            label: "Skin & hair",
+            color: "bg-pink-500/20 border-pink-500/30",
+          },
+          {
+            icon: "A",
+            label: "Kidney",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "A",
+            label: "Nutrition",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "A",
+            label: "Metabolism",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "B",
+            label: "Toxin exposure",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "B",
+            label: "Heart",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "B",
+            label: "Stress",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "B",
+            label: "Sex hormones",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "A",
+            label: "Energy",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "B",
+            label: "Thyroid health",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "A",
+            label: "Brain health",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+        ],
+      },
     },
     {
-      icon: Monitor,
-      title: t("services.dbt.sud"),
-      description: t("services.dbt.sud.desc"),
-      color: "bg-green-100 text-green-800",
-      iconColor: "text-green-600",
+      id: 2,
+      title: "Your biological age, unlocked",
+      description:
+        "Chronological age is surface-level. Biological age reveals how fast or slow your body is really aging.",
+      image:
+        "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f8df9e00f24c4e2180_how-it-works-bio-age.avif",
+      overlay: {
+        type: "age",
+        age: "25",
+      },
     },
     {
-      icon: User,
-      title: t("services.individual"),
-      description: t("services.individual.desc"),
-      color: "bg-purple-100 text-purple-800",
-      iconColor: "text-purple-600",
-    },
-    {
-      icon: FileText,
-      title: t("services.evaluations"),
-      description: t("services.evaluations.desc"),
-      color: "bg-orange-100 text-orange-800",
-      iconColor: "text-orange-600",
+      id: 3,
+      title: "Next steps, simplified",
+      description:
+        "We've analyzed your lab results and have translated them to a clear plan. Built around your biology, goals, and what matters most.",
+      image:
+        "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f8d7089bca838d30d7_how-it-works-simplified.avif",
+      overlay: {
+        type: "plan",
+      },
     },
   ];
 
-  return (
-    <section id="servicios" className="py-20 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t("services.title")}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("services.subtitle")}
-          </p>
-        </div>
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          {services.map((service, index) => {
-            const IconComponent = service.icon;
-            return (
-              <Card
+  const goToPrevious = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const goToNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  useEffect(() => {
+    if (sliderRef.current) {
+      const slideWidth = sliderRef.current.children[0]?.clientWidth || 0;
+      sliderRef.current.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    }
+  }, [currentSlide]);
+
+  const renderOverlay = (slide: (typeof slides)[0]) => {
+    if (slide.overlay?.type === "age") {
+      return (
+        <div className="absolute bottom-0 left-0 right-0 -mt-[35%] flex justify-center z-10">
+          <div className="relative">
+            <img
+              src="https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/68889b79d1a5b7466ab894e3_superpower-bio-card.png"
+              alt="Bio age card"
+              className="rounded-[20.7px] h-[380px] shadow-[rgba(0,0,0,0.1)_-1px_6px_12px_0px,rgba(0,0,0,0.09)_-2px_22px_22px_0px,rgba(0,0,0,0.05)_-5px_50px_30px_0px,rgba(0,0,0,0.01)_-9px_88px_36px_0px]"
+            />
+            <div className="absolute top-[21.6941px] right-[30.9916px] text-[67.7941px] text-white font-bold leading-none">
+              {slide.overlay.age}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (slide.overlay?.type === "plan") {
+      return (
+        <div className="absolute bottom-0 left-0 right-0 -mt-[35%] flex justify-center z-10">
+          <img
+            src="https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/6873bd6a13db5127a736a18f_Content%20Container%20(1).avif"
+            alt="Plan overview"
+            className="rounded-[20.7px] h-[380px] shadow-[rgba(0,0,0,0.1)_-1px_6px_12px_0px,rgba(0,0,0,0.09)_-2px_22px_22px_0px,rgba(0,0,0,0.05)_-5px_50px_30px_0px,rgba(0,0,0,0.01)_-9px_88px_36px_0px]"
+          />
+        </div>
+      );
+    }
+
+    // Default health score overlay
+    return (
+      <div className="absolute bottom-0 left-0 right-0 -mt-[35%] flex justify-center z-10">
+        <div className="backdrop-blur-[100px] bg-[rgba(37,41,39,0.4)] rounded-[20.7px] p-[23.2437px] w-[400px] h-[380px] flex flex-col justify-between shadow-[rgba(0,0,0,0.1)_-1px_6px_12px_0px,rgba(0,0,0,0.09)_-2px_22px_22px_0px,rgba(0,0,0,0.05)_-5px_50px_30px_0px,rgba(0,0,0,0.01)_-9px_88px_36px_0px]">
+          <div className="flex justify-between items-center text-white">
+            <h4 className="text-[23.2437px] font-medium leading-[30.9141px] tracking-[-0.348655px]">
+              {slide.overlay.title}
+            </h4>
+            <div className="opacity-30">{slide.overlay.subtitle}</div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-[7.7479px] text-white">
+            {slide.overlay.items?.map((item, index) => (
+              <div
                 key={index}
-                className="hover:shadow-lg transition-shadow duration-300"
+                className={`flex items-center gap-[10px] bg-white/10 border border-white/20 rounded-full px-[5px] py-[5px] ${item.color}`}
               >
-                <CardHeader>
-                  <div className="flex items-start space-x-4">
-                    <div
-                      className={`w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center ${service.iconColor}`}
-                    >
-                      <IconComponent className="w-6 h-6" />
+                <div className="flex items-center justify-center h-[28px] w-[29px]">
+                  <div className="text-sm font-bold">{item.icon}</div>
+                </div>
+                <div className="text-sm">{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <section className="bg-white overflow-hidden relative">
+      <div className="px-[38.7395px] pr-[38.7395px]">
+        <div className="pb-[61.9832px] pt-[61.9832px] relative">
+          <div className="justify-center ml-auto mr-auto max-w-[1239.66px] w-full">
+            <div className="flex flex-col gap-0">
+              <div className="flex items-end gap-[77.479px] justify-between">
+                <div className="w-full">
+                  <div className="flex-grow">
+                    <div className="mb-[15.4958px]">
+                      <div className="font-['nb_international_mono_pro',arial,sans-serif] text-[13.5588px] tracking-[-0.309916px] leading-[20.3382px] opacity-60 uppercase">
+                        How it works
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-lg font-semibold text-gray-900 leading-tight">
-                        {service.title}
-                      </CardTitle>
+                    <div className="flex items-start justify-between">
+                      <div className="max-w-[991.731px] w-full">
+                        <div className="mb-[15.4958px]">
+                          <h2 className="text-[61.9832px] tracking-[-1.23966px] leading-[69.7311px]">
+                            {services?.title || "Nuestros servicios"}
+                          </h2>
+                        </div>
+                      </div>
+                      <div className="flex items-center flex-wrap gap-[15.4958px] justify-end">
+                        <a
+                          href="#"
+                          className="bg-[rgb(252,95,43)] rounded-full text-white cursor-pointer text-[19.3697px] tracking-[-0.242122px] leading-[27.1176px] px-[23.2437px] py-[15.4958px] text-center transition-all duration-200 hover:bg-[rgb(242,85,33)]"
+                        >
+                          Start testing
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 leading-relaxed">
-                    {service.description}
-                  </p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                </div>
+              </div>
 
-        <div className="text-center">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg rounded-full">
-            {t("services.cta")}
-          </Button>
+              <div className="ml-[-7.7479px] mr-[-7.7479px] mt-[38.7395px] relative touch-pan-y w-full z-10">
+                <div
+                  ref={sliderRef}
+                  className="flex gap-0 h-full relative transition-transform duration-300 ease-in-out z-10"
+                  style={{
+                    transform: `translateX(-${currentSlide * 619.484}px)`,
+                  }}
+                >
+                  {slides.map((slide, index) => (
+                    <div
+                      key={slide.id}
+                      className="flex items-center justify-center flex-shrink-0 px-[7.7479px] relative w-1/2 min-w-[526.857px]"
+                      role="group"
+                      aria-label={`${index + 1} / ${slides.length}`}
+                    >
+                      <div className="h-full relative w-full">
+                        <a
+                          href="#"
+                          className="cursor-pointer inline-block max-w-full min-w-[526.857px] relative w-full"
+                        >
+                          <div className="cursor-pointer w-full">
+                            <div className="cursor-pointer max-w-[309.916px] w-full">
+                              <div className="cursor-pointer mb-[7.7479px]">
+                                <div className="cursor-pointer font-['nb_international_mono_pro',arial,sans-serif] text-[13.5588px] tracking-[-0.309916px] leading-[20.3382px] opacity-60 uppercase">
+                                  [{index + 1}]
+                                </div>
+                              </div>
+                              <div className="cursor-pointer mb-[7.7479px]">
+                                <h4 className="cursor-pointer text-[23.2437px] tracking-[-0.348655px] leading-[30.9141px]">
+                                  {slide.title}
+                                </h4>
+                              </div>
+                              <div className="cursor-pointer flex justify-between mb-[30.9916px]">
+                                <div className="cursor-pointer">
+                                  {slide.description}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="cursor-pointer h-[311.466px] overflow-hidden relative w-full">
+                            <img
+                              alt=""
+                              src={slide.image}
+                              className="absolute bottom-0 cursor-pointer h-[311.466px] left-0 max-w-full object-cover right-0 top-0 w-full"
+                            />
+                          </div>
+
+                          {renderOverlay(slide)}
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center flex-wrap gap-[30.9916px] justify-between mt-[61.9832px]">
+                <div className="flex items-stretch flex-wrap gap-[15.4958px] justify-center w-full">
+                  {/* Previous Button */}
+                  <div className="cursor-pointer" onClick={goToPrevious}>
+                    <a
+                      href="#"
+                      className="flex items-center bg-[rgba(0,0,0,0.05)] rounded-full cursor-pointer h-[46.4874px] justify-center max-w-full transition-colors duration-300 hover:bg-[rgba(0,0,0,0.1)] w-[46.4874px]"
+                    >
+                      <ChevronLeft className="h-[23.2437px] w-[23.2437px]" />
+                    </a>
+                  </div>
+
+                  {/* Slide Indicators */}
+                  <div className="flex items-center bg-[rgba(0,0,0,0.05)] rounded-full gap-[7.7479px] justify-start px-[23.2437px] py-[15.4958px]">
+                    {slides.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => goToSlide(index)}
+                        className={`w-[7.7479px] h-[7.7479px] rounded-full cursor-pointer text-center transition-colors duration-300 ${
+                          index === currentSlide
+                            ? "bg-black"
+                            : "bg-[rgba(0,0,0,0.25)] hover:bg-[rgba(0,0,0,0.4)]"
+                        }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                        aria-current={
+                          index === currentSlide ? "true" : undefined
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  {/* Next Button */}
+                  <div
+                    className={`cursor-pointer ${currentSlide === slides.length - 1 ? "opacity-25 pointer-events-none" : ""}`}
+                    onClick={
+                      currentSlide < slides.length - 1 ? goToNext : undefined
+                    }
+                  >
+                    <div className="flex items-center bg-[rgba(0,0,0,0.05)] rounded-full cursor-pointer h-[46.4874px] justify-center transition-colors duration-300 hover:bg-[rgba(0,0,0,0.1)] w-[46.4874px]">
+                      <ChevronRight className="h-[23.2437px] w-[23.2437px]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

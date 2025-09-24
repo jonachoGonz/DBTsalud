@@ -1,27 +1,25 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { MapPin, MessageCircle, Instagram, Phone } from "lucide-react";
+import { MessageCircle, Instagram, MapPin } from "lucide-react";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTContact() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: contact } = useContent<any>("luminous.contact", language);
 
   const contactInfo = [
     {
       icon: MapPin,
-      title: t("contact.address"),
+      title: contact?.address || t("contact.address"),
       color: "text-blue-600",
     },
     {
       icon: MessageCircle,
-      title: t("contact.whatsapp"),
+      title: contact?.whatsapp || t("contact.whatsapp"),
       color: "text-green-600",
     },
     {
       icon: Instagram,
-      title: t("contact.instagram"),
+      title: contact?.instagram || t("contact.instagram"),
       color: "text-pink-600",
     },
   ];
@@ -31,7 +29,7 @@ export default function DBTContact() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t("contact.title")}
+            {contact?.title || t("contact.title")}
           </h2>
         </div>
 
@@ -48,7 +46,9 @@ export default function DBTContact() {
                     <IconComponent className="w-8 h-8" />
                   </div>
                   <div>
-                    <p className="text-lg text-gray-700 font-medium">{info.title}</p>
+                    <p className="text-lg text-gray-700 font-medium">
+                      {info.title}
+                    </p>
                   </div>
                 </div>
               );
@@ -61,9 +61,9 @@ export default function DBTContact() {
               {t("contact.hours.title")}
             </h3>
             <div className="space-y-2 text-gray-600">
-              <p>{t("contact.hours.weekdays")}</p>
-              <p>{t("contact.hours.saturday")}</p>
-              <p>{t("contact.hours.sunday")}</p>
+              <p>{contact?.hours?.weekdays || t("contact.hours.weekdays")}</p>
+              <p>{contact?.hours?.saturday || t("contact.hours.saturday")}</p>
+              <p>{contact?.hours?.sunday || t("contact.hours.sunday")}</p>
             </div>
           </div>
 

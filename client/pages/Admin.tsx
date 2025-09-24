@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import JsonFormEditor from '@/components/admin/JsonFormEditor';
 import { fetchContent, upsertContent, fetchSiteSettings, upsertSiteSettings, listContentKeys, type Locale } from '@/lib/cms';
 import { applyTheme } from '@/lib/theme';
 import { autoTranslate } from '@/lib/translate';
@@ -29,6 +30,7 @@ export default function Admin() {
   const [content, setContent] = useState<any>({});
   const [rawJson, setRawJson] = useState<string>('{}');
   const [saving, setSaving] = useState(false);
+  const [editorMode, setEditorMode] = useState<'json'|'form'>('json');
 
   // styles state
   const [primary, setPrimary] = useState('#2e4c47');
@@ -268,8 +270,20 @@ export default function Admin() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium mb-1">JSON ({locale})</label>
-                <textarea value={rawJson} onChange={(e) => setRawJson(e.target.value)} className="w-full h-[460px] border rounded-md p-3 font-mono text-sm" />
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-sm font-medium">Editor ({locale})</label>
+                  <div className="inline-flex border rounded-md overflow-hidden">
+                    <button onClick={() => setEditorMode('json')} className={`px-3 py-1 text-sm ${editorMode==='json' ? 'bg-stone-900 text-white' : 'bg-white'}`}>JSON</button>
+                    <button onClick={() => setEditorMode('form')} className={`px-3 py-1 text-sm ${editorMode==='form' ? 'bg-stone-900 text-white' : 'bg-white'}`}>Formulario</button>
+                  </div>
+                </div>
+                {editorMode === 'json' ? (
+                  <textarea value={rawJson} onChange={(e) => setRawJson(e.target.value)} className="w-full h-[460px] border rounded-md p-3 font-mono text-sm" />
+                ) : (
+                  <div className="w-full h-[460px] border rounded-md p-3 bg-gray-50 overflow-auto">
+                    <JsonFormEditor jsonText={rawJson} onChangeJsonText={setRawJson} />
+                  </div>
+                )}
                 <div className="mt-3 flex gap-2">
                   <button disabled={saving} onClick={handleSaveContent} className="px-4 py-2 bg-stone-900 text-white rounded-md">Guardar</button>
                 </div>

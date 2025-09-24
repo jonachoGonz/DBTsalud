@@ -5,6 +5,8 @@ export type AdminNavKey = 'content' | 'styles' | 'translate';
 
 type NavItem = { key: AdminNavKey; label: string; icon: React.ReactNode };
 
+type SubItem = { key: string; label: string; active?: boolean; onClick?: () => void };
+
 const NAV_ITEMS: NavItem[] = [
   { key: 'content', label: 'Contenido', icon: <FileText size={16} /> },
   { key: 'styles', label: 'Estilos', icon: <Palette size={16} /> },
@@ -16,10 +18,11 @@ type Props = {
   onChange: (key: AdminNavKey) => void;
   locale: 'es' | 'en';
   onLocaleChange: (loc: 'es' | 'en') => void;
+  subItems?: SubItem[];
   children: React.ReactNode;
 };
 
-export default function AdminLayout({ active, onChange, locale, onLocaleChange, children }: Props) {
+export default function AdminLayout({ active, onChange, locale, onLocaleChange, subItems, children }: Props) {
   return (
     <div className="min-h-screen bg-gray-100 flex">
       <aside className="hidden md:flex w-64 shrink-0 flex-col border-r bg-white">
@@ -29,16 +32,31 @@ export default function AdminLayout({ active, onChange, locale, onLocaleChange, 
         </div>
         <nav className="p-3 space-y-1">
           {NAV_ITEMS.map((it) => (
-            <button
-              key={it.key}
-              onClick={() => onChange(it.key)}
-              className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm border ${
-                active === it.key ? 'bg-stone-900 text-white border-stone-900' : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              {it.icon}
-              <span>{it.label}</span>
-            </button>
+            <div key={it.key} className="space-y-1">
+              <button
+                onClick={() => onChange(it.key)}
+                className={`w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm border ${
+                  active === it.key ? 'bg-stone-900 text-white border-stone-900' : 'bg-white hover:bg-gray-50'
+                }`}
+              >
+                {it.icon}
+                <span>{it.label}</span>
+              </button>
+              {active === 'content' && it.key === 'content' && subItems && subItems.length > 0 && (
+                <div className="ml-2 pl-2 border-l space-y-1">
+                  <div className="px-2 pt-2 text-[10px] uppercase tracking-wide text-gray-500">Secciones</div>
+                  {subItems.map(si => (
+                    <button
+                      key={si.key}
+                      onClick={si.onClick}
+                      className={`w-full text-left px-3 py-1.5 rounded-md text-sm ${si.active ? 'bg-[rgb(236,243,255)] text-[rgb(70,95,255)]' : 'hover:bg-gray-50'}`}
+                    >
+                      {si.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
       </aside>

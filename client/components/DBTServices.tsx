@@ -1,11 +1,21 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTServices() {
+  const { language } = useLanguage();
+  const { data: services } = useContent<any>("luminous.services", language);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const slides = [
+  const slides = (services?.items || []).slice(0,3).map((s:any, idx:number) => ({
+    id: idx + 1,
+    title: s.title,
+    description: s.desc,
+    image: s.image || "https://images.unsplash.com/photo-1520975682031-5cd7e05fbc6f?w=800&h=600&fit=crop",
+    overlay: idx === 0 ? { title: s.title, subtitle: services?.subtitle || '', items: [] } : idx === 1 ? { type: 'age', age: '25' } : { type: 'plan' }
+  })) as any[] || [
     {
       id: 1,
       title: "Your health, quantified",

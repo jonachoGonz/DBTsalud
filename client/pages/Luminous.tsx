@@ -7,6 +7,8 @@ import DBTTeam from "@/components/DBTTeam";
 import DBTContact from "@/components/DBTContact";
 import DBTFooter from "@/components/DBTFooter";
 import SEOHead from "@/components/SEOHead";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useContent } from "@/hooks/use-content";
 
 export default function Luminous() {
   return (

@@ -1,33 +1,33 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTTeam() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: teamData } = useContent<any>("luminous.team", language);
 
-  const team = [
+  const team = (teamData?.members || [
     {
       name: t("team.karla.name"),
       description: t("team.karla.desc"),
-      image:
-        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
       specialties: ["DBT", "TCA", "ACT"],
     },
     {
       name: t("team.daniel.name"),
       description: t("team.daniel.desc"),
-      image:
-        "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
       specialties: ["DBT", "TCC", "Psicopatología"],
     },
-  ];
+  ]);
 
   return (
     <section id="equipo" className="py-20 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t("team.title")}
+            {teamData?.title || t("team.title")}
           </h2>
         </div>
 
@@ -51,7 +51,7 @@ export default function DBTTeam() {
                     {member.description}
                   </p>
                   <div className="flex flex-wrap justify-center gap-2">
-                    {member.specialties.map((specialty, specIndex) => (
+                    {member.specialties?.map((specialty: string, specIndex: number) => (
                       <span
                         key={specIndex}
                         className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"

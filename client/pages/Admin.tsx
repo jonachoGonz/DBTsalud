@@ -328,7 +328,7 @@ export default function Admin() {
         )}
 
         {tab === 'translate' && (
-          <section className="space-y-4">
+          <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
             <TranslatorTool />
           </section>
         )}

@@ -7,20 +7,22 @@ export default function DBTTeam() {
   const { t, language } = useLanguage();
   const { data: teamData } = useContent<any>("luminous.team", language);
 
-  const team = (teamData?.members || [
+  const team = teamData?.members || [
     {
       name: t("team.karla.name"),
       description: t("team.karla.desc"),
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
+      image:
+        "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
       specialties: ["DBT", "TCA", "ACT"],
     },
     {
       name: t("team.daniel.name"),
       description: t("team.daniel.desc"),
-      image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
+      image:
+        "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=400&fit=crop&crop=face",
       specialties: ["DBT", "TCC", "Psicopatología"],
     },
-  ]);
+  ];
 
   return (
     <section id="equipo" className="py-20 bg-white">
@@ -51,14 +53,16 @@ export default function DBTTeam() {
                     {member.description}
                   </p>
                   <div className="flex flex-wrap justify-center gap-2">
-                    {member.specialties?.map((specialty: string, specIndex: number) => (
-                      <span
-                        key={specIndex}
-                        className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
-                      >
-                        {specialty}
-                      </span>
-                    ))}
+                    {member.specialties?.map(
+                      (specialty: string, specIndex: number) => (
+                        <span
+                          key={specIndex}
+                          className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+                        >
+                          {specialty}
+                        </span>
+                      ),
+                    )}
                   </div>
                 </div>
                 <Button

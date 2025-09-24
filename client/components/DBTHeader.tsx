@@ -82,7 +82,6 @@ export default function DBTHeader() {
                 >
                   {language === "es" ? "EN" : "ES"}
                 </div>
-                
               </div>
 
               {/* CTA Button */}
@@ -184,7 +183,7 @@ export default function DBTHeader() {
 
         {/* Content */}
         <div className="flex flex-col items-center justify-end text-center max-w-6xl mx-auto px-6">
-          <h1 className="text-white font-bold text-5xl md:text-6xl leading-tight text-center mb-5 tk-alegreya" >
+          <h1 className="text-white font-bold text-5xl md:text-6xl leading-tight text-center mb-5 tk-alegreya">
             {header?.title1 || t("hero.title1")}
             <br />
             {header?.title2 || t("hero.title2")}

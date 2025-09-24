@@ -18,13 +18,31 @@ export default function DBTTherapies() {
     altText: it.title,
     benefits: [],
     details: it.desc,
-    overlay: { title: it.title, metrics: [{ label: 'INFO', value: '' }] }
+    overlay: { title: it.title, metrics: [{ label: "INFO", value: "" }] },
   }));
   if (!therapies.length) {
     // fallback minimal items
     therapies.push(
-      { title: t("therapies.dbt.title"), description: t("therapies.dbt.desc"), image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop", altText: 'DBT', benefits: [], details: t("therapies.dbt.desc"), overlay: { title: 'DBT', metrics: [{ label: 'INFO', value: '' }] } },
-      { title: t("therapies.tcc.title"), description: t("therapies.tcc.desc"), image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop", altText: 'CBT', benefits: [], details: t("therapies.tcc.desc"), overlay: { title: 'CBT', metrics: [{ label: 'INFO', value: '' }] } }
+      {
+        title: t("therapies.dbt.title"),
+        description: t("therapies.dbt.desc"),
+        image:
+          "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=450&fit=crop",
+        altText: "DBT",
+        benefits: [],
+        details: t("therapies.dbt.desc"),
+        overlay: { title: "DBT", metrics: [{ label: "INFO", value: "" }] },
+      },
+      {
+        title: t("therapies.tcc.title"),
+        description: t("therapies.tcc.desc"),
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=450&fit=crop",
+        altText: "CBT",
+        benefits: [],
+        details: t("therapies.tcc.desc"),
+        overlay: { title: "CBT", metrics: [{ label: "INFO", value: "" }] },
+      },
     );
   }
 
@@ -73,26 +91,40 @@ export default function DBTTherapies() {
     }
   }, [currentSlide]);
 
-  const renderOverlay = (therapy: typeof therapies[0]) => {
+  const renderOverlay = (therapy: (typeof therapies)[0]) => {
     if (therapy.overlay.type === "progress") {
       return (
         <>
           <div className="absolute bottom-[104px] left-[40px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[250px]">
             <div className="flex justify-between items-center mb-3">
-              <div className="text-xs uppercase text-[rgb(252,248,241)] font-mono">{therapy.overlay.bars?.[0].label}</div>
-              <div className="text-xs text-[rgb(252,248,241)] font-mono">{therapy.overlay.bars?.[0].status}</div>
+              <div className="text-xs uppercase text-[rgb(252,248,241)] font-mono">
+                {therapy.overlay.bars?.[0].label}
+              </div>
+              <div className="text-xs text-[rgb(252,248,241)] font-mono">
+                {therapy.overlay.bars?.[0].status}
+              </div>
             </div>
             <div className="bg-white/40 rounded h-[3px] w-full">
-              <div className="bg-[rgb(252,248,241)] rounded h-full" style={{ width: `${therapy.overlay.bars?.[0].percentage}%` }}></div>
+              <div
+                className="bg-[rgb(252,248,241)] rounded h-full"
+                style={{ width: `${therapy.overlay.bars?.[0].percentage}%` }}
+              ></div>
             </div>
           </div>
           <div className="absolute bottom-[40px] left-[40px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[250px]">
             <div className="flex justify-between items-center mb-3">
-              <div className="text-xs uppercase text-[rgb(252,248,241)] font-mono">{therapy.overlay.bars?.[1].label}</div>
-              <div className="text-xs text-[rgb(252,248,241)] font-mono">{therapy.overlay.bars?.[1].status}</div>
+              <div className="text-xs uppercase text-[rgb(252,248,241)] font-mono">
+                {therapy.overlay.bars?.[1].label}
+              </div>
+              <div className="text-xs text-[rgb(252,248,241)] font-mono">
+                {therapy.overlay.bars?.[1].status}
+              </div>
             </div>
             <div className="bg-white/40 rounded h-[3px] w-full">
-              <div className="bg-[rgb(252,248,241)] rounded h-full" style={{ width: `${therapy.overlay.bars?.[1].percentage}%` }}></div>
+              <div
+                className="bg-[rgb(252,248,241)] rounded h-full"
+                style={{ width: `${therapy.overlay.bars?.[1].percentage}%` }}
+              ></div>
             </div>
           </div>
         </>
@@ -103,13 +135,25 @@ export default function DBTTherapies() {
       return (
         <div className="absolute bottom-[30px] left-[30px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[240px] flex flex-col gap-2">
           <div className="flex items-center justify-center h-full relative">
-            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono top-0">{therapy.overlay.directions?.[0]}</div>
-            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono left-0">{therapy.overlay.directions?.[1]}</div>
-            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono right-0 max-w-[62px]">{therapy.overlay.directions?.[2]}</div>
-            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono bottom-0">{therapy.overlay.directions?.[3]}</div>
+            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono top-0">
+              {therapy.overlay.directions?.[0]}
+            </div>
+            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono left-0">
+              {therapy.overlay.directions?.[1]}
+            </div>
+            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono right-0 max-w-[62px]">
+              {therapy.overlay.directions?.[2]}
+            </div>
+            <div className="absolute text-xs uppercase text-[rgb(252,248,241)] font-mono bottom-0">
+              {therapy.overlay.directions?.[3]}
+            </div>
             <div className="flex flex-col items-center">
-              <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)]">{therapy.overlay.score}</div>
-              <div className="text-base font-medium text-[rgb(252,248,241)]">{therapy.overlay.label}</div>
+              <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)]">
+                {therapy.overlay.score}
+              </div>
+              <div className="text-base font-medium text-[rgb(252,248,241)]">
+                {therapy.overlay.label}
+              </div>
             </div>
           </div>
         </div>
@@ -120,17 +164,29 @@ export default function DBTTherapies() {
       return (
         <div className="absolute bottom-[30px] left-[30px] backdrop-blur-[30px] bg-white/17 rounded-lg p-4 w-[250px] h-[96px] flex justify-between">
           <div className="flex flex-col justify-between">
-            <div className="text-[10px] leading-3 text-[rgb(252,248,241)] font-mono">{therapy.overlay.items?.[0].label}</div>
+            <div className="text-[10px] leading-3 text-[rgb(252,248,241)] font-mono">
+              {therapy.overlay.items?.[0].label}
+            </div>
             <div className="flex items-end gap-1">
-              <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)] min-w-[30px]">{therapy.overlay.items?.[0].icon}</div>
-              <div className="text-base font-medium text-[rgb(252,248,241)]">{therapy.overlay.items?.[0].text}</div>
+              <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)] min-w-[30px]">
+                {therapy.overlay.items?.[0].icon}
+              </div>
+              <div className="text-base font-medium text-[rgb(252,248,241)]">
+                {therapy.overlay.items?.[0].text}
+              </div>
             </div>
           </div>
           <div className="flex flex-col justify-between">
-            <div className="text-[10px] leading-3 text-[rgb(252,248,241)] font-mono">{therapy.overlay.items?.[1].label}</div>
+            <div className="text-[10px] leading-3 text-[rgb(252,248,241)] font-mono">
+              {therapy.overlay.items?.[1].label}
+            </div>
             <div className="flex items-end gap-1">
-              <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)] min-w-[30px]">{therapy.overlay.items?.[1].icon}</div>
-              <div className="text-base font-medium text-[rgb(252,248,241)]">{therapy.overlay.items?.[1].text}</div>
+              <div className="text-[26px] leading-[28.6px] text-[rgb(252,248,241)] min-w-[30px]">
+                {therapy.overlay.items?.[1].icon}
+              </div>
+              <div className="text-base font-medium text-[rgb(252,248,241)]">
+                {therapy.overlay.items?.[1].text}
+              </div>
             </div>
           </div>
         </div>
@@ -146,8 +202,12 @@ export default function DBTTherapies() {
         <div className="flex gap-[26px]">
           {therapy.overlay.metrics?.map((metric, index) => (
             <div key={index} className="flex flex-col gap-[1.6px] w-[53px]">
-              <div className="text-xs text-[rgb(252,248,241)] font-mono">{metric.label}</div>
-              <div className="text-[13.5px] font-medium text-[rgb(252,248,241)]">{metric.value}</div>
+              <div className="text-xs text-[rgb(252,248,241)] font-mono">
+                {metric.label}
+              </div>
+              <div className="text-[13.5px] font-medium text-[rgb(252,248,241)]">
+                {metric.value}
+              </div>
             </div>
           ))}
         </div>
@@ -174,13 +234,15 @@ export default function DBTTherapies() {
               style={{ width: `${therapies.length * 100}%` }}
             >
               {therapies.map((therapy, index) => (
-                <div
-                  key={index}
-                  className="w-full flex-shrink-0"
-                >
+                <div key={index} className="w-full flex-shrink-0">
                   <div className="bg-[rgb(242,236,226)] rounded-[40px] flex h-[450px] max-w-full cursor-pointer transition-all duration-700 hover:shadow-lg">
-                    <div className="relative w-[400px] flex-shrink-0 overflow-hidden rounded-[40px]"
-                         style={{ backgroundImage: `url("${therapy.image}")`, backgroundPosition: '0px 0px' }}>
+                    <div
+                      className="relative w-[400px] flex-shrink-0 overflow-hidden rounded-[40px]"
+                      style={{
+                        backgroundImage: `url("${therapy.image}")`,
+                        backgroundPosition: "0px 0px",
+                      }}
+                    >
                       <img
                         src={therapy.image}
                         alt={therapy.altText}
@@ -193,8 +255,13 @@ export default function DBTTherapies() {
 
                     <div className="flex flex-col justify-between flex-1 px-[40px] py-[40px]">
                       <div className="flex flex-col gap-3 pr-[60px]">
-                        <h3 className="text-[36px] font-medium leading-[39.6px]"
-                            style={{ fontFamily: '"saans trial", sans-serif', letterSpacing: '-0.36px' }}>
+                        <h3
+                          className="text-[36px] font-medium leading-[39.6px]"
+                          style={{
+                            fontFamily: '"saans trial", sans-serif',
+                            letterSpacing: "-0.36px",
+                          }}
+                        >
                           {therapy.title}
                         </h3>
                         <p className="text-base leading-[22.4px] text-gray-700">
@@ -208,7 +275,10 @@ export default function DBTTherapies() {
                         </p>
                         <div className="flex gap-[10px]">
                           {therapy.benefits.map((benefit, benefitIndex) => (
-                            <div key={benefitIndex} className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8">
+                            <div
+                              key={benefitIndex}
+                              className="flex-1 border border-gray-200 rounded-xl h-[78px] p-[14px] pb-8"
+                            >
                               <div className="text-[13.5px] leading-[17.55px] text-gray-700">
                                 {benefit}
                               </div>
@@ -282,8 +352,8 @@ export default function DBTTherapies() {
                 }}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? 'bg-gray-800'
-                    : 'bg-gray-300 hover:bg-gray-400'
+                    ? "bg-gray-800"
+                    : "bg-gray-300 hover:bg-gray-400"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

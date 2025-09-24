@@ -12,7 +12,9 @@ export default function DBTFooter() {
           {/* Logo and Description */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold">DBT Salud</h3>
-            <p className="text-gray-300 leading-relaxed">{footer?.quote || t("footer.quote")}</p>
+            <p className="text-gray-300 leading-relaxed">
+              {footer?.quote || t("footer.quote")}
+            </p>
           </div>
 
           {/* Navigation Links */}

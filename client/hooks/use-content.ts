@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { fetchContent, type Locale } from '@/lib/cms';
+import { useEffect, useState } from "react";
+import { fetchContent, type Locale } from "@/lib/cms";
 
 export function useContent<T = any>(key: string, locale: Locale, initial?: T) {
   const [data, setData] = useState<T | null>(initial ?? null);
@@ -14,7 +14,7 @@ export function useContent<T = any>(key: string, locale: Locale, initial?: T) {
         if (!mounted) return;
         setData((d as T) ?? (initial as T) ?? null);
       })
-      .catch((e) => mounted && setError(e?.message || 'error'))
+      .catch((e) => mounted && setError(e?.message || "error"))
       .finally(() => mounted && setLoading(false));
     return () => {
       mounted = false;

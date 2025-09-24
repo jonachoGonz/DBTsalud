@@ -9,56 +9,119 @@ export default function DBTServices() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const slides = (services?.items || []).slice(0,3).map((s:any, idx:number) => ({
-    id: idx + 1,
-    title: s.title,
-    description: s.desc,
-    image: s.image || "https://images.unsplash.com/photo-1520975682031-5cd7e05fbc6f?w=800&h=600&fit=crop",
-    overlay: idx === 0 ? { title: s.title, subtitle: services?.subtitle || '', items: [] } : idx === 1 ? { type: 'age', age: '25' } : { type: 'plan' }
-  })) as any[] || [
+  const slides = ((services?.items || [])
+    .slice(0, 3)
+    .map((s: any, idx: number) => ({
+      id: idx + 1,
+      title: s.title,
+      description: s.desc,
+      image:
+        s.image ||
+        "https://images.unsplash.com/photo-1520975682031-5cd7e05fbc6f?w=800&h=600&fit=crop",
+      overlay:
+        idx === 0
+          ? { title: s.title, subtitle: services?.subtitle || "", items: [] }
+          : idx === 1
+            ? { type: "age", age: "25" }
+            : { type: "plan" },
+    })) as any[]) || [
     {
       id: 1,
       title: "Your health, quantified",
-      description: "Get insights into your heart, hormones, metabolism, and more – know exactly what's happening across your whole body.",
-      image: "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f766efbcbe63d20869_how-it-works-health.avif",
+      description:
+        "Get insights into your heart, hormones, metabolism, and more – know exactly what's happening across your whole body.",
+      image:
+        "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f766efbcbe63d20869_how-it-works-health.avif",
       overlay: {
         title: "Health score",
         subtitle: "100+ markers",
         items: [
-          { icon: "A", label: "Liver health", color: "bg-green-500/20 border-green-500/30" },
-          { icon: "C", label: "Skin & hair", color: "bg-pink-500/20 border-pink-500/30" },
-          { icon: "A", label: "Kidney", color: "bg-green-500/20 border-green-500/30" },
-          { icon: "A", label: "Nutrition", color: "bg-green-500/20 border-green-500/30" },
-          { icon: "A", label: "Metabolism", color: "bg-green-500/20 border-green-500/30" },
-          { icon: "B", label: "Toxin exposure", color: "bg-yellow-500/20 border-yellow-500/30" },
-          { icon: "B", label: "Heart", color: "bg-yellow-500/20 border-yellow-500/30" },
-          { icon: "B", label: "Stress", color: "bg-yellow-500/20 border-yellow-500/30" },
-          { icon: "B", label: "Sex hormones", color: "bg-yellow-500/20 border-yellow-500/30" },
-          { icon: "A", label: "Energy", color: "bg-green-500/20 border-green-500/30" },
-          { icon: "B", label: "Thyroid health", color: "bg-yellow-500/20 border-yellow-500/30" },
-          { icon: "A", label: "Brain health", color: "bg-green-500/20 border-green-500/30" },
-        ]
-      }
+          {
+            icon: "A",
+            label: "Liver health",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "C",
+            label: "Skin & hair",
+            color: "bg-pink-500/20 border-pink-500/30",
+          },
+          {
+            icon: "A",
+            label: "Kidney",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "A",
+            label: "Nutrition",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "A",
+            label: "Metabolism",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "B",
+            label: "Toxin exposure",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "B",
+            label: "Heart",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "B",
+            label: "Stress",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "B",
+            label: "Sex hormones",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "A",
+            label: "Energy",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+          {
+            icon: "B",
+            label: "Thyroid health",
+            color: "bg-yellow-500/20 border-yellow-500/30",
+          },
+          {
+            icon: "A",
+            label: "Brain health",
+            color: "bg-green-500/20 border-green-500/30",
+          },
+        ],
+      },
     },
     {
       id: 2,
       title: "Your biological age, unlocked",
-      description: "Chronological age is surface-level. Biological age reveals how fast or slow your body is really aging.",
-      image: "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f8df9e00f24c4e2180_how-it-works-bio-age.avif",
+      description:
+        "Chronological age is surface-level. Biological age reveals how fast or slow your body is really aging.",
+      image:
+        "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f8df9e00f24c4e2180_how-it-works-bio-age.avif",
       overlay: {
         type: "age",
-        age: "25"
-      }
+        age: "25",
+      },
     },
     {
       id: 3,
       title: "Next steps, simplified",
-      description: "We've analyzed your lab results and have translated them to a clear plan. Built around your biology, goals, and what matters most.",
-      image: "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f8d7089bca838d30d7_how-it-works-simplified.avif",
+      description:
+        "We've analyzed your lab results and have translated them to a clear plan. Built around your biology, goals, and what matters most.",
+      image:
+        "https://cdn.prod.website-files.com/63792ff4f3d6aa3d62071b61/687840f8d7089bca838d30d7_how-it-works-simplified.avif",
       overlay: {
-        type: "plan"
-      }
-    }
+        type: "plan",
+      },
+    },
   ];
 
   const goToSlide = (index: number) => {
@@ -80,7 +143,7 @@ export default function DBTServices() {
     }
   }, [currentSlide]);
 
-  const renderOverlay = (slide: typeof slides[0]) => {
+  const renderOverlay = (slide: (typeof slides)[0]) => {
     if (slide.overlay?.type === "age") {
       return (
         <div className="absolute bottom-0 left-0 right-0 -mt-[35%] flex justify-center z-10">
@@ -118,14 +181,15 @@ export default function DBTServices() {
             <h4 className="text-[23.2437px] font-medium leading-[30.9141px] tracking-[-0.348655px]">
               {slide.overlay.title}
             </h4>
-            <div className="opacity-30">
-              {slide.overlay.subtitle}
-            </div>
+            <div className="opacity-30">{slide.overlay.subtitle}</div>
           </div>
 
           <div className="grid grid-cols-2 gap-[7.7479px] text-white">
             {slide.overlay.items?.map((item, index) => (
-              <div key={index} className={`flex items-center gap-[10px] bg-white/10 border border-white/20 rounded-full px-[5px] py-[5px] ${item.color}`}>
+              <div
+                key={index}
+                className={`flex items-center gap-[10px] bg-white/10 border border-white/20 rounded-full px-[5px] py-[5px] ${item.color}`}
+              >
                 <div className="flex items-center justify-center h-[28px] w-[29px]">
                   <div className="text-sm font-bold">{item.icon}</div>
                 </div>
@@ -177,7 +241,9 @@ export default function DBTServices() {
                 <div
                   ref={sliderRef}
                   className="flex gap-0 h-full relative transition-transform duration-300 ease-in-out z-10"
-                  style={{ transform: `translateX(-${currentSlide * 619.484}px)` }}
+                  style={{
+                    transform: `translateX(-${currentSlide * 619.484}px)`,
+                  }}
                 >
                   {slides.map((slide, index) => (
                     <div
@@ -187,7 +253,10 @@ export default function DBTServices() {
                       aria-label={`${index + 1} / ${slides.length}`}
                     >
                       <div className="h-full relative w-full">
-                        <a href="#" className="cursor-pointer inline-block max-w-full min-w-[526.857px] relative w-full">
+                        <a
+                          href="#"
+                          className="cursor-pointer inline-block max-w-full min-w-[526.857px] relative w-full"
+                        >
                           <div className="cursor-pointer w-full">
                             <div className="cursor-pointer max-w-[309.916px] w-full">
                               <div className="cursor-pointer mb-[7.7479px]">
@@ -244,19 +313,23 @@ export default function DBTServices() {
                         onClick={() => goToSlide(index)}
                         className={`w-[7.7479px] h-[7.7479px] rounded-full cursor-pointer text-center transition-colors duration-300 ${
                           index === currentSlide
-                            ? 'bg-black'
-                            : 'bg-[rgba(0,0,0,0.25)] hover:bg-[rgba(0,0,0,0.4)]'
+                            ? "bg-black"
+                            : "bg-[rgba(0,0,0,0.25)] hover:bg-[rgba(0,0,0,0.4)]"
                         }`}
                         aria-label={`Go to slide ${index + 1}`}
-                        aria-current={index === currentSlide ? 'true' : undefined}
+                        aria-current={
+                          index === currentSlide ? "true" : undefined
+                        }
                       />
                     ))}
                   </div>
 
                   {/* Next Button */}
                   <div
-                    className={`cursor-pointer ${currentSlide === slides.length - 1 ? 'opacity-25 pointer-events-none' : ''}`}
-                    onClick={currentSlide < slides.length - 1 ? goToNext : undefined}
+                    className={`cursor-pointer ${currentSlide === slides.length - 1 ? "opacity-25 pointer-events-none" : ""}`}
+                    onClick={
+                      currentSlide < slides.length - 1 ? goToNext : undefined
+                    }
                   >
                     <div className="flex items-center bg-[rgba(0,0,0,0.05)] rounded-full cursor-pointer h-[46.4874px] justify-center transition-colors duration-300 hover:bg-[rgba(0,0,0,0.1)] w-[46.4874px]">
                       <ChevronRight className="h-[23.2437px] w-[23.2437px]" />

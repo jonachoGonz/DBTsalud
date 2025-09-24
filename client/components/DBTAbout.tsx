@@ -17,7 +17,10 @@ export default function DBTAbout() {
           </p>
           {about?.linkText && (
             <div className="mt-6">
-              <a href={about?.linkUrl || "#nosotros"} className="inline-flex items-center justify-center bg-stone-700 hover:bg-stone-800 text-white px-8 py-4 text-lg rounded-full tk-alegreya">
+              <a
+                href={about?.linkUrl || "#nosotros"}
+                className="inline-flex items-center justify-center bg-stone-700 hover:bg-stone-800 text-white px-8 py-4 text-lg rounded-full tk-alegreya"
+              >
                 {about.linkText}
               </a>
             </div>

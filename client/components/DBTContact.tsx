@@ -46,7 +46,9 @@ export default function DBTContact() {
                     <IconComponent className="w-8 h-8" />
                   </div>
                   <div>
-                    <p className="text-lg text-gray-700 font-medium">{info.title}</p>
+                    <p className="text-lg text-gray-700 font-medium">
+                      {info.title}
+                    </p>
                   </div>
                 </div>
               );

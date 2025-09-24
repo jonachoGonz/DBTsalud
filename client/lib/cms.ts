@@ -34,7 +34,10 @@ export type SiteSettings = {
 };
 
 // CONTENT
-export async function fetchContent<T = any>(key: string, locale: Locale): Promise<T | null> {
+export async function fetchContent<T = any>(
+  key: string,
+  locale: Locale,
+): Promise<T | null> {
   try {
     const { data, error } = await supabase
       .from("content_entries")
@@ -44,7 +47,10 @@ export async function fetchContent<T = any>(key: string, locale: Locale): Promis
       .maybeSingle();
 
     if (error) {
-      console.error("fetchContent error", error?.message || JSON.stringify(error));
+      console.error(
+        "fetchContent error",
+        error?.message || JSON.stringify(error),
+      );
       return null;
     }
     return (data?.data as T) ?? null;
@@ -54,11 +60,14 @@ export async function fetchContent<T = any>(key: string, locale: Locale): Promis
   }
 }
 
-export async function upsertContent<T = any>(key: string, locale: Locale, data: T) {
-  const { error } = await supabase.from("content_entries").upsert(
-    [{ key, locale, data }],
-    { onConflict: "key,locale" }
-  );
+export async function upsertContent<T = any>(
+  key: string,
+  locale: Locale,
+  data: T,
+) {
+  const { error } = await supabase
+    .from("content_entries")
+    .upsert([{ key, locale, data }], { onConflict: "key,locale" });
   if (error) throw error;
 }
 
@@ -81,7 +90,10 @@ export async function fetchSiteSettings(): Promise<SiteSettings | null> {
       .limit(1)
       .maybeSingle();
     if (error) {
-      console.error("fetchSiteSettings error", error?.message || JSON.stringify(error));
+      console.error(
+        "fetchSiteSettings error",
+        error?.message || JSON.stringify(error),
+      );
       return null;
     }
     return (data as SiteSettings) ?? null;
@@ -91,8 +103,12 @@ export async function fetchSiteSettings(): Promise<SiteSettings | null> {
   }
 }
 
-export async function upsertSiteSettings(settings: Partial<SiteSettings>["theme"]) {
-  const { data, error } = await supabase.rpc("upsert_site_settings", { payload: settings });
+export async function upsertSiteSettings(
+  settings: Partial<SiteSettings>["theme"],
+) {
+  const { data, error } = await supabase.rpc("upsert_site_settings", {
+    payload: settings,
+  });
   if (error) throw error;
   return data;
 }

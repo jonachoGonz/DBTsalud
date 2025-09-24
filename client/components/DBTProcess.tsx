@@ -1,11 +1,13 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { PhoneCall, FileCheck, Search, Route, Play } from "lucide-react";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTProcess() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: process } = useContent<any>("luminous.process", language);
 
-  const steps = [
+  const steps = (process?.steps || [
     {
       icon: PhoneCall,
       title: t("process.step1"),
@@ -36,17 +38,17 @@ export default function DBTProcess() {
       description: t("process.step5.desc"),
       number: "05",
     },
-  ];
+  ]);
 
   return (
     <section id="proceso" className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {t("process.title")}
+            {process?.title || t("process.title")}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t("process.intro")}
+            {process?.intro || t("process.intro")}
           </p>
         </div>
 

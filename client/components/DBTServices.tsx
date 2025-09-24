@@ -146,7 +146,7 @@ export default function DBTServices() {
                       <div className="max-w-[991.731px] w-full">
                         <div className="mb-[15.4958px]">
                           <h2 className="text-[61.9832px] tracking-[-1.23966px] leading-[69.7311px]">
-                            Test to know what's finally happening on the inside
+                            {services?.title || "Nuestros servicios"}
                           </h2>
                         </div>
                       </div>

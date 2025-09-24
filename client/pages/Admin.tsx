@@ -257,7 +257,7 @@ export default function Admin() {
         </nav>
 
         {tab === 'content' && (
-          <section className="space-y-4">
+          <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
             <div className="flex items-center gap-3 flex-wrap">
               <label className="text-sm">Sección</label>
               <select value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)} className="border rounded-md px-3 py-2">

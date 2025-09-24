@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import JsonFormEditor from '@/components/admin/JsonFormEditor';
+import AdminLayout from '@/components/admin/AdminLayout';
 import { fetchContent, upsertContent, fetchSiteSettings, upsertSiteSettings, listContentKeys, type Locale } from '@/lib/cms';
 import { applyTheme } from '@/lib/theme';
 import { autoTranslate } from '@/lib/translate';
@@ -229,7 +230,7 @@ export default function Admin() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Password</label>
-              <input type="password" name="password" className="w-full border rounded-md px-3 py-2" placeholder="••••••••" />
+              <input type="password" name="password" className="w-full border rounded-md px-3 py-2" placeholder="•••••���••" />
             </div>
             <button className="w-full bg-stone-800 text-white rounded-md py-2">Entrar</button>
             <p className="text-xs text-gray-500">Acceso solo por URL directa (/admin)</p>
@@ -240,23 +241,7 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <header className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold">Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <select value={locale} onChange={(e) => setLocale(e.target.value as Locale)} className="border rounded-md px-3 py-2">
-              <option value="es">Español</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-        </header>
-
-        <nav className="flex gap-2 mb-6">
-          <button onClick={() => setTab('content')} className={`px-4 py-2 rounded-md border ${tab==='content' ? 'bg-stone-900 text-white' : 'bg-white'}`}>Contenido</button>
-          <button onClick={() => setTab('styles')} className={`px-4 py-2 rounded-md border ${tab==='styles' ? 'bg-stone-900 text-white' : 'bg-white'}`}>Estilos</button>
-          <button onClick={() => setTab('translate')} className={`px-4 py-2 rounded-md border ${tab==='translate' ? 'bg-stone-900 text-white' : 'bg-white'}`}>Traductor</button>
-        </nav>
+    <AdminLayout active={tab} onChange={setTab as any} locale={locale} onLocaleChange={setLocale as any}>
 
         {tab === 'content' && (
           <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
@@ -346,8 +331,8 @@ export default function Admin() {
             <TranslatorTool />
           </section>
         )}
-      </div>
-    </div>
+
+    </AdminLayout>
   );
 }
 

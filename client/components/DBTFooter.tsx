@@ -1,7 +1,9 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useContent } from "@/hooks/use-content";
 
 export default function DBTFooter() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const { data: footer } = useContent<any>("luminous.footer", language);
 
   return (
     <footer className="bg-gray-900 text-white py-16">
@@ -10,7 +12,7 @@ export default function DBTFooter() {
           {/* Logo and Description */}
           <div className="space-y-4">
             <h3 className="text-2xl font-bold">DBT Salud</h3>
-            <p className="text-gray-300 leading-relaxed">{t("footer.quote")}</p>
+            <p className="text-gray-300 leading-relaxed">{footer?.quote || t("footer.quote")}</p>
           </div>
 
           {/* Navigation Links */}

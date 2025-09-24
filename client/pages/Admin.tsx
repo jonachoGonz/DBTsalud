@@ -240,18 +240,35 @@ export default function Admin() {
     );
   }
 
+  const sectionLabel = (k: string) => {
+    const name = k.replace(/^luminous\./, '');
+    const map: Record<string,string> = {
+      seo: 'SEO',
+      header: 'Encabezado',
+      about: 'Nosotros',
+      therapies: 'Terapias',
+      services: 'Servicios',
+      process: 'Proceso',
+      team: 'Equipo',
+      contact: 'Contacto',
+      footer: 'Footer'
+    };
+    return map[name] || name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
+  const subItems = availableKeys.map(k => ({ key: k, label: sectionLabel(k), active: selectedKey === k, onClick: () => setSelectedKey(k) }));
+
   return (
-    <AdminLayout active={tab} onChange={setTab as any} locale={locale} onLocaleChange={setLocale as any}>
+    <AdminLayout active={tab} onChange={setTab as any} locale={locale} onLocaleChange={setLocale as any} subItems={tab==='content' ? subItems : undefined}>
 
         {tab === 'content' && (
           <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
-            <div className="flex items-center gap-3 flex-wrap">
-              <label className="text-sm">Sección</label>
-              <select value={selectedKey} onChange={(e) => setSelectedKey(e.target.value)} className="border rounded-md px-3 py-2">
-                {availableKeys.map(k => <option key={k} value={k}>{k}</option>)}
-              </select>
-              <button onClick={() => setRawJson(JSON.stringify(defaultContent(selectedKey), null, 2))} className="px-3 py-2 border rounded-md">Cargar plantilla</button>
-              <button onClick={migrateFromLuminous} className="px-3 py-2 border rounded-md bg-stone-900 text-white">Migrar desde Luminous</button>
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="text-sm text-gray-600">Sección actual: <span className="font-medium">{sectionLabel(selectedKey)}</span></div>
+              <div className="flex gap-2">
+                <button onClick={() => setRawJson(JSON.stringify(defaultContent(selectedKey), null, 2))} className="px-3 py-2 border rounded-md">Cargar plantilla</button>
+                <button onClick={migrateFromLuminous} className="px-3 py-2 border rounded-md bg-stone-900 text-white">Migrar desde Luminous</button>
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>

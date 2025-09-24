@@ -30,7 +30,7 @@ export default function Admin() {
   const [content, setContent] = useState<any>({});
   const [rawJson, setRawJson] = useState<string>('{}');
   const [saving, setSaving] = useState(false);
-  const [editorMode, setEditorMode] = useState<'json'|'form'>('json');
+  const [editorMode, setEditorMode] = useState<'json'|'form'>('form');
 
   // styles state
   const [primary, setPrimary] = useState('#2e4c47');
@@ -273,8 +273,8 @@ export default function Admin() {
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-sm font-medium">Editor ({locale})</label>
                   <div className="inline-flex border rounded-md overflow-hidden">
-                    <button onClick={() => setEditorMode('json')} className={`px-3 py-1 text-sm ${editorMode==='json' ? 'bg-stone-900 text-white' : 'bg-white'}`}>JSON</button>
                     <button onClick={() => setEditorMode('form')} className={`px-3 py-1 text-sm ${editorMode==='form' ? 'bg-stone-900 text-white' : 'bg-white'}`}>Formulario</button>
+                    <button onClick={() => setEditorMode('json')} className={`px-3 py-1 text-sm ${editorMode==='json' ? 'bg-stone-900 text-white' : 'bg-white'}`}>JSON</button>
                   </div>
                 </div>
                 {editorMode === 'json' ? (
@@ -373,7 +373,7 @@ function defaultContent(key: string) {
     case 'luminous.team':
       return { title: 'Conoce al equipo', members: [
         { name: 'Karla González', role: 'Psicóloga clínica', bio: 'Formación en DBT, ACT y TCA.' },
-        { name: 'Daniel Henríquez', role: 'Psicólogo clínico', bio: 'Formación en DBT y TCC.' },
+        { name: 'Daniel Henríquez', role: 'Psic��logo clínico', bio: 'Formación en DBT y TCC.' },
       ] };
     case 'luminous.contact':
       return { title: 'Contacto directo', address: 'Almirante Pastene 185, Providencia, oficina 204', whatsapp: '+56 9 4989 7699', instagram: '@psi.karlagg', email: 'contacto@dbtsalud.cl', hours: { weekdays: 'Lun-Vie 10:00-19:00', saturday: 'Sáb 9:00-14:00', sunday: 'Domingo: Cerrado' } };

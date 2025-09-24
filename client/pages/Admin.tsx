@@ -442,7 +442,16 @@ export default function Admin() {
               </button>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Vista previa
+              </label>
+              <div className="w-full h-[320px] border rounded-md p-3 bg-gray-50 overflow-auto text-xs">
+                <ComponentPreview k={selectedKey} jsonText={rawJson} />
+              </div>
+            </div>
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm font-medium">
@@ -470,7 +479,7 @@ export default function Admin() {
                   className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
                 />
               ) : (
-                <div className="w-full h-[460px] border rounded-md p-3 bg-gray-50 overflow-auto">
+                <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
                   <JsonFormEditor
                     jsonText={rawJson}
                     onChangeJsonText={setRawJson}
@@ -485,14 +494,6 @@ export default function Admin() {
                 >
                   Guardar
                 </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Vista previa
-              </label>
-              <div className="w-full h-[460px] border rounded-md p-3 bg-gray-50 overflow-auto text-xs">
-                <ComponentPreview k={selectedKey} jsonText={rawJson} />
               </div>
             </div>
           </div>

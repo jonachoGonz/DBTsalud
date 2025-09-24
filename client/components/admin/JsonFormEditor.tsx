@@ -72,9 +72,9 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
           {label && (
             <label className="block text-sm font-medium">{label}</label>
           )}
-          <div className="space-y-2">
+          <div className="space-y-2 flex justify-between flex-wrap flex-auto w-auto gap-x-3 ">
             {value.map((item, idx) => (
-              <div key={idx} className="border rounded-md p-2 bg-white">
+              <div key={idx} className="border rounded-md p-2 bg-white w-auto w-auto md:w-[450px]">
                 {typeof item === "object" && item !== null ? (
                   <div className="space-y-3">
                     {Object.keys(item).map((k) =>
@@ -91,7 +91,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
                 <div className="flex justify-end mt-2">
                   <button
                     type="button"
-                    className="text-xs border rounded px-2 py-1"
+                    className="text-xs  rounded px-2 py-1 text-red-50 bg-red-500"
                     onClick={() => removeArrayIndex(path, idx)}
                   >
                     Eliminar
@@ -102,7 +102,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
             <div>
               <button
                 type="button"
-                className="text-xs border rounded px-2 py-1"
+                className="text-xs rounded px-2 py-1 bg-indigo-500 text-blue-50"
                 onClick={() =>
                   addArrayItem(path, typeof value[0] === "object" ? {} : "")
                 }
@@ -117,7 +117,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
 
     if (value && typeof value === "object") {
       return (
-        <fieldset key={key} className="border rounded-md p-3 bg-gray-50">
+        <fieldset key={key} className="rounded-md p-3 bg-gray-50">
           {label && (
             <legend className="px-1 text-sm font-medium">{label}</legend>
           )}

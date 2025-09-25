@@ -79,7 +79,8 @@ export default function Admin() {
     if (!authed) return;
     (async () => {
       const data = await fetchContent(selectedKey, locale);
-      const safe = data ?? defaultContent(selectedKey);
+      const defaults = defaultContent(selectedKey);
+      const safe = mergeDefaults(defaults, data ?? {});
       setContent(safe);
       setRawJson(JSON.stringify(safe, null, 2));
     })();
@@ -378,7 +379,7 @@ export default function Admin() {
                 type="password"
                 name="password"
                 className="w-full border rounded-md px-3 py-2"
-                placeholder="•••••���••"
+                placeholder="���••••���••"
               />
             </div>
             <button className="w-full bg-stone-800 text-white rounded-md py-2">
@@ -607,6 +608,26 @@ export default function Admin() {
       )}
     </AdminLayout>
   );
+}
+
+function isPlainObject(v: any) {
+  return v && typeof v === "object" && !Array.isArray(v);
+}
+
+function mergeDefaults<T = any>(defaults: any, data: any): T {
+  if (Array.isArray(defaults)) return (Array.isArray(data) ? data : defaults) as T;
+  if (isPlainObject(defaults)) {
+    const out: any = { ...defaults };
+    if (isPlainObject(data)) {
+      for (const k of Object.keys(data)) {
+        out[k] = isPlainObject(out[k]) || Array.isArray(out[k])
+          ? mergeDefaults(out[k], data[k])
+          : data[k];
+      }
+    }
+    return out as T;
+  }
+  return (data ?? defaults) as T;
 }
 
 function defaultContent(key: string) {

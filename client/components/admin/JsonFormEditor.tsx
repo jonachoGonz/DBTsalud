@@ -187,15 +187,31 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
     }
 
     if (value && typeof value === "object") {
+      const keys = Object.keys(value);
+      let ordered = keys;
+      if (path.length === 0) {
+        const headerOrder = [
+          "title1",
+          "title2",
+          "subtitle1",
+          "subtitle2",
+          "cta1",
+          "cta1Link",
+          "cta2",
+          "cta2Link",
+          "backgroundImage",
+        ];
+        const present = headerOrder.filter((k) => keys.includes(k));
+        const rest = keys.filter((k) => !headerOrder.includes(k));
+        ordered = [...present, ...rest];
+      }
       return (
         <fieldset key={key} className="rounded-md p-3 bg-gray-50">
           {label && (
             <legend className="px-1 text-sm font-medium">{humanLabel(label)}</legend>
           )}
           <div className="space-y-3">
-            {Object.keys(value).map((k) =>
-              renderField(value[k], [...path, k], k),
-            )}
+            {ordered.map((k) => renderField(value[k], [...path, k], k))}
           </div>
         </fieldset>
       );

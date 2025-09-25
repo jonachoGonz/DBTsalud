@@ -141,7 +141,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <div key={key} className="space-y-2">
           {label && (
-            <label className="block text-sm font-medium">{label}</label>
+            <label className="block text-sm font-medium">{humanLabel(label)}</label>
           )}
           <div className="space-y-2 flex justify-between flex-wrap flex-auto w-auto gap-x-3 ">
             {value.map((item, idx) => (
@@ -190,7 +190,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <fieldset key={key} className="rounded-md p-3 bg-gray-50">
           {label && (
-            <legend className="px-1 text-sm font-medium">{label}</legend>
+            <legend className="px-1 text-sm font-medium">{humanLabel(label)}</legend>
           )}
           <div className="space-y-3">
             {Object.keys(value).map((k) =>
@@ -205,7 +205,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <div key={key} className="">
           {label && (
-            <label className="block text-sm font-medium mb-1">{label}</label>
+            <label className="block text-sm font-medium mb-1">{humanLabel(label)}</label>
           )}
           {looksLikeUrl(String(value || "")) && (
             <div className="mb-2">
@@ -246,7 +246,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
     return (
       <div key={key}>
         {label && (
-          <label className="block text-sm font-medium mb-1">{label}</label>
+          <label className="block text-sm font-medium mb-1">{humanLabel(label)}</label>
         )}
         <input
           className="w-full border rounded-md px-3 py-2"

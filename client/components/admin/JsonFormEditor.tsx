@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 type Props = {
   jsonText: string;
@@ -26,6 +27,23 @@ function toStringValue(v: any): string {
   return String(v);
 }
 
+const SUPABASE_BUCKET = "images";
+
+function looksLikeUrl(v: string) {
+  return typeof v === "string" && /^(https?:)?\/\//.test(v);
+}
+
+function isImageKey(label: string | undefined, path: (string | number)[]) {
+  const last = String(label ?? path[path.length - 1] ?? "").toLowerCase();
+  return (
+    last.includes("image") ||
+    last.includes("logo") ||
+    last.includes("icon") ||
+    last.includes("avatar") ||
+    last.includes("banner")
+  );
+}
+
 export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
   const data = useMemo(() => {
     try {
@@ -36,6 +54,11 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return {} as any;
     }
   }, [jsonText]);
+
+  const [uploading, setUploading] = useState<Record<string, boolean>>({});
+
+  const setUploadingFor = (key: string, val: boolean) =>
+    setUploading((s) => ({ ...s, [key]: val }));
 
   const update = (path: (string | number)[], newVal: any) => {
     const updated = setAtPath(data, path, newVal);
@@ -58,6 +81,46 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
     const newData = setAtPath(data, path, next);
     onChangeJsonText(JSON.stringify(newData, null, 2));
   };
+
+  async function uploadFileAndSet(
+    path: (string | number)[],
+    file: File,
+    key: string,
+  ) {
+    try {
+      setUploadingFor(key, true);
+      const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
+      const safeName = `${crypto.randomUUID?.() || Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+      const d = new Date();
+      const folder = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
+      const objectPath = `${folder}/${safeName}`;
+
+      const { error: upErr } = await supabase
+        .storage
+        .from(SUPABASE_BUCKET)
+        .upload(objectPath, file, {
+          cacheControl: "3600",
+          contentType: file.type || `image/${ext}`,
+          upsert: false,
+        });
+      if (upErr) {
+        const msg = upErr.message || String(upErr);
+        alert(
+          `Error subiendo archivo: ${msg}. Asegúrate de tener un bucket público llamado "${SUPABASE_BUCKET}" en Supabase Storage.`,
+        );
+        return;
+      }
+      const { data: pub } = supabase.storage
+        .from(SUPABASE_BUCKET)
+        .getPublicUrl(objectPath);
+      const url = pub.publicUrl;
+      update(path, url);
+    } catch (e: any) {
+      alert(`Error subiendo archivo: ${e?.message || e}`);
+    } finally {
+      setUploadingFor(key, false);
+    }
+  }
 
   const renderField = (
     value: any,
@@ -127,6 +190,45 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
             )}
           </div>
         </fieldset>
+      );
+    }
+
+    if (isImageKey(label, path)) {
+      return (
+        <div key={key} className="">
+          {label && (
+            <label className="block text-sm font-medium mb-1">{label}</label>
+          )}
+          {looksLikeUrl(String(value || "")) && (
+            <div className="mb-2">
+              <img
+                src={String(value)}
+                alt="preview"
+                className="max-h-36 rounded border"
+              />
+            </div>
+          )}
+          <div className="border border-gray-200 rounded-md bg-white p-3">
+            <input
+              type="file"
+              accept="image/*"
+              disabled={!!uploading[key]}
+              onChange={(e) => {
+                const file = e.currentTarget.files?.[0];
+                if (file) uploadFileAndSet(path, file, key);
+              }}
+              className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+            />
+          </div>
+          <div className="mt-2">
+            <input
+              className="w-full border rounded-md px-3 py-2"
+              placeholder="o pega una URL de imagen"
+              value={toStringValue(value)}
+              onChange={(e) => update(path, e.target.value)}
+            />
+          </div>
+        </div>
       );
     }
 

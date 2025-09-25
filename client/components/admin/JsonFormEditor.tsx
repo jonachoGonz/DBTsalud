@@ -201,11 +201,14 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
           )}
           {looksLikeUrl(String(value || "")) && (
             <div className="mb-2">
-              <img
-                src={String(value)}
-                alt="preview"
-                className="max-h-36 rounded border"
-              />
+              <a
+                href={String(value)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline break-all"
+              >
+                Abrir imagen en nueva pestaña
+              </a>
             </div>
           )}
           <div className="border border-gray-200 rounded-md bg-white p-3">

@@ -122,6 +122,14 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
     }
   }
 
+  function humanLabel(raw?: string) {
+    if (!raw) return raw;
+    if (raw === "backgroundImage") return "Imagen de fondo";
+    if (raw === "cta1Link") return "cta1 link";
+    if (raw === "cta2Link") return "cta2 link";
+    return raw;
+  }
+
   const renderField = (
     value: any,
     path: (string | number)[],

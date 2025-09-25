@@ -1,44 +1,44 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
 import { PhoneCall, FileCheck, Search, Route, Play } from "lucide-react";
 import { useContent } from "@/hooks/use-content";
+
+const DEFAULT_ICONS = [PhoneCall, FileCheck, Search, Route, Play];
 
 export default function DBTProcess() {
   const { t, language } = useLanguage();
   const { data: process } = useContent<any>("luminous.process", language);
 
-  const steps = process?.steps || [
+  const fallback = [
     {
       icon: PhoneCall,
       title: t("process.step1"),
       description: t("process.step1.desc"),
-      number: "01",
     },
     {
       icon: FileCheck,
       title: t("process.step2"),
       description: t("process.step2.desc"),
-      number: "02",
     },
     {
       icon: Search,
       title: t("process.step3"),
       description: t("process.step3.desc"),
-      number: "03",
     },
     {
       icon: Route,
       title: t("process.step4"),
       description: t("process.step4.desc"),
-      number: "04",
     },
     {
       icon: Play,
       title: t("process.step5"),
       description: t("process.step5.desc"),
-      number: "05",
     },
   ];
+
+  const steps = Array.isArray(process?.steps) && process!.steps.length > 0
+    ? (process!.steps as any[])
+    : fallback;
 
   return (
     <section
@@ -56,26 +56,33 @@ export default function DBTProcess() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-16">
-          {steps.map((step, index) => {
-            const IconComponent = step.icon;
+          {steps.map((step: any, index: number) => {
+            const IconComponent = step.icon || DEFAULT_ICONS[index % DEFAULT_ICONS.length];
+            const number = step.number || String(index + 1).padStart(2, "0");
+            const title = step.title || step.name || "";
+            const description = step.description || step.desc || "";
             return (
               <div key={index} className="text-center">
                 <div className="relative mb-6">
                   <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto shadow-lg">
-                    <IconComponent className="w-8 h-8 text-blue-600" />
+                    {IconComponent ? (
+                      <IconComponent className="w-8 h-8 text-blue-600" />
+                    ) : (
+                      <span className="text-blue-600 font-bold text-xl">{number}</span>
+                    )}
                   </div>
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                    {step.number}
+                    {number}
                   </div>
                   {index < steps.length - 1 && (
                     <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-blue-200 -translate-y-1/2"></div>
                   )}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {step.title}
+                  {title}
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  {step.description}
+                  {description}
                 </p>
               </div>
             );

@@ -432,24 +432,7 @@ export default function Admin() {
               Sección actual:{" "}
               <span className="font-medium">{sectionLabel(selectedKey)}</span>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() =>
-                  setRawJson(
-                    JSON.stringify(defaultContent(selectedKey), null, 2),
-                  )
-                }
-                className="px-3 py-2 border rounded-md"
-              >
-                Cargar plantilla
-              </button>
-              <button
-                onClick={migrateFromLuminous}
-                className="px-3 py-2 border rounded-md bg-stone-900 text-white"
-              >
-                Migrar desde Luminous
-              </button>
-            </div>
+            {/* Botones ocultos: plantilla y migración ya no son necesarios */}
           </div>
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
           <div className="grid grid-cols-1 gap-6">

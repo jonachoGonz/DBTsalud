@@ -138,7 +138,11 @@ export default function Admin() {
         subtitle2:
           "Atención psicológica online y presencial, en español e inglés, desde Chile.",
         cta1: "Quiero comenzar terapia",
+        cta1Link: "https://wa.me/56949897699",
         cta2: "Conoce el Programa DBT",
+        cta2Link: "#servicios",
+        backgroundImage:
+          "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp",
       },
       about: {
         title: "Somos DBT Salud",
@@ -213,7 +217,11 @@ export default function Admin() {
         subtitle2:
           "Online and in-person psychological care, in Spanish and English, from Chile.",
         cta1: "I want to start therapy",
+        cta1Link: "https://wa.me/56949897699",
         cta2: "Learn about DBT Program",
+        cta2Link: "#servicios",
+        backgroundImage:
+          "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp",
       },
       about: {
         title: "We are DBT Salud",
@@ -620,7 +628,11 @@ function defaultContent(key: string) {
         subtitle1: "Psicoterapia DBT basada en evidencia",
         subtitle2: "Acompañamiento humano y profesional",
         cta1: "Quiero comenzar terapia",
+        cta1Link: "https://wa.me/56949897699",
         cta2: "Conoce el Programa DBT",
+        cta2Link: "#servicios",
+        backgroundImage:
+          "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp",
       };
     case "luminous.about":
       return {

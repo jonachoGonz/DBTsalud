@@ -200,9 +200,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
               <button
                 type="button"
                 className="text-xs rounded px-2 py-1 bg-indigo-500 text-blue-50"
-                onClick={() =>
-                  addArrayItem(path, typeof value[0] === "object" ? {} : "")
-                }
+                onClick={() => addArrayItem(path)}
               >
                 Agregar ítem
               </button>

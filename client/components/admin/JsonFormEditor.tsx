@@ -169,9 +169,9 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
           {label && (
             <label className="block text-sm font-medium">{humanLabel(label)}</label>
           )}
-          <div className="space-y-2 flex justify-between flex-wrap flex-auto w-auto gap-x-3 ">
+          <div className="flex flex-wrap gap-3">
             {value.map((item, idx) => (
-              <div key={idx} className="border rounded-md p-2 bg-white w-auto w-auto md:w-[450px]">
+              <div key={idx} className="border rounded-md p-2 bg-white w-auto md:w-[450px]">
                 {typeof item === "object" && item !== null ? (
                   <div className="space-y-3">
                     {Object.keys(item).map((k) =>
@@ -188,7 +188,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
                 <div className="flex justify-end mt-2">
                   <button
                     type="button"
-                    className="text-xs  rounded px-2 py-1 text-red-50 bg-red-500"
+                    className="text-xs rounded px-2 py-1 text-red-50 bg-red-500"
                     onClick={() => removeArrayIndex(path, idx)}
                   >
                     Eliminar
@@ -196,15 +196,15 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
                 </div>
               </div>
             ))}
-            <div>
-              <button
-                type="button"
-                className="text-xs rounded px-2 py-1 bg-indigo-500 text-blue-50"
-                onClick={() => addArrayItem(path)}
-              >
-                Agregar ítem
-              </button>
-            </div>
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="text-xs rounded px-2 py-1 bg-indigo-500 text-blue-50"
+              onClick={() => addArrayItem(path)}
+            >
+              Agregar ítem
+            </button>
           </div>
         </div>
       );

@@ -669,7 +669,14 @@ function defaultStyles(key: string) {
     };
   }
   if (name === "about") {
-    return { titleColor: "#111111", bodyColor: "#333333" };
+    return {
+      titleColor: "#111111",
+      bodyColor: "#333333",
+      backgroundColor: "#ffffff",
+      titleSize: 50,
+      bodySize: 18,
+      backgroundImage: "",
+    };
   }
   if (name === "therapies") {
     return { titleColor: "#111111", itemTitleColor: "#111111", itemDescColor: "#555555" };
@@ -723,6 +730,7 @@ function defaultContent(key: string) {
         body: "Creemos que cada persona tiene el potencial de sanar.",
         linkText: "Conócenos",
         linkUrl: "/#nosotros",
+        image: "",
       };
     case "luminous.therapies":
       return {

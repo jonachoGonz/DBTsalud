@@ -553,11 +553,17 @@ export default function Admin() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">Color primario</label>
-                <input type="text" value={primary} onChange={(e) => setPrimary(e.target.value)} className="w-full border rounded-md px-3 py-2" />
+                <div className="flex items-center gap-2">
+                  <input type="color" value={primary.startsWith('#')?primary:'#'+primary.replace(/[^0-9a-fA-F]/g,'')} onChange={(e) => setPrimary(e.target.value)} className="h-10 w-14 p-0 border rounded" />
+                  <input type="text" value={primary} onChange={(e) => setPrimary(e.target.value)} className="flex-1 border rounded-md px-3 py-2 font-mono" />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Color secundario</label>
-                <input type="text" value={secondary} onChange={(e) => setSecondary(e.target.value)} className="w-full border rounded-md px-3 py-2" />
+                <div className="flex items-center gap-2">
+                  <input type="color" value={secondary.startsWith('#')?secondary:'#'+secondary.replace(/[^0-9a-fA-F]/g,'')} onChange={(e) => setSecondary(e.target.value)} className="h-10 w-14 p-0 border rounded" />
+                  <input type="text" value={secondary} onChange={(e) => setSecondary(e.target.value)} className="flex-1 border rounded-md px-3 py-2 font-mono" />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Tipografía (CSS font-family)</label>

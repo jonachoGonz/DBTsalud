@@ -632,14 +632,24 @@ export default function Admin() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Tipografía (CSS font-family)
+                  Tipografía (Google Fonts)
                 </label>
-                <input
-                  type="text"
+                <select
                   value={fontFamily}
                   onChange={(e) => setFontFamily(e.target.value)}
                   className="w-full border rounded-md px-3 py-2"
-                />
+                >
+                  {fontsLoading && <option>Cargando fuentes…</option>}
+                  {!fontsLoading && (
+                    <>
+                      {fontOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">

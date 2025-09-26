@@ -119,6 +119,32 @@ export default function Admin() {
     })();
   }, [selectedKey, locale, authed]);
 
+  useEffect(() => {
+    if (!authed) return;
+    (async () => {
+      try {
+        setFontsLoading(true);
+        const { listGoogleFonts, formatFontFamilyCSS, ensureGoogleFontLoaded } = await import("@/lib/googleFonts");
+        const apiKey = import.meta.env.VITE_GOOGLE_FONTS_API_KEY as string | undefined;
+        const fonts = await listGoogleFonts(apiKey);
+        const opts = fonts.map((f) => ({ label: f.family, value: formatFontFamilyCSS(f.family, f.category) }));
+        setFontOptions(opts);
+        ensureGoogleFontLoaded(fontFamily);
+      } catch (e) {
+        console.warn("No se pudieron cargar Google Fonts", e);
+      } finally {
+        setFontsLoading(false);
+      }
+    })();
+  }, [authed]);
+
+  useEffect(() => {
+    (async () => {
+      const { ensureGoogleFontLoaded } = await import("@/lib/googleFonts");
+      ensureGoogleFontLoaded(fontFamily);
+    })();
+  }, [fontFamily]);
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);

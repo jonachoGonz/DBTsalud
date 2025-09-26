@@ -47,6 +47,8 @@ export default function Admin() {
   const [secondary, setSecondary] = useState("#CBEDE0");
   const [fontFamily, setFontFamily] = useState("alegreya-sans, sans-serif");
   const [baseSize, setBaseSize] = useState(16);
+  const [fontOptions, setFontOptions] = useState<{ label: string; value: string }[]>([]);
+  const [fontsLoading, setFontsLoading] = useState(false);
   const [logoUrl, setLogoUrl] = useState("");
   // styles: per-section
   const styleKeysBase = useMemo(

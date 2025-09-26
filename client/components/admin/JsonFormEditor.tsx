@@ -74,9 +74,35 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
     onChangeJsonText(JSON.stringify(newData, null, 2));
   };
 
-  const addArrayItem = (path: (string | number)[], template: any = "") => {
+  function inferTemplateFromArray(arr: any[], path: (string | number)[]) {
+    const objs = (arr || []).filter(
+      (x) => x && typeof x === "object" && !Array.isArray(x),
+    );
+    if (objs.length > 0) {
+      const keys = Array.from(
+        new Set(objs.flatMap((o: any) => Object.keys(o || {}))),
+      );
+      const tpl: any = {};
+      keys.forEach((k) => (tpl[k] = ""));
+      return tpl;
+    }
+    const last = String(path[path.length - 1] ?? "").toLowerCase();
+    if (last.includes("members") || last.includes("equipo") || last.includes("team")) {
+      return { name: "", role: "", bio: "", image: "" };
+    }
+    if (last.includes("steps") || last.includes("pasos") || last.includes("step")) {
+      return { title: "", desc: "" };
+    }
+    if (last.includes("items") || last.includes("item")) {
+      return { title: "", desc: "", image: "" };
+    }
+    return { title: "", desc: "" };
+  }
+
+  const addArrayItem = (path: (string | number)[]) => {
     const parent = path.reduce((acc: any, key) => acc?.[key as any], data);
     const next = Array.isArray(parent) ? parent.slice() : [];
+    const template = inferTemplateFromArray(next, path);
     next.push(template);
     const newData = setAtPath(data, path, next);
     onChangeJsonText(JSON.stringify(newData, null, 2));

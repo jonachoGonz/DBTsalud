@@ -861,13 +861,32 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
   }
   if (k === "luminous.about") {
     return (
-      <div>
+      <div className="h-full flex flex-col">
         <Heading>Nosotros</Heading>
-        <div className="bg-[rgb(253,251,245)] rounded-lg p-4">
-          <div className="text-xl font-medium mb-2 tk-alegreya">
-            {data.title}
+        <div className="grid md:grid-cols-2 gap-4 items-center">
+          <div className="space-y-3">
+            <div className="text-2xl md:text-3xl font-bold tk-alegreya tracking-tight">
+              {data.title}
+            </div>
+            <div className="h-0.5 w-12 bg-[rgb(186,161,132)]" />
+            <Small>{data.body}</Small>
+            {data.linkText && (
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 border shadow-[inset_0_1px_0_0_#BAA184]">
+                  <span className="text-xs tk-alegreya">{data.linkText}</span>
+                </span>
+              </div>
+            )}
           </div>
-          <Small>{data.body}</Small>
+          <div className="md:row-start-1">
+            <div className="aspect-square w-3/4 ml-auto rounded-lg overflow-hidden bg-gray-200">
+              {data.image ? (
+                <img src={data.image} alt="about" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full grid place-items-center text-gray-500 text-xs">Imagen</div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );

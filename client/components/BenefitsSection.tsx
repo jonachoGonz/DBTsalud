@@ -94,7 +94,7 @@ export default function BenefitsSection() {
         <h2
           className="text-2xl font-medium leading-[28.8px] text-center transition-all duration-800"
           style={{
-            fontFamily: '"saans trial", sans-serif',
+            fontFamily: 'var(--font-family)',
             letterSpacing: "-0.24px",
           }}
         >
@@ -246,7 +246,7 @@ export default function BenefitsSection() {
                 <div
                   className="text-[36px] font-medium leading-[39.6px]"
                   style={{
-                    fontFamily: '"saans trial", sans-serif',
+                    fontFamily: 'var(--font-family)',
                     letterSpacing: "-0.36px",
                   }}
                 >

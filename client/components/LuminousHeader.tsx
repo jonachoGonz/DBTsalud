@@ -19,7 +19,7 @@ export default function LuminousHeader() {
             >
               <div
                 className="text-2xl font-bold"
-                style={{ fontFamily: '"saans trial", sans-serif' }}
+                style={{ fontFamily: 'var(--font-family)' }}
               >
                 DBT Salud
               </div>
@@ -151,7 +151,7 @@ export default function LuminousHeader() {
           <h1
             className="text-[rgb(252,248,241)] font-medium text-6xl md:text-7xl leading-tight text-center mb-8"
             style={{
-              fontFamily: '"saans trial", sans-serif',
+              fontFamily: 'var(--font-family)',
               letterSpacing: "-0.72px",
             }}
           >

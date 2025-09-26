@@ -100,7 +100,7 @@ export default function Footer() {
               <a href="/" className="inline-block max-w-full">
                 <div
                   className="text-3xl font-bold"
-                  style={{ fontFamily: '"saans trial", sans-serif' }}
+                  style={{ fontFamily: 'var(--font-family)' }}
                 >
                   DBT Salud
                 </div>

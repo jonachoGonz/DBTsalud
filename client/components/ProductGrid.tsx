@@ -93,7 +93,7 @@ export default function ProductGrid() {
                 {/* Category Text */}
                 <span
                   className="relative z-20 font-medium text-[16.5px] leading-[21.45px]"
-                  style={{ fontFamily: '"saans trial", sans-serif' }}
+                  style={{ fontFamily: 'var(--font-family)' }}
                 >
                   {service.category}
                 </span>

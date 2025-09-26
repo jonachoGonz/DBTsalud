@@ -25,7 +25,7 @@ export default function DBTHeader() {
             >
               <div
                 className="text-2xl font-bold"
-                style={{ fontFamily: '"saans trial", sans-serif' }}
+                style={{ fontFamily: 'var(--font-family)' }}
               >
                 DBT Salud
               </div>

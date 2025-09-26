@@ -42,7 +42,7 @@ export default function FAQSection() {
           <div className="flex flex-col items-start gap-10 w-[449px] transition-all duration-800">
             <h4
               className="text-2xl font-medium leading-[28.8px]"
-              style={{ fontFamily: '"saans trial", sans-serif' }}
+              style={{ fontFamily: 'var(--font-family)' }}
             >
               <span className="text-[rgba(0,0,0,0.3)]">
                 Creemos en conversaciones significativas. Para ayudarte,

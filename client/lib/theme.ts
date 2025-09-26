@@ -13,13 +13,18 @@ type Theme = {
   assets?: Record<string, string>;
 };
 
+import { ensureGoogleFontLoaded } from "@/lib/googleFonts";
+
 export function applyTheme(theme: Theme) {
   const root = document.documentElement;
   if (theme.colors?.primary) root.style.setProperty('--primary', rgbOrHsl(theme.colors.primary));
   if (theme.colors?.secondary) root.style.setProperty('--secondary', rgbOrHsl(theme.colors.secondary));
   if (theme.colors?.background) root.style.setProperty('--background', rgbOrHsl(theme.colors.background));
   if (theme.colors?.foreground) root.style.setProperty('--foreground', rgbOrHsl(theme.colors.foreground));
-  if (theme.typography?.fontFamily) root.style.setProperty('--font-family', theme.typography.fontFamily);
+  if (theme.typography?.fontFamily) {
+    root.style.setProperty('--font-family', theme.typography.fontFamily);
+    ensureGoogleFontLoaded(theme.typography.fontFamily);
+  }
   if (theme.typography?.baseSize) root.style.setProperty('--base-font-size', `${theme.typography.baseSize}px`);
 }
 

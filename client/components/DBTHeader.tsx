@@ -6,6 +6,11 @@ export default function DBTHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
   const { data: header } = useContent<any>("luminous.header", language);
+  const bgImage =
+    header?.backgroundImage ||
+    "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp";
+  const cta1Href = header?.cta1Link || "https://wa.me/56949897699";
+  const cta2Href = header?.cta2Link || "#servicios";
 
   return (
     <div className="bg-[rgb(252,248,241)] flex flex-col h-[928px] max-h-[928px] max-w-[1800px] min-h-[600px] pb-[15px] px-[15px] pt-[15px] relative z-[99]">
@@ -166,7 +171,7 @@ export default function DBTHeader() {
       <div className="flex flex-col items-center justify-end h-full relative rounded-[20px] overflow-hidden pb-16 mb-0">
         {/* Background Image */}
         <img
-          src="https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp"
+          src={bgImage}
           alt="Terapia DBT Salud"
           className="absolute inset-0 w-full h-full object-cover -z-20 rounded-[20px]"
         />
@@ -198,15 +203,17 @@ export default function DBTHeader() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href="https://wa.me/56949897699"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={cta1Href}
+              target={cta1Href.startsWith("http") ? "_blank" : undefined}
+              rel={
+                cta1Href.startsWith("http") ? "noopener noreferrer" : undefined
+              }
               className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)] tk-alegreya"
             >
               {header?.cta1 || t("hero.cta1")}
             </a>
             <a
-              href="#servicios"
+              href={cta2Href}
               className="inline-flex items-center justify-center border-2 border-[rgb(252,248,241)] text-[rgb(252,248,241)] text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.1)] tk-alegreya"
             >
               {header?.cta2 || t("hero.cta2")}

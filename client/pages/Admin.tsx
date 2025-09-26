@@ -42,12 +42,31 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [editorMode, setEditorMode] = useState<"json" | "form">("form");
 
-  // styles state
+  // styles: general theme
   const [primary, setPrimary] = useState("#2e4c47");
   const [secondary, setSecondary] = useState("#CBEDE0");
   const [fontFamily, setFontFamily] = useState("alegreya-sans, sans-serif");
   const [baseSize, setBaseSize] = useState(16);
   const [logoUrl, setLogoUrl] = useState("");
+  // styles: per-section
+  const styleKeysBase = useMemo(
+    () => [
+      "luminous.styles.generales",
+      ...defaultKeys
+        .filter((k) => k !== "luminous.seo")
+        .map((k) => k.replace(/^luminous\./, "luminous.styles.")),
+    ],
+    [],
+  );
+  const [selectedStyleKey, setSelectedStyleKey] = useState<string>(
+    styleKeysBase[0],
+  );
+  const [styleJson, setStyleJson] = useState<any>({});
+  const [styleRawJson, setStyleRawJson] = useState<string>("{}");
+  const [styleSaving, setStyleSaving] = useState(false);
+  const [styleEditorMode, setStyleEditorMode] = useState<"json" | "form">(
+    "form",
+  );
 
   useEffect(() => {
     if (!authed) return;
@@ -60,6 +79,18 @@ export default function Admin() {
       } catch {}
     })();
   }, [authed]);
+
+  // load per-section styles when switching selection
+  useEffect(() => {
+    if (!authed) return;
+    (async () => {
+      const defaults = defaultStyles(selectedStyleKey);
+      const data = await fetchContent(selectedStyleKey, locale);
+      const safe = mergeDefaults(defaults, data ?? {});
+      setStyleJson(safe);
+      setStyleRawJson(JSON.stringify(safe, null, 2));
+    })();
+  }, [selectedStyleKey, locale, authed]);
 
   async function loadSettings() {
     const settings = await fetchSiteSettings();
@@ -79,7 +110,8 @@ export default function Admin() {
     if (!authed) return;
     (async () => {
       const data = await fetchContent(selectedKey, locale);
-      const safe = data ?? defaultContent(selectedKey);
+      const defaults = defaultContent(selectedKey);
+      const safe = mergeDefaults(defaults, data ?? {});
       setContent(safe);
       setRawJson(JSON.stringify(safe, null, 2));
     })();
@@ -138,7 +170,11 @@ export default function Admin() {
         subtitle2:
           "Atención psicológica online y presencial, en español e inglés, desde Chile.",
         cta1: "Quiero comenzar terapia",
+        cta1Link: "https://wa.me/56949897699",
         cta2: "Conoce el Programa DBT",
+        cta2Link: "#servicios",
+        backgroundImage:
+          "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp",
       },
       about: {
         title: "Somos DBT Salud",
@@ -213,7 +249,11 @@ export default function Admin() {
         subtitle2:
           "Online and in-person psychological care, in Spanish and English, from Chile.",
         cta1: "I want to start therapy",
+        cta1Link: "https://wa.me/56949897699",
         cta2: "Learn about DBT Program",
+        cta2Link: "#servicios",
+        backgroundImage:
+          "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp",
       },
       about: {
         title: "We are DBT Salud",
@@ -370,7 +410,7 @@ export default function Admin() {
                 type="password"
                 name="password"
                 className="w-full border rounded-md px-3 py-2"
-                placeholder="•••••���••"
+                placeholder="���••••���••"
               />
             </div>
             <button className="w-full bg-stone-800 text-white rounded-md py-2">
@@ -408,13 +448,42 @@ export default function Admin() {
     onClick: () => setSelectedKey(k),
   }));
 
+  const stylesSectionLabel = (k: string) => {
+    const name = k.replace(/^luminous\.styles\./, "");
+    const map: Record<string, string> = {
+      generales: "Generales",
+      header: "Encabezado",
+      about: "Nosotros",
+      therapies: "Terapias",
+      services: "Servicios",
+      process: "Proceso",
+      team: "Equipo",
+      contact: "Contacto",
+      footer: "Footer",
+    };
+    return map[name] || name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
+  const styleSubItems = styleKeysBase.map((k) => ({
+    key: k,
+    label: stylesSectionLabel(k),
+    active: selectedStyleKey === k,
+    onClick: () => setSelectedStyleKey(k),
+  }));
+
   return (
     <AdminLayout
       active={tab}
       onChange={setTab as any}
       locale={locale}
       onLocaleChange={setLocale as any}
-      subItems={tab === "content" ? subItems : undefined}
+      subItems={
+        tab === "content"
+          ? subItems
+          : tab === "styles"
+            ? styleSubItems
+            : undefined
+      }
     >
       {tab === "content" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
@@ -423,24 +492,7 @@ export default function Admin() {
               Sección actual:{" "}
               <span className="font-medium">{sectionLabel(selectedKey)}</span>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() =>
-                  setRawJson(
-                    JSON.stringify(defaultContent(selectedKey), null, 2),
-                  )
-                }
-                className="px-3 py-2 border rounded-md"
-              >
-                Cargar plantilla
-              </button>
-              <button
-                onClick={migrateFromLuminous}
-                className="px-3 py-2 border rounded-md bg-stone-900 text-white"
-              >
-                Migrar desde Luminous
-              </button>
-            </div>
+            {/* Botones ocultos: plantilla y migración ya no son necesarios */}
           </div>
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
           <div className="grid grid-cols-1 gap-6">
@@ -500,7 +552,7 @@ export default function Admin() {
         </section>
       )}
 
-      {tab === "styles" && (
+      {tab === "styles" && selectedStyleKey === "luminous.styles.generales" && (
         <section className="space-y-6 bg-white rounded-xl border shadow-sm p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
@@ -508,23 +560,47 @@ export default function Admin() {
                 <label className="block text-sm font-medium mb-1">
                   Color primario
                 </label>
-                <input
-                  type="text"
-                  value={primary}
-                  onChange={(e) => setPrimary(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={
+                      primary.startsWith("#")
+                        ? primary
+                        : "#" + primary.replace(/[^0-9a-fA-F]/g, "")
+                    }
+                    onChange={(e) => setPrimary(e.target.value)}
+                    className="h-10 w-14 p-0 border rounded"
+                  />
+                  <input
+                    type="text"
+                    value={primary}
+                    onChange={(e) => setPrimary(e.target.value)}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
                   Color secundario
                 </label>
-                <input
-                  type="text"
-                  value={secondary}
-                  onChange={(e) => setSecondary(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={
+                      secondary.startsWith("#")
+                        ? secondary
+                        : "#" + secondary.replace(/[^0-9a-fA-F]/g, "")
+                    }
+                    onChange={(e) => setSecondary(e.target.value)}
+                    className="h-10 w-14 p-0 border rounded"
+                  />
+                  <input
+                    type="text"
+                    value={secondary}
+                    onChange={(e) => setSecondary(e.target.value)}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
@@ -592,6 +668,65 @@ export default function Admin() {
         </section>
       )}
 
+      {tab === "styles" && selectedStyleKey !== "luminous.styles.generales" && (
+        <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-sm font-medium">
+              Editor de estilos ({locale})
+            </label>
+            <div className="inline-flex border rounded-md overflow-hidden">
+              <button
+                onClick={() => setStyleEditorMode("form")}
+                className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
+              >
+                Formulario
+              </button>
+              <button
+                onClick={() => setStyleEditorMode("json")}
+                className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
+              >
+                JSON
+              </button>
+            </div>
+          </div>
+          {styleEditorMode === "json" ? (
+            <textarea
+              value={styleRawJson}
+              onChange={(e) => setStyleRawJson(e.target.value)}
+              className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
+            />
+          ) : (
+            <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+              <JsonFormEditor
+                jsonText={styleRawJson}
+                onChangeJsonText={setStyleRawJson}
+              />
+            </div>
+          )}
+          <div className="mt-3">
+            <button
+              disabled={styleSaving}
+              onClick={async () => {
+                try {
+                  setStyleSaving(true);
+                  const parsed = JSON.parse(styleRawJson);
+                  await upsertContent(selectedStyleKey, locale, parsed);
+                  setStyleJson(parsed);
+                  alert("Estilos guardados");
+                } catch (e: any) {
+                  alert("Error al guardar: " + e.message);
+                } finally {
+                  setStyleSaving(false);
+                }
+              }}
+              className="px-4 py-2 bg-stone-900 text-white rounded-md"
+            >
+              Guardar
+            </button>
+          </div>
+        </section>
+      )}
+
       {tab === "translate" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
           <TranslatorTool />
@@ -599,6 +734,95 @@ export default function Admin() {
       )}
     </AdminLayout>
   );
+}
+
+function isPlainObject(v: any) {
+  return v && typeof v === "object" && !Array.isArray(v);
+}
+
+function mergeDefaults<T = any>(defaults: any, data: any): T {
+  if (Array.isArray(defaults))
+    return (Array.isArray(data) ? data : defaults) as T;
+  if (isPlainObject(defaults)) {
+    const out: any = { ...defaults };
+    if (isPlainObject(data)) {
+      for (const k of Object.keys(data)) {
+        out[k] =
+          isPlainObject(out[k]) || Array.isArray(out[k])
+            ? mergeDefaults(out[k], data[k])
+            : data[k];
+      }
+    }
+    return out as T;
+  }
+  return (data ?? defaults) as T;
+}
+
+function defaultStyles(key: string) {
+  const name = key.replace(/^luminous\.styles\./, "");
+  if (name === "generales") {
+    return {
+      colors: { primary: "#2e4c47", secondary: "#CBEDE0" },
+      typography: { fontFamily: "alegreya-sans, sans-serif", baseSize: 16 },
+      assets: { logoUrl: "" },
+    };
+  }
+  if (name === "header") {
+    return {
+      title1Color: "#ffffff",
+      title2Color: "#ffffff",
+      title1Size: 48,
+      title2Size: 40,
+      subtitle1Color: "#ffffff",
+      subtitle2Color: "#ffffff",
+    };
+  }
+  if (name === "about") {
+    return {
+      titleColor: "#111111",
+      bodyColor: "#333333",
+      backgroundColor: "#ffffff",
+      titleSize: 50,
+      bodySize: 18,
+      backgroundImage: "",
+    };
+  }
+  if (name === "therapies") {
+    return {
+      titleColor: "#111111",
+      itemTitleColor: "#111111",
+      itemDescColor: "#555555",
+    };
+  }
+  if (name === "services") {
+    return {
+      titleColor: "#111111",
+      subtitleColor: "#333333",
+      itemTitleColor: "#111111",
+    };
+  }
+  if (name === "process") {
+    return {
+      titleColor: "#111111",
+      introColor: "#333333",
+      stepTitleColor: "#111111",
+      stepDescColor: "#555555",
+    };
+  }
+  if (name === "team") {
+    return {
+      titleColor: "#111111",
+      nameColor: "#111111",
+      roleColor: "#555555",
+    };
+  }
+  if (name === "contact") {
+    return { titleColor: "#111111", infoColor: "#333333" };
+  }
+  if (name === "footer") {
+    return { textColor: "#111111" };
+  }
+  return {};
 }
 
 function defaultContent(key: string) {
@@ -620,7 +844,11 @@ function defaultContent(key: string) {
         subtitle1: "Psicoterapia DBT basada en evidencia",
         subtitle2: "Acompañamiento humano y profesional",
         cta1: "Quiero comenzar terapia",
+        cta1Link: "https://wa.me/56949897699",
         cta2: "Conoce el Programa DBT",
+        cta2Link: "#servicios",
+        backgroundImage:
+          "https://cdn.prod.website-files.com/671898ae57fbee5bf1da9fba/673daa20f8d824dc60d87727_6ca5979b6f014ba47a22c3f88928aabc_bg-1.webp",
       };
     case "luminous.about":
       return {
@@ -628,6 +856,7 @@ function defaultContent(key: string) {
         body: "Creemos que cada persona tiene el potencial de sanar.",
         linkText: "Conócenos",
         linkUrl: "/#nosotros",
+        image: "",
       };
     case "luminous.therapies":
       return {
@@ -752,13 +981,38 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
   }
   if (k === "luminous.about") {
     return (
-      <div>
+      <div className="h-full flex flex-col">
         <Heading>Nosotros</Heading>
-        <div className="bg-[rgb(253,251,245)] rounded-lg p-4">
-          <div className="text-xl font-medium mb-2 tk-alegreya">
-            {data.title}
+        <div className="grid md:grid-cols-2 gap-4 items-center">
+          <div className="space-y-3">
+            <div className="text-2xl md:text-3xl font-bold tk-alegreya tracking-tight">
+              {data.title}
+            </div>
+            <div className="h-0.5 w-12 bg-[rgb(186,161,132)]" />
+            <Small>{data.body}</Small>
+            {data.linkText && (
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full px-4 py-2 border shadow-[inset_0_1px_0_0_#BAA184]">
+                  <span className="text-xs tk-alegreya">{data.linkText}</span>
+                </span>
+              </div>
+            )}
           </div>
-          <Small>{data.body}</Small>
+          <div className="md:row-start-1">
+            <div className="aspect-square w-3/4 ml-auto rounded-lg overflow-hidden bg-gray-200">
+              {data.image ? (
+                <img
+                  src={data.image}
+                  alt="about"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full grid place-items-center text-gray-500 text-xs">
+                  Imagen
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );

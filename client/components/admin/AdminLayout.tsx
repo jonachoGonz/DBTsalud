@@ -56,25 +56,22 @@ export default function AdminLayout({
                 {it.icon}
                 <span>{it.label}</span>
               </button>
-              {active === "content" &&
-                it.key === "content" &&
-                subItems &&
-                subItems.length > 0 && (
-                  <div className="ml-2 pl-2 border-l space-y-1">
-                    <div className="px-2 pt-2 text-[10px] uppercase tracking-wide text-gray-500">
-                      Secciones
-                    </div>
-                    {subItems.map((si) => (
-                      <button
-                        key={si.key}
-                        onClick={si.onClick}
-                        className={`w-full text-left px-3 py-1.5 rounded-md text-sm ${si.active ? "bg-[rgb(236,243,255)] text-[rgb(70,95,255)]" : "hover:bg-gray-50"}`}
-                      >
-                        {si.label}
-                      </button>
-                    ))}
+              {it.key === active && subItems && subItems.length > 0 && (
+                <div className="ml-2 pl-2 border-l space-y-1">
+                  <div className="px-2 pt-2 text-[10px] uppercase tracking-wide text-gray-500">
+                    Secciones
                   </div>
-                )}
+                  {subItems.map((si) => (
+                    <button
+                      key={si.key}
+                      onClick={si.onClick}
+                      className={`w-full text-left px-3 py-1.5 rounded-md text-sm ${si.active ? "bg-[rgb(236,243,255)] text-[rgb(70,95,255)]" : "hover:bg-gray-50"}`}
+                    >
+                      {si.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </nav>

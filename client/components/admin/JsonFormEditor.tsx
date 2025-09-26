@@ -151,6 +151,10 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
   function humanLabel(raw?: string) {
     if (!raw) return raw;
     if (raw === "backgroundImage") return "Imagen de fondo";
+    if (raw === "backgroundColor") return "Color de fondo";
+    if (raw === "titleSize") return "Tamaño del título";
+    if (raw === "bodySize") return "Tamaño del cuerpo";
+    if (raw === "image") return "Imagen";
     if (raw === "cta1Link") return "cta1 link";
     if (raw === "cta2Link") return "cta2 link";
     return raw;

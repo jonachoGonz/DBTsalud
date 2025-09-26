@@ -44,6 +44,21 @@ function isImageKey(label: string | undefined, path: (string | number)[]) {
   );
 }
 
+function isColorKey(label?: string) {
+  const l = String(label || "").toLowerCase();
+  return l.includes("color");
+}
+
+function toHex(v: any): string {
+  let s = String(v || "#000000").trim();
+  if (!s.startsWith("#")) s = "#" + s.replace(/[^0-9a-fA-F]/g, "");
+  if (s.length === 4) {
+    const r = s[1], g = s[2], b = s[3];
+    s = `#${r}${r}${g}${g}${b}${b}`;
+  }
+  return /^#([0-9a-fA-F]{6})$/.test(s) ? s : "#000000";
+}
+
 export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
   const data = useMemo(() => {
     try {
@@ -280,6 +295,30 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
               className="w-full border rounded-md px-3 py-2"
               placeholder="o pega una URL de imagen"
               value={toStringValue(value)}
+              onChange={(e) => update(path, e.target.value)}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (isColorKey(label)) {
+      const hex = toHex(value);
+      return (
+        <div key={key}>
+          {label && (
+            <label className="block text-sm font-medium mb-1">{humanLabel(label)}</label>
+          )}
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={hex}
+              onChange={(e) => update(path, e.target.value)}
+              className="h-10 w-14 p-0 border rounded"
+            />
+            <input
+              className="flex-1 border rounded-md px-3 py-2 font-mono"
+              value={hex}
               onChange={(e) => update(path, e.target.value)}
             />
           </div>

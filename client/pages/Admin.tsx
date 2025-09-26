@@ -42,12 +42,32 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [editorMode, setEditorMode] = useState<"json" | "form">("form");
 
-  // styles state
+  // styles: general theme
   const [primary, setPrimary] = useState("#2e4c47");
   const [secondary, setSecondary] = useState("#CBEDE0");
   const [fontFamily, setFontFamily] = useState("alegreya-sans, sans-serif");
   const [baseSize, setBaseSize] = useState(16);
   const [logoUrl, setLogoUrl] = useState("");
+  // styles: per-section
+  const styleKeysBase = useMemo(
+    () =>
+      [
+        "luminous.styles.generales",
+        ...defaultKeys
+          .filter((k) => k !== "luminous.seo")
+          .map((k) => k.replace(/^luminous\./, "luminous.styles.")),
+      ],
+    [],
+  );
+  const [selectedStyleKey, setSelectedStyleKey] = useState<string>(
+    styleKeysBase[0],
+  );
+  const [styleJson, setStyleJson] = useState<any>({});
+  const [styleRawJson, setStyleRawJson] = useState<string>("{}");
+  const [styleSaving, setStyleSaving] = useState(false);
+  const [styleEditorMode, setStyleEditorMode] = useState<"json" | "form">(
+    "form",
+  );
 
   useEffect(() => {
     if (!authed) return;
@@ -60,6 +80,18 @@ export default function Admin() {
       } catch {}
     })();
   }, [authed]);
+
+  // load per-section styles when switching selection
+  useEffect(() => {
+    if (!authed) return;
+    (async () => {
+      const defaults = defaultStyles(selectedStyleKey);
+      const data = await fetchContent(selectedStyleKey, locale);
+      const safe = mergeDefaults(defaults, data ?? {});
+      setStyleJson(safe);
+      setStyleRawJson(JSON.stringify(safe, null, 2));
+    })();
+  }, [selectedStyleKey, locale, authed]);
 
   async function loadSettings() {
     const settings = await fetchSiteSettings();
@@ -417,13 +449,36 @@ export default function Admin() {
     onClick: () => setSelectedKey(k),
   }));
 
+  const stylesSectionLabel = (k: string) => {
+    const name = k.replace(/^luminous\.styles\./, "");
+    const map: Record<string, string> = {
+      generales: "Generales",
+      header: "Encabezado",
+      about: "Nosotros",
+      therapies: "Terapias",
+      services: "Servicios",
+      process: "Proceso",
+      team: "Equipo",
+      contact: "Contacto",
+      footer: "Footer",
+    };
+    return map[name] || name.charAt(0).toUpperCase() + name.slice(1);
+  };
+
+  const styleSubItems = styleKeysBase.map((k) => ({
+    key: k,
+    label: stylesSectionLabel(k),
+    active: selectedStyleKey === k,
+    onClick: () => setSelectedStyleKey(k),
+  }));
+
   return (
     <AdminLayout
       active={tab}
       onChange={setTab as any}
       locale={locale}
       onLocaleChange={setLocale as any}
-      subItems={tab === "content" ? subItems : undefined}
+      subItems={tab === "content" ? subItems : tab === "styles" ? styleSubItems : undefined}
     >
       {tab === "content" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
@@ -492,94 +547,75 @@ export default function Admin() {
         </section>
       )}
 
-      {tab === "styles" && (
+      {tab === "styles" && selectedStyleKey === "luminous.styles.generales" && (
         <section className="space-y-6 bg-white rounded-xl border shadow-sm p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Color primario
-                </label>
-                <input
-                  type="text"
-                  value={primary}
-                  onChange={(e) => setPrimary(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <label className="block text-sm font-medium mb-1">Color primario</label>
+                <input type="text" value={primary} onChange={(e) => setPrimary(e.target.value)} className="w-full border rounded-md px-3 py-2" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Color secundario
-                </label>
-                <input
-                  type="text"
-                  value={secondary}
-                  onChange={(e) => setSecondary(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <label className="block text-sm font-medium mb-1">Color secundario</label>
+                <input type="text" value={secondary} onChange={(e) => setSecondary(e.target.value)} className="w-full border rounded-md px-3 py-2" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Tipografía (CSS font-family)
-                </label>
-                <input
-                  type="text"
-                  value={fontFamily}
-                  onChange={(e) => setFontFamily(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <label className="block text-sm font-medium mb-1">Tipografía (CSS font-family)</label>
+                <input type="text" value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} className="w-full border rounded-md px-3 py-2" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Tamaño base (px)
-                </label>
-                <input
-                  type="number"
-                  min={12}
-                  max={24}
-                  value={baseSize}
-                  onChange={(e) => setBaseSize(Number(e.target.value))}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <label className="block text-sm font-medium mb-1">Tamaño base (px)</label>
+                <input type="number" min={12} max={24} value={baseSize} onChange={(e) => setBaseSize(Number(e.target.value))} className="w-full border rounded-md px-3 py-2" />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">
-                  Logo URL
-                </label>
-                <input
-                  type="text"
-                  value={logoUrl}
-                  onChange={(e) => setLogoUrl(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
-                />
+                <label className="block text-sm font-medium mb-1">Logo URL</label>
+                <input type="text" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} className="w-full border rounded-md px-3 py-2" />
               </div>
             </div>
             <div>
               <div className="border rounded-xl p-4">
-                <div
-                  className="h-36 rounded bg-gray-50 flex items-center justify-center"
-                  style={{ fontFamily }}
-                >
+                <div className="h-36 rounded bg-gray-50 flex items-center justify-center" style={{ fontFamily }}>
                   <div>
                     <div className="text-sm text-gray-500">Vista previa</div>
-                    <div className="text-2xl" style={{ color: primary }}>
-                      Título de ejemplo
-                    </div>
-                    <div className="text-base" style={{ color: secondary }}>
-                      Texto secundario
-                    </div>
+                    <div className="text-2xl" style={{ color: primary }}>Título de ejemplo</div>
+                    <div className="text-base" style={{ color: secondary }}>Texto secundario</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <button
-              onClick={handleApplyTheme}
-              className="px-4 py-2 bg-stone-900 text-white rounded-md"
-            >
-              Guardar y aplicar
-            </button>
+            <button onClick={handleApplyTheme} className="px-4 py-2 bg-stone-900 text-white rounded-md">Guardar y aplicar</button>
+          </div>
+        </section>
+      )}
+
+      {tab === "styles" && selectedStyleKey !== "luminous.styles.generales" && (
+        <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-sm font-medium">Editor de estilos ({locale})</label>
+            <div className="inline-flex border rounded-md overflow-hidden">
+              <button onClick={() => setStyleEditorMode("form")} className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}>Formulario</button>
+              <button onClick={() => setStyleEditorMode("json")} className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}>JSON</button>
+            </div>
+          </div>
+          {styleEditorMode === "json" ? (
+            <textarea value={styleRawJson} onChange={(e) => setStyleRawJson(e.target.value)} className="w-full h-[460px] border rounded-md p-3 font-mono text-sm" />
+          ) : (
+            <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+              <JsonFormEditor jsonText={styleRawJson} onChangeJsonText={setStyleRawJson} />
+            </div>
+          )}
+          <div className="mt-3">
+            <button disabled={styleSaving} onClick={async () => {
+              try {
+                setStyleSaving(true);
+                const parsed = JSON.parse(styleRawJson);
+                await upsertContent(selectedStyleKey, locale, parsed);
+                setStyleJson(parsed);
+                alert("Estilos guardados");
+              } catch (e: any) { alert("Error al guardar: " + e.message); } finally { setStyleSaving(false); }
+            }} className="px-4 py-2 bg-stone-900 text-white rounded-md">Guardar</button>
           </div>
         </section>
       )}
@@ -611,6 +647,49 @@ function mergeDefaults<T = any>(defaults: any, data: any): T {
     return out as T;
   }
   return (data ?? defaults) as T;
+}
+
+function defaultStyles(key: string) {
+  const name = key.replace(/^luminous\.styles\./, "");
+  if (name === "generales") {
+    return {
+      colors: { primary: "#2e4c47", secondary: "#CBEDE0" },
+      typography: { fontFamily: "alegreya-sans, sans-serif", baseSize: 16 },
+      assets: { logoUrl: "" },
+    };
+  }
+  if (name === "header") {
+    return {
+      title1Color: "#ffffff",
+      title2Color: "#ffffff",
+      title1Size: 48,
+      title2Size: 40,
+      subtitle1Color: "#ffffff",
+      subtitle2Color: "#ffffff",
+    };
+  }
+  if (name === "about") {
+    return { titleColor: "#111111", bodyColor: "#333333" };
+  }
+  if (name === "therapies") {
+    return { titleColor: "#111111", itemTitleColor: "#111111", itemDescColor: "#555555" };
+  }
+  if (name === "services") {
+    return { titleColor: "#111111", subtitleColor: "#333333", itemTitleColor: "#111111" };
+  }
+  if (name === "process") {
+    return { titleColor: "#111111", introColor: "#333333", stepTitleColor: "#111111", stepDescColor: "#555555" };
+  }
+  if (name === "team") {
+    return { titleColor: "#111111", nameColor: "#111111", roleColor: "#555555" };
+  }
+  if (name === "contact") {
+    return { titleColor: "#111111", infoColor: "#333333" };
+  }
+  if (name === "footer") {
+    return { textColor: "#111111" };
+  }
+  return {};
 }
 
 function defaultContent(key: string) {

@@ -205,7 +205,9 @@ export default function DBTHeader() {
             <a
               href={cta1Href}
               target={cta1Href.startsWith("http") ? "_blank" : undefined}
-              rel={cta1Href.startsWith("http") ? "noopener noreferrer" : undefined}
+              rel={
+                cta1Href.startsWith("http") ? "noopener noreferrer" : undefined
+              }
               className="inline-flex items-center justify-center bg-[rgb(252,248,241)] text-black text-lg font-medium px-8 py-4 rounded-full transition-all duration-400 hover:bg-[rgba(252,248,241,0.9)] tk-alegreya"
             >
               {header?.cta1 || t("hero.cta1")}

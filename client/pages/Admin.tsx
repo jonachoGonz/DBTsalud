@@ -50,13 +50,12 @@ export default function Admin() {
   const [logoUrl, setLogoUrl] = useState("");
   // styles: per-section
   const styleKeysBase = useMemo(
-    () =>
-      [
-        "luminous.styles.generales",
-        ...defaultKeys
-          .filter((k) => k !== "luminous.seo")
-          .map((k) => k.replace(/^luminous\./, "luminous.styles.")),
-      ],
+    () => [
+      "luminous.styles.generales",
+      ...defaultKeys
+        .filter((k) => k !== "luminous.seo")
+        .map((k) => k.replace(/^luminous\./, "luminous.styles.")),
+    ],
     [],
   );
   const [selectedStyleKey, setSelectedStyleKey] = useState<string>(
@@ -478,7 +477,13 @@ export default function Admin() {
       onChange={setTab as any}
       locale={locale}
       onLocaleChange={setLocale as any}
-      subItems={tab === "content" ? subItems : tab === "styles" ? styleSubItems : undefined}
+      subItems={
+        tab === "content"
+          ? subItems
+          : tab === "styles"
+            ? styleSubItems
+            : undefined
+      }
     >
       {tab === "content" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
@@ -552,46 +557,113 @@ export default function Admin() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Color primario</label>
+                <label className="block text-sm font-medium mb-1">
+                  Color primario
+                </label>
                 <div className="flex items-center gap-2">
-                  <input type="color" value={primary.startsWith('#')?primary:'#'+primary.replace(/[^0-9a-fA-F]/g,'')} onChange={(e) => setPrimary(e.target.value)} className="h-10 w-14 p-0 border rounded" />
-                  <input type="text" value={primary} onChange={(e) => setPrimary(e.target.value)} className="flex-1 border rounded-md px-3 py-2 font-mono" />
+                  <input
+                    type="color"
+                    value={
+                      primary.startsWith("#")
+                        ? primary
+                        : "#" + primary.replace(/[^0-9a-fA-F]/g, "")
+                    }
+                    onChange={(e) => setPrimary(e.target.value)}
+                    className="h-10 w-14 p-0 border rounded"
+                  />
+                  <input
+                    type="text"
+                    value={primary}
+                    onChange={(e) => setPrimary(e.target.value)}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                  />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Color secundario</label>
+                <label className="block text-sm font-medium mb-1">
+                  Color secundario
+                </label>
                 <div className="flex items-center gap-2">
-                  <input type="color" value={secondary.startsWith('#')?secondary:'#'+secondary.replace(/[^0-9a-fA-F]/g,'')} onChange={(e) => setSecondary(e.target.value)} className="h-10 w-14 p-0 border rounded" />
-                  <input type="text" value={secondary} onChange={(e) => setSecondary(e.target.value)} className="flex-1 border rounded-md px-3 py-2 font-mono" />
+                  <input
+                    type="color"
+                    value={
+                      secondary.startsWith("#")
+                        ? secondary
+                        : "#" + secondary.replace(/[^0-9a-fA-F]/g, "")
+                    }
+                    onChange={(e) => setSecondary(e.target.value)}
+                    className="h-10 w-14 p-0 border rounded"
+                  />
+                  <input
+                    type="text"
+                    value={secondary}
+                    onChange={(e) => setSecondary(e.target.value)}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                  />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Tipografía (CSS font-family)</label>
-                <input type="text" value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} className="w-full border rounded-md px-3 py-2" />
+                <label className="block text-sm font-medium mb-1">
+                  Tipografía (CSS font-family)
+                </label>
+                <input
+                  type="text"
+                  value={fontFamily}
+                  onChange={(e) => setFontFamily(e.target.value)}
+                  className="w-full border rounded-md px-3 py-2"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Tamaño base (px)</label>
-                <input type="number" min={12} max={24} value={baseSize} onChange={(e) => setBaseSize(Number(e.target.value))} className="w-full border rounded-md px-3 py-2" />
+                <label className="block text-sm font-medium mb-1">
+                  Tamaño base (px)
+                </label>
+                <input
+                  type="number"
+                  min={12}
+                  max={24}
+                  value={baseSize}
+                  onChange={(e) => setBaseSize(Number(e.target.value))}
+                  className="w-full border rounded-md px-3 py-2"
+                />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Logo URL</label>
-                <input type="text" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} className="w-full border rounded-md px-3 py-2" />
+                <label className="block text-sm font-medium mb-1">
+                  Logo URL
+                </label>
+                <input
+                  type="text"
+                  value={logoUrl}
+                  onChange={(e) => setLogoUrl(e.target.value)}
+                  className="w-full border rounded-md px-3 py-2"
+                />
               </div>
             </div>
             <div>
               <div className="border rounded-xl p-4">
-                <div className="h-36 rounded bg-gray-50 flex items-center justify-center" style={{ fontFamily }}>
+                <div
+                  className="h-36 rounded bg-gray-50 flex items-center justify-center"
+                  style={{ fontFamily }}
+                >
                   <div>
                     <div className="text-sm text-gray-500">Vista previa</div>
-                    <div className="text-2xl" style={{ color: primary }}>Título de ejemplo</div>
-                    <div className="text-base" style={{ color: secondary }}>Texto secundario</div>
+                    <div className="text-2xl" style={{ color: primary }}>
+                      Título de ejemplo
+                    </div>
+                    <div className="text-base" style={{ color: secondary }}>
+                      Texto secundario
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div>
-            <button onClick={handleApplyTheme} className="px-4 py-2 bg-stone-900 text-white rounded-md">Guardar y aplicar</button>
+            <button
+              onClick={handleApplyTheme}
+              className="px-4 py-2 bg-stone-900 text-white rounded-md"
+            >
+              Guardar y aplicar
+            </button>
           </div>
         </section>
       )}
@@ -599,29 +671,58 @@ export default function Admin() {
       {tab === "styles" && selectedStyleKey !== "luminous.styles.generales" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium">Editor de estilos ({locale})</label>
+            <label className="block text-sm font-medium">
+              Editor de estilos ({locale})
+            </label>
             <div className="inline-flex border rounded-md overflow-hidden">
-              <button onClick={() => setStyleEditorMode("form")} className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}>Formulario</button>
-              <button onClick={() => setStyleEditorMode("json")} className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}>JSON</button>
+              <button
+                onClick={() => setStyleEditorMode("form")}
+                className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
+              >
+                Formulario
+              </button>
+              <button
+                onClick={() => setStyleEditorMode("json")}
+                className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
+              >
+                JSON
+              </button>
             </div>
           </div>
           {styleEditorMode === "json" ? (
-            <textarea value={styleRawJson} onChange={(e) => setStyleRawJson(e.target.value)} className="w-full h-[460px] border rounded-md p-3 font-mono text-sm" />
+            <textarea
+              value={styleRawJson}
+              onChange={(e) => setStyleRawJson(e.target.value)}
+              className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
+            />
           ) : (
             <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
-              <JsonFormEditor jsonText={styleRawJson} onChangeJsonText={setStyleRawJson} />
+              <JsonFormEditor
+                jsonText={styleRawJson}
+                onChangeJsonText={setStyleRawJson}
+              />
             </div>
           )}
           <div className="mt-3">
-            <button disabled={styleSaving} onClick={async () => {
-              try {
-                setStyleSaving(true);
-                const parsed = JSON.parse(styleRawJson);
-                await upsertContent(selectedStyleKey, locale, parsed);
-                setStyleJson(parsed);
-                alert("Estilos guardados");
-              } catch (e: any) { alert("Error al guardar: " + e.message); } finally { setStyleSaving(false); }
-            }} className="px-4 py-2 bg-stone-900 text-white rounded-md">Guardar</button>
+            <button
+              disabled={styleSaving}
+              onClick={async () => {
+                try {
+                  setStyleSaving(true);
+                  const parsed = JSON.parse(styleRawJson);
+                  await upsertContent(selectedStyleKey, locale, parsed);
+                  setStyleJson(parsed);
+                  alert("Estilos guardados");
+                } catch (e: any) {
+                  alert("Error al guardar: " + e.message);
+                } finally {
+                  setStyleSaving(false);
+                }
+              }}
+              className="px-4 py-2 bg-stone-900 text-white rounded-md"
+            >
+              Guardar
+            </button>
           </div>
         </section>
       )}
@@ -640,14 +741,16 @@ function isPlainObject(v: any) {
 }
 
 function mergeDefaults<T = any>(defaults: any, data: any): T {
-  if (Array.isArray(defaults)) return (Array.isArray(data) ? data : defaults) as T;
+  if (Array.isArray(defaults))
+    return (Array.isArray(data) ? data : defaults) as T;
   if (isPlainObject(defaults)) {
     const out: any = { ...defaults };
     if (isPlainObject(data)) {
       for (const k of Object.keys(data)) {
-        out[k] = isPlainObject(out[k]) || Array.isArray(out[k])
-          ? mergeDefaults(out[k], data[k])
-          : data[k];
+        out[k] =
+          isPlainObject(out[k]) || Array.isArray(out[k])
+            ? mergeDefaults(out[k], data[k])
+            : data[k];
       }
     }
     return out as T;
@@ -685,16 +788,33 @@ function defaultStyles(key: string) {
     };
   }
   if (name === "therapies") {
-    return { titleColor: "#111111", itemTitleColor: "#111111", itemDescColor: "#555555" };
+    return {
+      titleColor: "#111111",
+      itemTitleColor: "#111111",
+      itemDescColor: "#555555",
+    };
   }
   if (name === "services") {
-    return { titleColor: "#111111", subtitleColor: "#333333", itemTitleColor: "#111111" };
+    return {
+      titleColor: "#111111",
+      subtitleColor: "#333333",
+      itemTitleColor: "#111111",
+    };
   }
   if (name === "process") {
-    return { titleColor: "#111111", introColor: "#333333", stepTitleColor: "#111111", stepDescColor: "#555555" };
+    return {
+      titleColor: "#111111",
+      introColor: "#333333",
+      stepTitleColor: "#111111",
+      stepDescColor: "#555555",
+    };
   }
   if (name === "team") {
-    return { titleColor: "#111111", nameColor: "#111111", roleColor: "#555555" };
+    return {
+      titleColor: "#111111",
+      nameColor: "#111111",
+      roleColor: "#555555",
+    };
   }
   if (name === "contact") {
     return { titleColor: "#111111", infoColor: "#333333" };
@@ -881,9 +1001,15 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
           <div className="md:row-start-1">
             <div className="aspect-square w-3/4 ml-auto rounded-lg overflow-hidden bg-gray-200">
               {data.image ? (
-                <img src={data.image} alt="about" className="w-full h-full object-cover" />
+                <img
+                  src={data.image}
+                  alt="about"
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <div className="w-full h-full grid place-items-center text-gray-500 text-xs">Imagen</div>
+                <div className="w-full h-full grid place-items-center text-gray-500 text-xs">
+                  Imagen
+                </div>
               )}
             </div>
           </div>

@@ -10,7 +10,8 @@ export default function DBTAbout() {
   const body = about?.body || t("about.intro");
   const linkText = about?.linkText;
   const linkUrl = about?.linkUrl || "#nosotros";
-  const imageUrl = about?.image ||
+  const imageUrl =
+    about?.image ||
     "https://images.unsplash.com/photo-1529336953121-a1d79f36d1f0?q=80&w=1200&auto=format&fit=crop";
 
   return (
@@ -21,9 +22,7 @@ export default function DBTAbout() {
         className="pointer-events-none select-none absolute inset-x-0 -top-28 -z-10 text-[22vw] leading-none text-white"
         style={{ textShadow: "0 1px 0 #BAA184" }}
       >
-        <span className="block pl-2 pr-4 truncate">
-          {title}
-        </span>
+        <span className="block pl-2 pr-4 truncate">{title}</span>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">

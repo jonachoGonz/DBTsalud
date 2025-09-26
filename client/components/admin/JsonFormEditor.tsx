@@ -53,7 +53,9 @@ function toHex(v: any): string {
   let s = String(v || "#000000").trim();
   if (!s.startsWith("#")) s = "#" + s.replace(/[^0-9a-fA-F]/g, "");
   if (s.length === 4) {
-    const r = s[1], g = s[2], b = s[3];
+    const r = s[1],
+      g = s[2],
+      b = s[3];
     s = `#${r}${r}${g}${g}${b}${b}`;
   }
   return /^#([0-9a-fA-F]{6})$/.test(s) ? s : "#000000";
@@ -102,10 +104,18 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return tpl;
     }
     const last = String(path[path.length - 1] ?? "").toLowerCase();
-    if (last.includes("members") || last.includes("equipo") || last.includes("team")) {
+    if (
+      last.includes("members") ||
+      last.includes("equipo") ||
+      last.includes("team")
+    ) {
       return { name: "", role: "", bio: "", image: "" };
     }
-    if (last.includes("steps") || last.includes("pasos") || last.includes("step")) {
+    if (
+      last.includes("steps") ||
+      last.includes("pasos") ||
+      last.includes("step")
+    ) {
       return { title: "", desc: "" };
     }
     if (last.includes("items") || last.includes("item")) {
@@ -136,8 +146,7 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       const folder = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
       const objectPath = `${folder}/${safeName}`;
 
-      const { error: upErr } = await supabase
-        .storage
+      const { error: upErr } = await supabase.storage
         .from(SUPABASE_BUCKET)
         .upload(objectPath, file, {
           cacheControl: "3600",
@@ -186,11 +195,16 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <div key={key} className="space-y-2">
           {label && (
-            <label className="block text-sm font-medium">{humanLabel(label)}</label>
+            <label className="block text-sm font-medium">
+              {humanLabel(label)}
+            </label>
           )}
           <div className="flex flex-wrap gap-3">
             {value.map((item, idx) => (
-              <div key={idx} className="border rounded-md p-2 bg-white w-auto md:w-[450px]">
+              <div
+                key={idx}
+                className="border rounded-md p-2 bg-white w-auto md:w-[450px]"
+              >
                 {typeof item === "object" && item !== null ? (
                   <div className="space-y-3">
                     {Object.keys(item).map((k) =>
@@ -251,7 +265,9 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <fieldset key={key} className="rounded-md p-3 bg-gray-50">
           {label && (
-            <legend className="px-1 text-sm font-medium">{humanLabel(label)}</legend>
+            <legend className="px-1 text-sm font-medium">
+              {humanLabel(label)}
+            </legend>
           )}
           <div className="space-y-3">
             {ordered.map((k) => renderField(value[k], [...path, k], k))}
@@ -264,7 +280,9 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <div key={key} className="">
           {label && (
-            <label className="block text-sm font-medium mb-1">{humanLabel(label)}</label>
+            <label className="block text-sm font-medium mb-1">
+              {humanLabel(label)}
+            </label>
           )}
           {looksLikeUrl(String(value || "")) && (
             <div className="mb-2">
@@ -307,7 +325,9 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
       return (
         <div key={key}>
           {label && (
-            <label className="block text-sm font-medium mb-1">{humanLabel(label)}</label>
+            <label className="block text-sm font-medium mb-1">
+              {humanLabel(label)}
+            </label>
           )}
           <div className="flex items-center gap-2">
             <input
@@ -329,7 +349,9 @@ export default function JsonFormEditor({ jsonText, onChangeJsonText }: Props) {
     return (
       <div key={key}>
         {label && (
-          <label className="block text-sm font-medium mb-1">{humanLabel(label)}</label>
+          <label className="block text-sm font-medium mb-1">
+            {humanLabel(label)}
+          </label>
         )}
         <input
           className="w-full border rounded-md px-3 py-2"

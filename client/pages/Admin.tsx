@@ -152,6 +152,7 @@ export default function Admin() {
     const pw = String(form.get("password") || "");
     if (user === ADMIN_USER && pw === ADMIN_PASSWORD) {
       sessionStorage.setItem("adminAuthed", "1");
+      sessionStorage.setItem("adminBasicAuth", btoa(`${user}:${pw}`));
       setAuthed(true);
     } else {
       alert("Credenciales inválidas");

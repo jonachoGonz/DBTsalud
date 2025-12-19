@@ -7,7 +7,7 @@ export default function Footer() {
     { label: "Contacto", href: "/contacto" },
   ];
 
-  const legalLinks = [
+  const legalLinks: { label: string; href: string; external?: boolean }[] = [
     { label: "Política de Privacidad", href: "/privacy-policy" },
     { label: "Términos y Condiciones", href: "/terms-conditions" },
     { label: "Código de Ética", href: "/codigo-etica" },

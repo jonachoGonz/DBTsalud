@@ -21,20 +21,23 @@ const SEOHead = ({
     document.title = title;
 
     // Helper function to set or update meta tags
-    const setMetaTag = (name: string, content: string, property?: string) => {
-      const selector = property ? `meta[property="${name}"]` : `meta[name="${name}"]`;
-      let meta = document.querySelector(selector) as HTMLMetaElement;
-      
+    const setMetaTag = (
+      name: string,
+      content: string,
+      isProperty = false,
+    ) => {
+      const selector = isProperty
+        ? `meta[property="${name}"]`
+        : `meta[name="${name}"]`;
+      let meta = document.querySelector(selector) as HTMLMetaElement | null;
+
       if (!meta) {
-        meta = document.createElement('meta');
-        if (property) {
-          meta.setAttribute('property', name);
-        } else {
-          meta.setAttribute('name', name);
-        }
+        meta = document.createElement("meta");
+        meta.setAttribute(isProperty ? "property" : "name", name);
         document.head.appendChild(meta);
       }
-      meta.setAttribute('content', content);
+
+      meta.setAttribute("content", content);
     };
 
     // Helper function to set canonical link

@@ -88,7 +88,7 @@ export async function fetchContent<T = any>(
 ): Promise<T | null> {
   const url = `${API_BASE}/content?key=${encodeURIComponent(key)}&locale=${encodeURIComponent(locale)}`;
   const res = await apiFetchJson<{ data: T | null }>(url);
-  if (!res.ok) {
+  if (res.ok === false) {
     console.error("fetchContent error", res.error);
     return null;
   }
@@ -109,7 +109,7 @@ export async function upsertContent<T = any>(
     },
     body: JSON.stringify({ key, locale, data }),
   });
-  if (!res.ok) throw new Error(res.error);
+  if (res.ok === false) throw new Error(res.error);
 }
 
 export async function listContentKeys(prefix?: string): Promise<string[]> {
@@ -117,7 +117,7 @@ export async function listContentKeys(prefix?: string): Promise<string[]> {
     ? `${API_BASE}/keys?prefix=${encodeURIComponent(prefix)}`
     : `${API_BASE}/keys`;
   const res = await apiFetchJson<{ keys: string[] }>(url);
-  if (!res.ok) throw new Error(res.error);
+  if (res.ok === false) throw new Error(res.error);
   return Array.from(new Set(res.data.keys)).sort();
 }
 
@@ -126,7 +126,7 @@ export async function fetchSiteSettings(): Promise<SiteSettings | null> {
   const res = await apiFetchJson<{ settings: SiteSettings | null }>(
     `${API_BASE}/settings`,
   );
-  if (!res.ok) {
+  if (res.ok === false) {
     console.error("fetchSiteSettings error", res.error);
     return null;
   }
@@ -145,7 +145,7 @@ export async function upsertSiteSettings(
     },
     body: JSON.stringify({ theme: settings }),
   });
-  if (!res.ok) throw new Error(res.error);
+  if (res.ok === false) throw new Error(res.error);
   return null;
 }
 

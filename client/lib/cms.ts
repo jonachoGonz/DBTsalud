@@ -1,6 +1,54 @@
-import { supabase } from "@/lib/supabase";
-
 export type Locale = "es" | "en";
+
+const API_BASE = "/api/cms";
+
+async function apiFetchJson<T>(
+  input: string,
+  init?: RequestInit,
+): Promise<{ ok: true; data: T } | { ok: false; error: string; status?: number }> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+
+  try {
+    const res = await fetch(input, {
+      ...init,
+      signal: controller.signal,
+      headers: {
+        Accept: "application/json",
+        ...(init?.headers || {}),
+      },
+    });
+
+    const status = res.status;
+
+    let json: any = null;
+    try {
+      json = await res.json();
+    } catch {
+      json = null;
+    }
+
+    if (!res.ok) {
+      const msg =
+        (json && typeof json === "object" && (json.error || json.message)) ||
+        `HTTP ${status}`;
+      return { ok: false, error: String(msg), status };
+    }
+
+    return { ok: true, data: json as T };
+  } catch (e: any) {
+    return { ok: false, error: e?.message || String(e) };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function getAdminAuthHeader(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  const token = window.sessionStorage.getItem("adminBasicAuth");
+  if (!token) return undefined;
+  return `Basic ${token}`;
+}
 
 export type ContentEntry<T = any> = {
   id: string;
@@ -38,26 +86,13 @@ export async function fetchContent<T = any>(
   key: string,
   locale: Locale,
 ): Promise<T | null> {
-  try {
-    const { data, error } = await supabase
-      .from("content_entries")
-      .select("data")
-      .eq("key", key)
-      .eq("locale", locale)
-      .maybeSingle();
-
-    if (error) {
-      console.error(
-        "fetchContent error",
-        error?.message || JSON.stringify(error),
-      );
-      return null;
-    }
-    return (data?.data as T) ?? null;
-  } catch (e: any) {
-    console.error("fetchContent error", e?.message || e);
+  const url = `${API_BASE}/content?key=${encodeURIComponent(key)}&locale=${encodeURIComponent(locale)}`;
+  const res = await apiFetchJson<{ data: T | null }>(url);
+  if (!res.ok) {
+    console.error("fetchContent error", res.error);
     return null;
   }
+  return res.data.data ?? null;
 }
 
 export async function upsertContent<T = any>(
@@ -65,52 +100,53 @@ export async function upsertContent<T = any>(
   locale: Locale,
   data: T,
 ) {
-  const { error } = await supabase
-    .from("content_entries")
-    .upsert([{ key, locale, data }], { onConflict: "key,locale" });
-  if (error) throw error;
+  const auth = getAdminAuthHeader();
+  const res = await apiFetchJson<{ ok: true }>(`${API_BASE}/content`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(auth ? { Authorization: auth } : {}),
+    },
+    body: JSON.stringify({ key, locale, data }),
+  });
+  if (!res.ok) throw new Error(res.error);
 }
 
 export async function listContentKeys(prefix?: string): Promise<string[]> {
-  let query = supabase.from("content_entries").select("key");
-  if (prefix) query = query.like("key", `${prefix}%`);
-  const { data, error } = await query;
-  if (error) throw error;
-  const set = new Set<string>();
-  data?.forEach((row: any) => set.add(row.key));
-  return Array.from(set).sort();
+  const url = prefix
+    ? `${API_BASE}/keys?prefix=${encodeURIComponent(prefix)}`
+    : `${API_BASE}/keys`;
+  const res = await apiFetchJson<{ keys: string[] }>(url);
+  if (!res.ok) throw new Error(res.error);
+  return Array.from(new Set(res.data.keys)).sort();
 }
 
 // SETTINGS
 export async function fetchSiteSettings(): Promise<SiteSettings | null> {
-  try {
-    const { data, error } = await supabase
-      .from("site_settings")
-      .select("*")
-      .limit(1)
-      .maybeSingle();
-    if (error) {
-      console.error(
-        "fetchSiteSettings error",
-        error?.message || JSON.stringify(error),
-      );
-      return null;
-    }
-    return (data as SiteSettings) ?? null;
-  } catch (e: any) {
-    console.error("fetchSiteSettings error", e?.message || e);
+  const res = await apiFetchJson<{ settings: SiteSettings | null }>(
+    `${API_BASE}/settings`,
+  );
+  if (!res.ok) {
+    console.error("fetchSiteSettings error", res.error);
     return null;
   }
+  return res.data.settings ?? null;
 }
 
 export async function upsertSiteSettings(
   settings: Partial<SiteSettings>["theme"],
 ) {
-  const { data, error } = await supabase.rpc("upsert_site_settings", {
-    payload: settings,
+  const auth = getAdminAuthHeader();
+  const res = await apiFetchJson<{ ok: true }>(`${API_BASE}/settings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(auth ? { Authorization: auth } : {}),
+    },
+    body: JSON.stringify({ theme: settings }),
   });
-  if (error) throw error;
-  return data;
+  if (!res.ok) throw new Error(res.error);
+  return null;
 }
 
 export const SUPABASE_SCHEMA_SQL = `

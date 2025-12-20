@@ -831,10 +831,7 @@ function defaultStyles(key: string) {
   }
   if (name === "spaces") {
     return {
-      outerBg: "#E2DCD5",
-      innerBg: "#1C1C1C",
-      textColor: "#FFFFFF",
-      trackBg: "#F2EFEA",
+      textColor: "#1C1C1C",
       speedSeconds: 25.6,
     };
   }

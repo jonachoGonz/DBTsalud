@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useContent } from "@/hooks/use-content";
 
@@ -12,30 +11,21 @@ type SpaceItem = {
 type SpacesContent = {
   eyebrow?: string;
   title?: string;
-  ctaText?: string;
-  ctaLink?: string;
   items?: SpaceItem[];
 };
 
 type SpacesStyles = {
-  outerBg?: string;
-  innerBg?: string;
   textColor?: string;
-  trackBg?: string;
   speedSeconds?: number;
 };
 
 const FALLBACK: Record<
   "es" | "en",
-  Required<Pick<SpacesContent, "eyebrow" | "title" | "ctaText" | "ctaLink">> & {
-    items: SpaceItem[];
-  }
+  Required<Pick<SpacesContent, "eyebrow" | "title">> & { items: SpaceItem[] }
 > = {
   es: {
     eyebrow: "NUESTROS ESPACIOS",
     title: "Conoce el centro y sus espacios",
-    ctaText: "VER TODAS LAS FOTOS",
-    ctaLink: "#contacto",
     items: [
       {
         title: "Espacio 1",
@@ -62,8 +52,6 @@ const FALLBACK: Record<
   en: {
     eyebrow: "OUR SPACES",
     title: "Discover our center and spaces",
-    ctaText: "VIEW ALL PHOTOS",
-    ctaLink: "#contact",
     items: [
       {
         title: "Space 1",
@@ -90,10 +78,7 @@ const FALLBACK: Record<
 };
 
 const DEFAULT_STYLES: Required<SpacesStyles> = {
-  outerBg: "#E2DCD5",
-  innerBg: "#1C1C1C",
-  textColor: "#FFFFFF",
-  trackBg: "#F2EFEA",
+  textColor: "#1C1C1C",
   speedSeconds: 25.6,
 };
 
@@ -136,15 +121,9 @@ export default function DBTSpacesCarousel() {
 
   const eyebrow = content?.eyebrow || fallback.eyebrow;
   const title = content?.title || fallback.title;
-  const ctaText = content?.ctaText || fallback.ctaText;
-  const ctaLink = content?.ctaLink || fallback.ctaLink;
 
   return (
-    <section
-      aria-label={eyebrow}
-      className="py-12 sm:py-14"
-      style={{ backgroundColor: mergedStyles.outerBg }}
-    >
+    <section aria-label={eyebrow} className="py-12 sm:py-14">
       <style>{`
         @keyframes dbtSpacesTranslateX {
           from { transform: translateX(0); }
@@ -155,81 +134,57 @@ export default function DBTSpacesCarousel() {
         }
       `}</style>
 
-      <div className="px-4 sm:px-10">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center tk-alegreya">
+          <div
+            className="text-sm tracking-[0.08em] font-medium uppercase"
+            style={{ color: mergedStyles.textColor }}
+          >
+            {eyebrow}
+          </div>
+          <h2
+            className="mt-6 text-4xl sm:text-5xl font-light uppercase"
+            style={{ color: mergedStyles.textColor }}
+          >
+            {title}
+          </h2>
+        </div>
+      </div>
+
+      <div className="mt-10 w-full overflow-hidden">
         <div
-          className="mx-auto max-w-[2200px] relative"
-          style={{ backgroundColor: mergedStyles.innerBg }}
+          className="dbt-spaces-track flex items-center justify-start"
+          style={{
+            animation: `dbtSpacesTranslateX ${mergedStyles.speedSeconds}s linear infinite`,
+            width: "max-content",
+          }}
         >
-          <div className="mx-auto max-w-[1454px] px-4 sm:px-[68px] pt-14 sm:pt-[100px] pb-[220px] sm:pb-[290px]">
-            <div className="mx-auto max-w-[780px] text-center flex flex-col items-center">
-              <div
-                className="text-sm tracking-[0.08em] font-medium uppercase"
-                style={{ color: mergedStyles.textColor }}
-              >
-                {eyebrow}
+          {marqueeSlides.map((it, idx) => {
+            const baseIndex = slides.length ? idx % slides.length : idx;
+            const large = baseIndex % 2 === 0;
+            const width = large
+              ? "clamp(240px, 40vw, 444px)"
+              : "clamp(220px, 34vw, 356px)";
+
+            return (
+              <div key={`${it.title}-${idx}`} className="overflow-hidden pr-20">
+                <div
+                  className="relative aspect-square"
+                  style={{ width }}
+                  aria-label={it.title}
+                >
+                  <div className="absolute inset-0 h-[110%] w-full">
+                    <img
+                      loading="lazy"
+                      alt={it.title}
+                      src={it.image}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
               </div>
-              <h2
-                className="mt-8 text-4xl sm:text-5xl md:text-[60px] md:leading-[65px] font-light uppercase"
-                style={{ color: mergedStyles.textColor }}
-              >
-                {title}
-              </h2>
-
-              <a
-                href={ctaLink}
-                className="mt-12 inline-flex items-center gap-3 text-xs sm:text-[13px] font-medium tracking-[0.08em] uppercase transition-opacity"
-                style={{ color: mergedStyles.textColor }}
-              >
-                <span>{ctaText}</span>
-                <ArrowRight
-                  className="h-[13px] w-[13px]"
-                  style={{ color: mergedStyles.textColor }}
-                />
-              </a>
-            </div>
-          </div>
-
-          <div className="mx-auto max-w-[2200px] -mt-[220px] sm:-mt-[290px] pb-10">
-            <div
-              className="overflow-hidden"
-              style={{ backgroundColor: mergedStyles.trackBg }}
-            >
-              <div
-                className="dbt-spaces-track flex items-center justify-start"
-                style={{
-                  animation: `dbtSpacesTranslateX ${mergedStyles.speedSeconds}s linear infinite`,
-                  width: "max-content",
-                }}
-              >
-                {marqueeSlides.map((it, idx) => {
-                  const baseIndex = slides.length ? idx % slides.length : idx;
-                  const large = baseIndex % 2 === 0;
-                  const width = large
-                    ? "clamp(240px, 40vw, 444px)"
-                    : "clamp(220px, 34vw, 356px)";
-
-                  return (
-                    <div key={`${it.title}-${idx}`} className="overflow-hidden pr-20">
-                      <div
-                        className="relative aspect-square"
-                        style={{ width }}
-                        aria-label={it.title}
-                      >
-                        <div className="absolute inset-0 h-[110%] w-full">
-                          <img
-                            loading="lazy"
-                            alt={it.title}
-                            src={it.image}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>

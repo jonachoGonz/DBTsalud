@@ -1,6 +1,13 @@
 import type { RequestHandler } from "express";
 import { z } from "zod";
 import { supabaseServer } from "../supabase";
+import {
+  getLocalContent,
+  getLocalSettings,
+  listLocalKeys,
+  setLocalContent,
+  setLocalSettings,
+} from "../cms-store";
 
 function sanitizeEnv(v?: string) {
   return (v || "").trim().replace(/^['"]+|['"]+$/g, "");
@@ -53,6 +60,16 @@ const upsertContentBodySchema = z.object({
   data: z.unknown(),
 });
 
+function shouldFallback(err: unknown) {
+  const msg =
+    typeof err === "string" ? err : (err as any)?.message || String(err);
+  return (
+    msg.includes("fetch failed") ||
+    msg.includes("ENOTFOUND") ||
+    msg.includes("getaddrinfo")
+  );
+}
+
 export const handleGetContent: RequestHandler = async (req, res) => {
   const parsed = getContentQuerySchema.safeParse(req.query);
   if (!parsed.success) {
@@ -61,18 +78,29 @@ export const handleGetContent: RequestHandler = async (req, res) => {
 
   const { key, locale } = parsed.data;
 
-  const { data, error } = await supabaseServer
-    .from("content_entries")
-    .select("data")
-    .eq("key", key)
-    .eq("locale", locale)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabaseServer
+      .from("content_entries")
+      .select("data")
+      .eq("key", key)
+      .eq("locale", locale)
+      .maybeSingle();
 
-  if (error) {
-    return res.status(500).json({ error: error.message });
+    if (!error) {
+      return res.status(200).json({ data: (data as any)?.data ?? null });
+    }
+
+    if (!shouldFallback(error)) {
+      return res.status(500).json({ error: error.message });
+    }
+  } catch (e: any) {
+    if (!shouldFallback(e)) {
+      return res.status(500).json({ error: e?.message || String(e) });
+    }
   }
 
-  return res.status(200).json({ data: (data as any)?.data ?? null });
+  const local = await getLocalContent(key, locale);
+  return res.status(200).json({ data: local, backend: "local" });
 };
 
 export const handleUpsertContent: RequestHandler = async (req, res) => {
@@ -87,15 +115,26 @@ export const handleUpsertContent: RequestHandler = async (req, res) => {
 
   const { key, locale, data } = parsed.data;
 
-  const { error } = await supabaseServer
-    .from("content_entries")
-    .upsert([{ key, locale, data }], { onConflict: "key,locale" });
+  try {
+    const { error } = await supabaseServer
+      .from("content_entries")
+      .upsert([{ key, locale, data }], { onConflict: "key,locale" });
 
-  if (error) {
-    return res.status(500).json({ error: error.message });
+    if (!error) {
+      return res.status(200).json({ ok: true });
+    }
+
+    if (!shouldFallback(error)) {
+      return res.status(500).json({ error: error.message });
+    }
+  } catch (e: any) {
+    if (!shouldFallback(e)) {
+      return res.status(500).json({ error: e?.message || String(e) });
+    }
   }
 
-  return res.status(200).json({ ok: true });
+  await setLocalContent(key, locale, data);
+  return res.status(200).json({ ok: true, backend: "local" });
 };
 
 const listKeysQuerySchema = z.object({
@@ -110,31 +149,53 @@ export const handleListKeys: RequestHandler = async (req, res) => {
 
   const prefix = parsed.data.prefix;
 
-  let query = supabaseServer.from("content_entries").select("key");
-  if (prefix) query = query.like("key", `${prefix}%`);
+  try {
+    let query = supabaseServer.from("content_entries").select("key");
+    if (prefix) query = query.like("key", `${prefix}%`);
 
-  const { data, error } = await query;
-  if (error) {
-    return res.status(500).json({ error: error.message });
+    const { data, error } = await query;
+    if (!error) {
+      const set = new Set<string>();
+      (data || []).forEach((row: any) => set.add(String(row.key)));
+      return res.status(200).json({ keys: Array.from(set).sort() });
+    }
+
+    if (!shouldFallback(error)) {
+      return res.status(500).json({ error: error.message });
+    }
+  } catch (e: any) {
+    if (!shouldFallback(e)) {
+      return res.status(500).json({ error: e?.message || String(e) });
+    }
   }
 
-  const set = new Set<string>();
-  (data || []).forEach((row: any) => set.add(String(row.key)));
-  return res.status(200).json({ keys: Array.from(set).sort() });
+  const keys = await listLocalKeys(prefix);
+  return res.status(200).json({ keys, backend: "local" });
 };
 
 export const handleGetSiteSettings: RequestHandler = async (_req, res) => {
-  const { data, error } = await supabaseServer
-    .from("site_settings")
-    .select("*")
-    .limit(1)
-    .maybeSingle();
+  try {
+    const { data, error } = await supabaseServer
+      .from("site_settings")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
 
-  if (error) {
-    return res.status(500).json({ error: error.message });
+    if (!error) {
+      return res.status(200).json({ settings: data ?? null });
+    }
+
+    if (!shouldFallback(error)) {
+      return res.status(500).json({ error: error.message });
+    }
+  } catch (e: any) {
+    if (!shouldFallback(e)) {
+      return res.status(500).json({ error: e?.message || String(e) });
+    }
   }
 
-  return res.status(200).json({ settings: data ?? null });
+  const local = await getLocalSettings();
+  return res.status(200).json({ settings: local ?? null, backend: "local" });
 };
 
 const upsertSettingsBodySchema = z.object({
@@ -153,13 +214,24 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
 
   const { theme } = parsed.data;
 
-  const { error } = await supabaseServer.rpc("upsert_site_settings", {
-    payload: theme,
-  });
+  try {
+    const { error } = await supabaseServer.rpc("upsert_site_settings", {
+      payload: theme,
+    });
 
-  if (error) {
-    return res.status(500).json({ error: error.message });
+    if (!error) {
+      return res.status(200).json({ ok: true });
+    }
+
+    if (!shouldFallback(error)) {
+      return res.status(500).json({ error: error.message });
+    }
+  } catch (e: any) {
+    if (!shouldFallback(e)) {
+      return res.status(500).json({ error: e?.message || String(e) });
+    }
   }
 
-  return res.status(200).json({ ok: true });
+  await setLocalSettings(theme);
+  return res.status(200).json({ ok: true, backend: "local" });
 };

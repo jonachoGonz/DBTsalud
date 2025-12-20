@@ -1105,7 +1105,7 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
           {(data.items || []).slice(0, 4).map((it: any, idx: number) => (
             <div key={idx} className="border rounded-lg p-2 bg-white">
               <div className="font-medium text-xs">{it.title}</div>
-              <Small className="truncate">{it.image}</Small>
+              <div className="text-[10px] text-gray-500 truncate">{it.image}</div>
             </div>
           ))}
         </div>

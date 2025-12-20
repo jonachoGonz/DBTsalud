@@ -1,5 +1,6 @@
 import DBTHeader from "@/components/DBTHeader";
 import DBTAbout from "@/components/DBTAbout";
+import DBTSpacesCarousel from "@/components/DBTSpacesCarousel";
 import DBTTherapies from "@/components/DBTTherapies";
 import DBTServices from "@/components/DBTServices";
 import DBTProcess from "@/components/DBTProcess";
@@ -24,6 +25,7 @@ export default function Luminous() {
       />
       <DBTHeader />
       <DBTAbout />
+      <DBTSpacesCarousel />
       <DBTTherapies />
       <DBTServices />
       <DBTProcess />

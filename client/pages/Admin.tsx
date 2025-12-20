@@ -21,6 +21,7 @@ const defaultKeys = [
   "luminous.seo",
   "luminous.header",
   "luminous.about",
+  "luminous.spaces",
   "luminous.therapies",
   "luminous.services",
   "luminous.process",
@@ -460,6 +461,7 @@ export default function Admin() {
       seo: "SEO",
       header: "Encabezado",
       about: "Nosotros",
+      spaces: "Espacios",
       therapies: "Terapias",
       services: "Servicios",
       process: "Proceso",
@@ -483,6 +485,7 @@ export default function Admin() {
       generales: "Generales",
       header: "Encabezado",
       about: "Nosotros",
+      spaces: "Espacios",
       therapies: "Terapias",
       services: "Servicios",
       process: "Proceso",
@@ -826,6 +829,15 @@ function defaultStyles(key: string) {
       backgroundImage: "",
     };
   }
+  if (name === "spaces") {
+    return {
+      outerBg: "#E2DCD5",
+      innerBg: "#1C1C1C",
+      textColor: "#FFFFFF",
+      mutedTextColor: "rgba(242,236,226,0.5)",
+      borderColor: "rgba(255,255,255,0.9)",
+    };
+  }
   if (name === "therapies") {
     return {
       titleColor: "#111111",
@@ -896,6 +908,33 @@ function defaultContent(key: string) {
         linkText: "Conócenos",
         linkUrl: "/#nosotros",
         image: "",
+      };
+    case "luminous.spaces":
+      return {
+        eyebrow: "NUESTROS ESPACIOS",
+        title: "Conoce el centro y sus espacios",
+        ctaText: "VER TODAS LAS FOTOS",
+        ctaLink: "#contacto",
+        items: [
+          {
+            title: "Recepción",
+            image:
+              "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?q=80&w=1400&auto=format&fit=crop",
+            href: "#contacto",
+          },
+          {
+            title: "Sala de espera",
+            image:
+              "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1400&auto=format&fit=crop",
+            href: "#contacto",
+          },
+          {
+            title: "Consulta",
+            image:
+              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1400&auto=format&fit=crop",
+            href: "#contacto",
+          },
+        ],
       };
     case "luminous.therapies":
       return {
@@ -1052,6 +1091,23 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
               )}
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+  if (k === "luminous.spaces") {
+    return (
+      <div>
+        <Heading>Espacios</Heading>
+        <Small>{data.eyebrow}</Small>
+        <Small>{data.title}</Small>
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          {(data.items || []).slice(0, 4).map((it: any, idx: number) => (
+            <div key={idx} className="border rounded-lg p-2 bg-white">
+              <div className="font-medium text-xs">{it.title}</div>
+              <Small className="truncate">{it.image}</Small>
+            </div>
+          ))}
         </div>
       </div>
     );

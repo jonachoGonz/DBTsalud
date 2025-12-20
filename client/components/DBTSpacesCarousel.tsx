@@ -1,12 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useContent } from "@/hooks/use-content";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 
 type SpaceItem = {
   title: string;
@@ -26,13 +21,16 @@ type SpacesStyles = {
   outerBg?: string;
   innerBg?: string;
   textColor?: string;
-  mutedTextColor?: string;
-  borderColor?: string;
-  arrowBg?: string;
-  arrowFg?: string;
+  trackBg?: string;
+  speedSeconds?: number;
 };
 
-const FALLBACK: Record<"es" | "en", Required<Pick<SpacesContent, "eyebrow" | "title" | "ctaText" | "ctaLink">> & { items: SpaceItem[] }> = {
+const FALLBACK: Record<
+  "es" | "en",
+  Required<Pick<SpacesContent, "eyebrow" | "title" | "ctaText" | "ctaLink">> & {
+    items: SpaceItem[];
+  }
+> = {
   es: {
     eyebrow: "NUESTROS ESPACIOS",
     title: "Conoce el centro y sus espacios",
@@ -40,24 +38,24 @@ const FALLBACK: Record<"es" | "en", Required<Pick<SpacesContent, "eyebrow" | "ti
     ctaLink: "#contacto",
     items: [
       {
-        title: "Recepción",
+        title: "Espacio 1",
         image:
-          "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b0202b2d312f5d46f_Frame%20147.avif",
       },
       {
-        title: "Sala de espera",
+        title: "Espacio 2",
         image:
-          "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b26ca1b096a6eda7c_Frame%2098.avif",
       },
       {
-        title: "Consulta",
+        title: "Espacio 3",
         image:
-          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bfd4346c3a790d01a_Frame%20143.avif",
       },
       {
-        title: "Espacios",
+        title: "Espacio 4",
         image:
-          "https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bd7bea7f2504f39de_Frame%20142.avif",
       },
     ],
   },
@@ -68,24 +66,24 @@ const FALLBACK: Record<"es" | "en", Required<Pick<SpacesContent, "eyebrow" | "ti
     ctaLink: "#contact",
     items: [
       {
-        title: "Reception",
+        title: "Space 1",
         image:
-          "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b0202b2d312f5d46f_Frame%20147.avif",
       },
       {
-        title: "Waiting room",
+        title: "Space 2",
         image:
-          "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b26ca1b096a6eda7c_Frame%2098.avif",
       },
       {
-        title: "Office",
+        title: "Space 3",
         image:
-          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bfd4346c3a790d01a_Frame%20143.avif",
       },
       {
-        title: "Spaces",
+        title: "Space 4",
         image:
-          "https://images.unsplash.com/photo-1522441815192-d9f04eb0615c?q=80&w=1400&auto=format&fit=crop",
+          "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bd7bea7f2504f39de_Frame%20142.avif",
       },
     ],
   },
@@ -95,23 +93,21 @@ const DEFAULT_STYLES: Required<SpacesStyles> = {
   outerBg: "#E2DCD5",
   innerBg: "#1C1C1C",
   textColor: "#FFFFFF",
-  mutedTextColor: "rgba(242,236,226,0.5)",
-  borderColor: "rgba(255,255,255,0.9)",
-  arrowBg: "transparent",
-  arrowFg: "#FFFFFF",
+  trackBg: "#F2EFEA",
+  speedSeconds: 25.6,
 };
 
 export default function DBTSpacesCarousel() {
   const { language } = useLanguage();
-  const { data: content } = useContent<SpacesContent>("luminous.spaces", language);
+
+  const { data: content } = useContent<SpacesContent>(
+    "luminous.spaces",
+    language,
+  );
   const { data: styles } = useContent<SpacesStyles>(
     "luminous.styles.spaces",
     language,
   );
-
-  const [api, setApi] = useState<any>(null);
-  const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(false);
 
   const fallback = FALLBACK[language === "en" ? "en" : "es"];
 
@@ -133,20 +129,10 @@ export default function DBTSpacesCarousel() {
     return safe.length ? safe : fallback.items;
   }, [content, fallback.items]);
 
-  useEffect(() => {
-    if (!api) return;
-    const update = () => {
-      setCanPrev(Boolean(api.canScrollPrev?.()));
-      setCanNext(Boolean(api.canScrollNext?.()));
-    };
-    update();
-    api.on?.("select", update);
-    api.on?.("reInit", update);
-    return () => {
-      api.off?.("select", update);
-      api.off?.("reInit", update);
-    };
-  }, [api]);
+  const marqueeSlides = useMemo(() => {
+    if (slides.length === 0) return [];
+    return [...slides, ...slides];
+  }, [slides]);
 
   const eyebrow = content?.eyebrow || fallback.eyebrow;
   const title = content?.title || fallback.title;
@@ -159,6 +145,16 @@ export default function DBTSpacesCarousel() {
       className="py-12 sm:py-14"
       style={{ backgroundColor: mergedStyles.outerBg }}
     >
+      <style>{`
+        @keyframes dbtSpacesTranslateX {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .dbt-spaces-track { animation: none !important; transform: none !important; }
+        }
+      `}</style>
+
       <div className="px-4 sm:px-10">
         <div
           className="mx-auto max-w-[2200px] relative"
@@ -193,81 +189,44 @@ export default function DBTSpacesCarousel() {
             </div>
           </div>
 
-          <div className="mx-auto max-w-[2200px] -mt-[220px] sm:-mt-[290px] px-4 sm:px-[68px] pb-10">
-            <div className="mx-auto max-w-[1454px]">
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  aria-label="Previous slide"
-                  disabled={!canPrev}
-                  onClick={() => api?.scrollPrev?.()}
-                  className="h-12 w-12 rounded-full border transition-opacity disabled:opacity-50 disabled:pointer-events-none"
-                  style={{ borderColor: mergedStyles.borderColor }}
-                >
-                  <ChevronLeft
-                    className="mx-auto h-5 w-5"
-                    style={{ color: mergedStyles.textColor }}
-                  />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next slide"
-                  disabled={!canNext}
-                  onClick={() => api?.scrollNext?.()}
-                  className="h-12 w-12 rounded-full border transition-opacity disabled:opacity-50 disabled:pointer-events-none"
-                  style={{ borderColor: mergedStyles.borderColor }}
-                >
-                  <ChevronRight
-                    className="mx-auto h-5 w-5"
-                    style={{ color: mergedStyles.textColor }}
-                  />
-                </button>
-              </div>
+          <div className="mx-auto max-w-[2200px] -mt-[220px] sm:-mt-[290px] pb-10">
+            <div
+              className="overflow-hidden"
+              style={{ backgroundColor: mergedStyles.trackBg }}
+            >
+              <div
+                className="dbt-spaces-track flex items-center justify-start"
+                style={{
+                  animation: `dbtSpacesTranslateX ${mergedStyles.speedSeconds}s linear infinite`,
+                  width: "max-content",
+                }}
+              >
+                {marqueeSlides.map((it, idx) => {
+                  const baseIndex = slides.length ? idx % slides.length : idx;
+                  const large = baseIndex % 2 === 0;
+                  const width = large
+                    ? "clamp(240px, 40vw, 444px)"
+                    : "clamp(220px, 34vw, 356px)";
 
-              <div className="mt-6">
-                <Carousel
-                  setApi={setApi}
-                  opts={{ align: "start", loop: false }}
-                  className="w-full"
-                >
-                  <CarouselContent className="-ml-6">
-                    {slides.map((it, idx) => {
-                      const href = it.href || ctaLink;
-                      return (
-                        <CarouselItem
-                          key={`${it.title}-${idx}`}
-                          className="pl-6 basis-[85vw] sm:basis-[650px]"
-                        >
-                          <a
-                            href={href}
-                            className="group block"
-                            aria-label={`${idx + 1} / ${slides.length}: ${it.title}`}
-                          >
-                            <div className="overflow-hidden">
-                              <img
-                                src={it.image}
-                                alt={it.title}
-                                loading="lazy"
-                                className="w-full h-auto object-cover select-none"
-                              />
-                            </div>
-                            <div
-                              className="flex items-center justify-between py-6"
-                              style={{ color: mergedStyles.textColor }}
-                            >
-                              <span className="text-2xl sm:text-[44px] leading-tight font-light">
-                                {it.title}
-                              </span>
-                              <span className="h-10 w-10 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <ArrowRight className="h-6 w-6" />
-                              </span>
-                            </div>
-                          </a>
-                        </CarouselItem>
-                      );
-                    })}
-                  </CarouselContent>
-                </Carousel>
+                  return (
+                    <div key={`${it.title}-${idx}`} className="overflow-hidden pr-20">
+                      <div
+                        className="relative aspect-square"
+                        style={{ width }}
+                        aria-label={it.title}
+                      >
+                        <div className="absolute inset-0 h-[110%] w-full">
+                          <img
+                            loading="lazy"
+                            alt={it.title}
+                            src={it.image}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

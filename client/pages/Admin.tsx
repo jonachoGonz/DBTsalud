@@ -834,8 +834,8 @@ function defaultStyles(key: string) {
       outerBg: "#E2DCD5",
       innerBg: "#1C1C1C",
       textColor: "#FFFFFF",
-      mutedTextColor: "rgba(242,236,226,0.5)",
-      borderColor: "rgba(255,255,255,0.9)",
+      trackBg: "#F2EFEA",
+      speedSeconds: 25.6,
     };
   }
   if (name === "therapies") {
@@ -917,22 +917,24 @@ function defaultContent(key: string) {
         ctaLink: "#contacto",
         items: [
           {
-            title: "Recepción",
+            title: "Espacio 1",
             image:
-              "https://images.unsplash.com/photo-1550565118-3a14e8d0386f?q=80&w=1400&auto=format&fit=crop",
-            href: "#contacto",
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b0202b2d312f5d46f_Frame%20147.avif",
           },
           {
-            title: "Sala de espera",
+            title: "Espacio 2",
             image:
-              "https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1400&auto=format&fit=crop",
-            href: "#contacto",
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b26ca1b096a6eda7c_Frame%2098.avif",
           },
           {
-            title: "Consulta",
+            title: "Espacio 3",
             image:
-              "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1400&auto=format&fit=crop",
-            href: "#contacto",
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bfd4346c3a790d01a_Frame%20143.avif",
+          },
+          {
+            title: "Espacio 4",
+            image:
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bd7bea7f2504f39de_Frame%20142.avif",
           },
         ],
       };

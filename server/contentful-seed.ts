@@ -105,6 +105,28 @@ function pickLocale(locales: LocaleInfo[], preferred: string[]) {
   return def?.code || locales[0]?.code || "en-US";
 }
 
+async function ensureLocale(
+  envApi: any,
+  code: string,
+  name: string,
+  fallbackCode: string,
+) {
+  try {
+    await envApi.getLocale(code);
+    return;
+  } catch (e: any) {
+    const info = parseContentfulError(e);
+    if ((info.status || 0) !== 404) throw e;
+  }
+
+  await envApi.createLocale({
+    code,
+    name,
+    fallbackCode,
+    optional: false,
+  });
+}
+
 async function ensureContentType(envApi: any, id: string, spec: any) {
   try {
     await envApi.getContentType(id);
@@ -145,8 +167,8 @@ export async function seedContentfulFromDefaults() {
     space.getEnvironment(environmentId),
   );
 
-  const localesRes = await runStep("getLocales", async () => envApi.getLocales());
-  const locales: LocaleInfo[] = (localesRes?.items || []).map((l: any) => ({
+  let localesRes = await runStep("getLocales", async () => envApi.getLocales());
+  let locales: LocaleInfo[] = (localesRes?.items || []).map((l: any) => ({
     code: String(l.code),
     default: Boolean(l.default),
   }));
@@ -156,8 +178,30 @@ export async function seedContentfulFromDefaults() {
   }
 
   const defaultLocale = locales.find((l) => l.default)?.code || locales[0].code;
-  const localeEs = pickLocale(locales, [env("CONTENTFUL_LOCALE_ES") || "es", "es-CL", "es-ES", "es"]);
-  const localeEn = pickLocale(locales, [env("CONTENTFUL_LOCALE_EN") || "en", "en-US", "en-GB", "en"]);
+
+  const desiredEs = env("CONTENTFUL_LOCALE_ES") || "es-CL";
+  const desiredEn = env("CONTENTFUL_LOCALE_EN") || "en-US";
+
+  if (!locales.some((l) => l.code.toLowerCase().startsWith("es"))) {
+    await runStep(`ensureLocale:${desiredEs}`, async () =>
+      ensureLocale(envApi, desiredEs, "Spanish", defaultLocale),
+    );
+  }
+
+  if (!locales.some((l) => l.code.toLowerCase().startsWith("en"))) {
+    await runStep(`ensureLocale:${desiredEn}`, async () =>
+      ensureLocale(envApi, desiredEn, "English", defaultLocale),
+    );
+  }
+
+  localesRes = await runStep("getLocales:afterEnsure", async () => envApi.getLocales());
+  locales = (localesRes?.items || []).map((l: any) => ({
+    code: String(l.code),
+    default: Boolean(l.default),
+  }));
+
+  const localeEs = pickLocale(locales, [desiredEs, "es-CL", "es-ES", "es"]);
+  const localeEn = pickLocale(locales, [desiredEn, "en-US", "en-GB", "en"]);
 
   process.env.CONTENTFUL_DEFAULT_LOCALE = defaultLocale;
   process.env.CONTENTFUL_LOCALE_ES = localeEs;

@@ -327,12 +327,27 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
 };
 
 function formatContentfulError(e: any) {
-  const status = e?.response?.status || e?.status;
-  const message =
+  let status: any = e?.response?.status || e?.status;
+  let message: any =
     e?.response?.data?.message ||
     e?.response?.data?.details?.errors?.[0]?.message ||
     e?.message ||
     String(e);
+
+  if (!status && typeof message === "string") {
+    const trimmed = message.trim();
+    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === "object") {
+          status = parsed.status || status;
+          message = parsed.message || message;
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
 
   if (status === 401 || status === 403) {
     return {

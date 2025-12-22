@@ -368,6 +368,8 @@ function formatContentfulError(e: any) {
         if (parsed && typeof parsed === "object") {
           status = parsed.status || status;
           message = parsed.message || message;
+          if (!requestId && (parsed as any).requestId) requestId = (parsed as any).requestId;
+          if (!sysId && (parsed as any).sys?.id) sysId = (parsed as any).sys.id;
         }
       } catch {
         // ignore

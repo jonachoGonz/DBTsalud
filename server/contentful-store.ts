@@ -1,5 +1,9 @@
-import { createClient, type Entry, type EntryCollection } from "contentful";
-import contentfulManagement from "contentful-management";
+import { createClient } from "contentful";
+import {
+  createClient as createManagementClient,
+  type Entry,
+  type EntryCollection,
+} from "contentful-management";
 
 export type Locale = "es" | "en";
 
@@ -209,7 +213,7 @@ async function getManagementEnvironment(cfg: ContentfulStoreConfig) {
     throw new Error("Contentful management token not configured");
   }
 
-  const client = contentfulManagement.createClient({ accessToken: cfg.managementToken });
+  const client = createManagementClient({ accessToken: cfg.managementToken });
   const space = await client.getSpace(cfg.spaceId);
   return space.getEnvironment(cfg.environment);
 }

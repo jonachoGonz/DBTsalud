@@ -8,6 +8,7 @@ import {
   handleListKeys,
   handleUpsertContent,
   handleUpsertSiteSettings,
+  handleSeedContentful,
 } from "./routes/cms";
 
 export function createServer() {
@@ -32,6 +33,7 @@ export function createServer() {
   app.get("/api/cms/keys", handleListKeys);
   app.get("/api/cms/settings", handleGetSiteSettings);
   app.post("/api/cms/settings", handleUpsertSiteSettings);
+  app.post("/api/cms/seed", handleSeedContentful);
 
   return app;
 }

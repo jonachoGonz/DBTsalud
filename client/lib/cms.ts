@@ -36,11 +36,28 @@ async function apiFetchJson<T>(
       json = null;
     }
 
-      if (!res.ok) {
-        const msg =
+        if (!res.ok) {
+        const baseMsg =
           (json && typeof json === "object" && (json.error || json.message)) ||
           `HTTP ${status}`;
-        return { ok: false, error: String(msg), status };
+
+        const reqId =
+          json && typeof json === "object"
+            ? (json.requestId || json.requestID || json.request_id)
+            : undefined;
+        const code =
+          json && typeof json === "object" ? (json.code || json.sysId) : undefined;
+
+        const suffixParts: string[] = [];
+        if (code) suffixParts.push(`code=${String(code)}`);
+        if (reqId) suffixParts.push(`requestId=${String(reqId)}`);
+
+        const msg =
+          suffixParts.length > 0
+            ? `${String(baseMsg)} (${suffixParts.join(", ")})`
+            : String(baseMsg);
+
+        return { ok: false, error: msg, status };
       }
 
       return { ok: true, data: json as T };

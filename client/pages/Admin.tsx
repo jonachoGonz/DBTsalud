@@ -7,6 +7,7 @@ import {
   fetchSiteSettings,
   upsertSiteSettings,
   listContentKeys,
+  seedContentful,
   type Locale,
 } from "@/lib/cms";
 import { applyTheme } from "@/lib/theme";
@@ -42,6 +43,11 @@ export default function Admin() {
   const [rawJson, setRawJson] = useState<string>("{}");
   const [saving, setSaving] = useState(false);
   const [editorMode, setEditorMode] = useState<"json" | "form">("form");
+
+  const [seeding, setSeeding] = useState(false);
+  const [seedStatus, setSeedStatus] = useState<
+    { ok: true; environment: string; locales: { defaultLocale: string; es: string; en: string } } | null
+  >(null);
 
   // styles: general theme
   const [primary, setPrimary] = useState("#2e4c47");
@@ -188,6 +194,39 @@ export default function Admin() {
     }
     applyTheme(theme);
     alert("Estilos aplicados");
+  };
+
+  const handleSeedContentful = async () => {
+    const ok = confirm(
+      "Esto creará/actualizará el esquema y contenido inicial en Contentful (master). ¿Continuar?",
+    );
+    if (!ok) return;
+
+    try {
+      setSeeding(true);
+      const result = await seedContentful();
+      setSeedStatus({
+        ok: true,
+        environment: result.environment,
+        locales: result.locales,
+      });
+
+      await loadSettings();
+
+      try {
+        const keys = await listContentKeys("luminous.");
+        if (keys.length)
+          setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
+      } catch {
+        // ignore
+      }
+
+      alert("Contentful sincronizado correctamente");
+    } catch (e: any) {
+      alert("Error al sincronizar Contentful: " + (e?.message || String(e)));
+    } finally {
+      setSeeding(false);
+    }
   };
 
   async function migrateFromLuminous() {
@@ -524,8 +563,25 @@ export default function Admin() {
               Sección actual:{" "}
               <span className="font-medium">{sectionLabel(selectedKey)}</span>
             </div>
-            {/* Botones ocultos: plantilla y migración ya no son necesarios */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                disabled={seeding}
+                onClick={handleSeedContentful}
+                className="px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                {seeding ? "Sincronizando Contentful…" : "Replicar en Contentful"}
+              </button>
+            </div>
           </div>
+
+          {seedStatus && (
+            <div className="rounded-md border bg-[rgb(248,250,252)] p-3 text-sm text-gray-700">
+              <div className="font-medium">Contentful listo</div>
+              <div className="text-xs text-gray-500">
+                Environment: {seedStatus.environment} · Locales: ES={seedStatus.locales.es}, EN={seedStatus.locales.en}
+              </div>
+            </div>
+          )}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
           <div className="grid grid-cols-1 gap-6">
             <div>

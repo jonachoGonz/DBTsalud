@@ -5,9 +5,11 @@ const API_BASE = "/api/cms";
 async function apiFetchJson<T>(
   input: string,
   init?: RequestInit,
+  opts?: { timeoutMs?: number },
 ): Promise<{ ok: true; data: T } | { ok: false; error: string; status?: number }> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 15_000);
+  const timeoutMs = opts?.timeoutMs ?? 15_000;
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const res = await fetch(input, {
@@ -147,6 +149,35 @@ export async function upsertSiteSettings(
   });
   if (res.ok === false) throw new Error(res.error);
   return null;
+}
+
+export type SeedContentfulResult = {
+  ok: true;
+  backend: "contentful";
+  environment: string;
+  locales: {
+    defaultLocale: string;
+    es: string;
+    en: string;
+  };
+  seeded: {
+    contentKeys: string[];
+    styleKeys: string[];
+    settings: true;
+  };
+};
+
+export async function seedContentful(): Promise<SeedContentfulResult> {
+  const auth = getAdminAuthHeader();
+  const res = await apiFetchJson<SeedContentfulResult>(`${API_BASE}/seed`, {
+    method: "POST",
+    headers: {
+      ...(auth ? { Authorization: auth } : {}),
+    },
+  }, { timeoutMs: 120_000 });
+
+  if (res.ok === false) throw new Error(res.error);
+  return res.data;
 }
 
 export const SUPABASE_SCHEMA_SQL = `

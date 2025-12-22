@@ -26,6 +26,20 @@ function env(key: string) {
   return sanitizeEnv(process.env[key]);
 }
 
+function normalizeContentfulId(value: string, fallback: string) {
+  const v = sanitizeEnv(value);
+  if (!v) return fallback;
+  if (v.toUpperCase() === "DOESNOTEXIST") return fallback;
+  return v;
+}
+
+function isUnknownContentTypeError(e: any) {
+  const status = e?.response?.status || e?.status;
+  const errs = e?.response?.data?.details?.errors;
+  if (status !== 400 || !Array.isArray(errs)) return false;
+  return errs.some((x: any) => x?.name === "unknownContentType");
+}
+
 function getConfig(): ContentfulStoreConfig | null {
   const spaceId = env("CONTENTFUL_SPACE_ID");
   const deliveryToken = env("CONTENTFUL_DELIVERY_TOKEN");
@@ -42,10 +56,14 @@ function getConfig(): ContentfulStoreConfig | null {
   const localeEs = env("CONTENTFUL_LOCALE_ES") || "es";
   const localeEn = env("CONTENTFUL_LOCALE_EN") || "en";
 
-  const contentTypeContentEntry =
-    env("CONTENTFUL_CONTENT_ENTRY_TYPE") || "contentEntry";
-  const contentTypeSiteSettings =
-    env("CONTENTFUL_SITE_SETTINGS_TYPE") || "siteSettings";
+  const contentTypeContentEntry = normalizeContentfulId(
+    env("CONTENTFUL_CONTENT_ENTRY_TYPE"),
+    "contentEntry",
+  );
+  const contentTypeSiteSettings = normalizeContentfulId(
+    env("CONTENTFUL_SITE_SETTINGS_TYPE"),
+    "siteSettings",
+  );
 
   const fieldKey = env("CONTENTFUL_FIELD_KEY") || "key";
   const fieldData = env("CONTENTFUL_FIELD_DATA") || "data";
@@ -121,25 +139,41 @@ async function findContentEntryByKey(cfg: ContentfulStoreConfig, key: string) {
   };
   q[`fields.${cfg.fieldKey}`] = key;
 
-  const resAllLocales = await allLocalesClient.getEntries(q);
-  if (resAllLocales.items?.length) return resAllLocales.items[0] as any;
+  try {
+    const resAllLocales = await allLocalesClient.getEntries(q);
+    if (resAllLocales.items?.length) return resAllLocales.items[0] as any;
 
-  const resDefault = await client.getEntries({ ...q, locale: cfg.defaultLocale });
-  if (resDefault.items?.length) return resDefault.items[0] as any;
+    const resDefault = await client.getEntries({ ...q, locale: cfg.defaultLocale });
+    if (resDefault.items?.length) return resDefault.items[0] as any;
 
-  return null;
+    return null;
+  } catch (e: any) {
+    if (isUnknownContentTypeError(e)) return null;
+    throw e;
+  }
 }
 
 export async function contentfulGetContent<T = any>(key: string, locale: Locale) {
   const cfg = getConfig();
   if (!cfg) return { configured: false as const, data: null as T | null };
 
-  const entry: any = await findContentEntryByKey(cfg, key);
-  if (!entry) return { configured: true as const, data: null as T | null };
+  try {
+    const entry: any = await findContentEntryByKey(cfg, key);
+    if (!entry) return { configured: true as const, data: null as T | null };
 
-  const localeCode = mappedLocale(cfg, locale);
-  const data = pickLocaleValue<T>(entry.fields?.[cfg.fieldData], localeCode, cfg.defaultLocale);
-  return { configured: true as const, data };
+    const localeCode = mappedLocale(cfg, locale);
+    const data = pickLocaleValue<T>(
+      entry.fields?.[cfg.fieldData],
+      localeCode,
+      cfg.defaultLocale,
+    );
+    return { configured: true as const, data };
+  } catch (e: any) {
+    if (isUnknownContentTypeError(e)) {
+      return { configured: false as const, data: null as T | null };
+    }
+    throw e;
+  }
 }
 
 export async function contentfulListKeys(prefix?: string) {
@@ -153,26 +187,37 @@ export async function contentfulListKeys(prefix?: string) {
   let skip = 0;
   const limit = 1000;
 
-  while (true) {
-    const q: Record<string, any> = {
-      content_type: cfg.contentTypeContentEntry,
-      select: `fields.${cfg.fieldKey}`,
-      limit,
-      skip,
-    };
+  try {
+    while (true) {
+      const q: Record<string, any> = {
+        content_type: cfg.contentTypeContentEntry,
+        select: `fields.${cfg.fieldKey}`,
+        limit,
+        skip,
+      };
 
-    const page = await allLocalesClient.getEntries(q);
-    for (const item of page.items as any[]) {
-      const k = pickLocaleValue<string>(item.fields?.[cfg.fieldKey], cfg.defaultLocale, cfg.defaultLocale);
-      if (typeof k === "string" && (!prefix || k.startsWith(prefix))) keys.add(k);
+      const page = await allLocalesClient.getEntries(q);
+      for (const item of page.items as any[]) {
+        const k = pickLocaleValue<string>(
+          item.fields?.[cfg.fieldKey],
+          cfg.defaultLocale,
+          cfg.defaultLocale,
+        );
+        if (typeof k === "string" && (!prefix || k.startsWith(prefix))) keys.add(k);
+      }
+
+      const total = page.total ?? 0;
+      skip += page.items.length;
+      if (skip >= total || page.items.length === 0) break;
     }
 
-    const total = page.total ?? 0;
-    skip += page.items.length;
-    if (skip >= total || page.items.length === 0) break;
+    return { configured: true as const, keys: Array.from(keys).sort() };
+  } catch (e: any) {
+    if (isUnknownContentTypeError(e)) {
+      return { configured: false as const, keys: [] as string[] };
+    }
+    throw e;
   }
-
-  return { configured: true as const, keys: Array.from(keys).sort() };
 }
 
 export async function contentfulGetSiteSettings() {
@@ -181,24 +226,36 @@ export async function contentfulGetSiteSettings() {
 
   const client: any = getDeliveryClient(cfg, false);
   const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
-  const page = await allLocalesClient.getEntries({
-    content_type: cfg.contentTypeSiteSettings,
-    limit: 1,
-  });
 
-  const item: any = page.items?.[0];
-  if (!item) return { configured: true as const, settings: null as any };
+  try {
+    const page = await allLocalesClient.getEntries({
+      content_type: cfg.contentTypeSiteSettings,
+      limit: 1,
+    });
 
-  const theme = pickLocaleValue<any>(item.fields?.[cfg.fieldTheme], cfg.defaultLocale, cfg.defaultLocale);
-  const settings = theme
-    ? {
-        id: item.sys?.id || "contentful",
-        theme,
-        updated_at: item.sys?.updatedAt || new Date().toISOString(),
-      }
-    : null;
+    const item: any = page.items?.[0];
+    if (!item) return { configured: true as const, settings: null as any };
 
-  return { configured: true as const, settings };
+    const theme = pickLocaleValue<any>(
+      item.fields?.[cfg.fieldTheme],
+      cfg.defaultLocale,
+      cfg.defaultLocale,
+    );
+    const settings = theme
+      ? {
+          id: item.sys?.id || "contentful",
+          theme,
+          updated_at: item.sys?.updatedAt || new Date().toISOString(),
+        }
+      : null;
+
+    return { configured: true as const, settings };
+  } catch (e: any) {
+    if (isUnknownContentTypeError(e)) {
+      return { configured: false as const, settings: null as any };
+    }
+    throw e;
+  }
 }
 
 async function getManagementEnvironment(cfg: ContentfulStoreConfig) {

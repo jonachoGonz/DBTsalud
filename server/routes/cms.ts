@@ -71,7 +71,21 @@ const upsertContentBodySchema = z.object({
   data: z.unknown(),
 });
 
+function isContentfulUnknownContentType(err: any) {
+  const status = err?.response?.status || err?.status;
+  const errors = err?.response?.data?.details?.errors;
+  if (status === 400 && Array.isArray(errors)) {
+    return errors.some((e: any) => e?.name === "unknownContentType");
+  }
+
+  const msg =
+    typeof err === "string" ? err : err?.message || String(err || "");
+  return typeof msg === "string" && msg.includes("unknownContentType");
+}
+
 function shouldFallback(err: unknown) {
+  if (isContentfulUnknownContentType(err as any)) return true;
+
   const msg =
     typeof err === "string" ? err : (err as any)?.message || String(err);
   return (

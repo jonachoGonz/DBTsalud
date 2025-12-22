@@ -342,6 +342,14 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
 
 function formatContentfulError(e: any) {
   let status: any = e?.response?.status || e?.status;
+
+  const requestId: any =
+    e?.requestId ||
+    e?.response?.headers?.["x-contentful-request-id"] ||
+    e?.response?.headers?.["X-Contentful-Request-Id"] ||
+    e?.response?.data?.requestId ||
+    e?.response?.data?.sys?.id;
+
   let message: any =
     e?.response?.data?.message ||
     e?.response?.data?.details?.errors?.[0]?.message ||
@@ -366,12 +374,14 @@ function formatContentfulError(e: any) {
   if (status === 401 || status === 403) {
     return {
       status,
-      message:
-        "Contentful auth error: verifica que CONTENTFUL_MANAGEMENT_TOKEN tenga acceso al Space y Environment.",
+      requestId,
+      message: `Contentful auth error (${status}): ${String(
+        message,
+      )}. Verifica que CONTENTFUL_MANAGEMENT_TOKEN sea un CMA (Personal Access Token) válido y que su usuario tenga acceso al Space y al Environment.`,
     };
   }
 
-  return { status, message: String(message) };
+  return { status, requestId, message: String(message) };
 }
 
 export const handleSeedContentful: RequestHandler = async (req, res) => {
@@ -384,6 +394,8 @@ export const handleSeedContentful: RequestHandler = async (req, res) => {
     return res.status(200).json(result);
   } catch (e: any) {
     const err = formatContentfulError(e);
-    return res.status(500).json({ error: err.message, status: err.status });
+    return res
+      .status(500)
+      .json({ error: err.message, status: err.status, requestId: err.requestId });
   }
 };

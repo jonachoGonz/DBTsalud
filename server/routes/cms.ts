@@ -16,6 +16,7 @@ import {
   contentfulUpsertSiteSettings,
   isContentfulManagementConfigured,
 } from "../contentful-store";
+import { seedContentfulFromDefaults } from "../contentful-seed";
 
 function sanitizeEnv(v?: string) {
   return (v || "").trim().replace(/^['\"]+|['\"]+$/g, "");
@@ -97,7 +98,9 @@ export const handleGetContent: RequestHandler = async (req, res) => {
   try {
     const cf = await contentfulGetContent(key, locale as Locale);
     if (cf.configured) {
-      return res.status(200).json({ data: cf.data ?? null, backend: "contentful" });
+      return res
+        .status(200)
+        .json({ data: cf.data ?? null, backend: "contentful" });
     }
   } catch (e: any) {
     if (!shouldFallback(e)) {
@@ -211,7 +214,9 @@ export const handleListKeys: RequestHandler = async (req, res) => {
       if (!error) {
         const set = new Set<string>();
         (data || []).forEach((row: any) => set.add(String(row.key)));
-        return res.status(200).json({ keys: Array.from(set).sort(), backend: "supabase" });
+        return res
+          .status(200)
+          .json({ keys: Array.from(set).sort(), backend: "supabase" });
       }
 
       if (!shouldFallback(error)) {
@@ -251,7 +256,9 @@ export const handleGetSiteSettings: RequestHandler = async (_req, res) => {
         .maybeSingle();
 
       if (!error) {
-        return res.status(200).json({ settings: data ?? null, backend: "supabase" });
+        return res
+          .status(200)
+          .json({ settings: data ?? null, backend: "supabase" });
       }
 
       if (!shouldFallback(error)) {
@@ -317,4 +324,17 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
 
   await setLocalSettings(theme);
   return res.status(200).json({ ok: true, backend: "local" });
+};
+
+export const handleSeedContentful: RequestHandler = async (req, res) => {
+  if (!isAuthorized(req)) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const result = await seedContentfulFromDefaults();
+    return res.status(200).json(result);
+  } catch (e: any) {
+    return res.status(500).json({ error: e?.message || String(e) });
+  }
 };

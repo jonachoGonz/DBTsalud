@@ -8,9 +8,17 @@ import {
   setLocalContent,
   setLocalSettings,
 } from "../cms-store";
+import {
+  contentfulGetContent,
+  contentfulGetSiteSettings,
+  contentfulListKeys,
+  contentfulUpsertContent,
+  contentfulUpsertSiteSettings,
+  isContentfulManagementConfigured,
+} from "../contentful-store";
 
 function sanitizeEnv(v?: string) {
-  return (v || "").trim().replace(/^['"]+|['"]+$/g, "");
+  return (v || "").trim().replace(/^['\"]+|['\"]+$/g, "");
 }
 
 function getAdminCreds() {
@@ -49,6 +57,8 @@ function isAuthorized(req: any) {
 
 const localeSchema = z.enum(["es", "en"]);
 
+type Locale = z.infer<typeof localeSchema>;
+
 const getContentQuerySchema = z.object({
   key: z.string().min(1),
   locale: localeSchema,
@@ -66,8 +76,14 @@ function shouldFallback(err: unknown) {
   return (
     msg.includes("fetch failed") ||
     msg.includes("ENOTFOUND") ||
-    msg.includes("getaddrinfo")
+    msg.includes("getaddrinfo") ||
+    msg.includes("ECONNRESET") ||
+    msg.includes("ETIMEDOUT")
   );
+}
+
+function hasSupabase() {
+  return Boolean(supabaseServer);
 }
 
 export const handleGetContent: RequestHandler = async (req, res) => {
@@ -79,23 +95,36 @@ export const handleGetContent: RequestHandler = async (req, res) => {
   const { key, locale } = parsed.data;
 
   try {
-    const { data, error } = await supabaseServer
-      .from("content_entries")
-      .select("data")
-      .eq("key", key)
-      .eq("locale", locale)
-      .maybeSingle();
-
-    if (!error) {
-      return res.status(200).json({ data: (data as any)?.data ?? null });
-    }
-
-    if (!shouldFallback(error)) {
-      return res.status(500).json({ error: error.message });
+    const cf = await contentfulGetContent(key, locale as Locale);
+    if (cf.configured) {
+      return res.status(200).json({ data: cf.data ?? null, backend: "contentful" });
     }
   } catch (e: any) {
     if (!shouldFallback(e)) {
       return res.status(500).json({ error: e?.message || String(e) });
+    }
+  }
+
+  if (hasSupabase()) {
+    try {
+      const { data, error } = await supabaseServer!
+        .from("content_entries")
+        .select("data")
+        .eq("key", key)
+        .eq("locale", locale)
+        .maybeSingle();
+
+      if (!error) {
+        return res.status(200).json({ data: (data as any)?.data ?? null });
+      }
+
+      if (!shouldFallback(error)) {
+        return res.status(500).json({ error: error.message });
+      }
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
   }
 
@@ -115,21 +144,34 @@ export const handleUpsertContent: RequestHandler = async (req, res) => {
 
   const { key, locale, data } = parsed.data;
 
-  try {
-    const { error } = await supabaseServer
-      .from("content_entries")
-      .upsert([{ key, locale, data }], { onConflict: "key,locale" });
-
-    if (!error) {
-      return res.status(200).json({ ok: true });
+  if (isContentfulManagementConfigured()) {
+    try {
+      await contentfulUpsertContent(key, locale as Locale, data);
+      return res.status(200).json({ ok: true, backend: "contentful" });
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
+  }
 
-    if (!shouldFallback(error)) {
-      return res.status(500).json({ error: error.message });
-    }
-  } catch (e: any) {
-    if (!shouldFallback(e)) {
-      return res.status(500).json({ error: e?.message || String(e) });
+  if (hasSupabase()) {
+    try {
+      const { error } = await supabaseServer!
+        .from("content_entries")
+        .upsert([{ key, locale, data }], { onConflict: "key,locale" });
+
+      if (!error) {
+        return res.status(200).json({ ok: true, backend: "supabase" });
+      }
+
+      if (!shouldFallback(error)) {
+        return res.status(500).json({ error: error.message });
+      }
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
   }
 
@@ -150,22 +192,35 @@ export const handleListKeys: RequestHandler = async (req, res) => {
   const prefix = parsed.data.prefix;
 
   try {
-    let query = supabaseServer.from("content_entries").select("key");
-    if (prefix) query = query.like("key", `${prefix}%`);
-
-    const { data, error } = await query;
-    if (!error) {
-      const set = new Set<string>();
-      (data || []).forEach((row: any) => set.add(String(row.key)));
-      return res.status(200).json({ keys: Array.from(set).sort() });
-    }
-
-    if (!shouldFallback(error)) {
-      return res.status(500).json({ error: error.message });
+    const cf = await contentfulListKeys(prefix);
+    if (cf.configured) {
+      return res.status(200).json({ keys: cf.keys, backend: "contentful" });
     }
   } catch (e: any) {
     if (!shouldFallback(e)) {
       return res.status(500).json({ error: e?.message || String(e) });
+    }
+  }
+
+  if (hasSupabase()) {
+    try {
+      let query = supabaseServer!.from("content_entries").select("key");
+      if (prefix) query = query.like("key", `${prefix}%`);
+
+      const { data, error } = await query;
+      if (!error) {
+        const set = new Set<string>();
+        (data || []).forEach((row: any) => set.add(String(row.key)));
+        return res.status(200).json({ keys: Array.from(set).sort(), backend: "supabase" });
+      }
+
+      if (!shouldFallback(error)) {
+        return res.status(500).json({ error: error.message });
+      }
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
   }
 
@@ -175,22 +230,37 @@ export const handleListKeys: RequestHandler = async (req, res) => {
 
 export const handleGetSiteSettings: RequestHandler = async (_req, res) => {
   try {
-    const { data, error } = await supabaseServer
-      .from("site_settings")
-      .select("*")
-      .limit(1)
-      .maybeSingle();
-
-    if (!error) {
-      return res.status(200).json({ settings: data ?? null });
-    }
-
-    if (!shouldFallback(error)) {
-      return res.status(500).json({ error: error.message });
+    const cf = await contentfulGetSiteSettings();
+    if (cf.configured) {
+      return res
+        .status(200)
+        .json({ settings: cf.settings ?? null, backend: "contentful" });
     }
   } catch (e: any) {
     if (!shouldFallback(e)) {
       return res.status(500).json({ error: e?.message || String(e) });
+    }
+  }
+
+  if (hasSupabase()) {
+    try {
+      const { data, error } = await supabaseServer!
+        .from("site_settings")
+        .select("*")
+        .limit(1)
+        .maybeSingle();
+
+      if (!error) {
+        return res.status(200).json({ settings: data ?? null, backend: "supabase" });
+      }
+
+      if (!shouldFallback(error)) {
+        return res.status(500).json({ error: error.message });
+      }
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
   }
 
@@ -214,21 +284,34 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
 
   const { theme } = parsed.data;
 
-  try {
-    const { error } = await supabaseServer.rpc("upsert_site_settings", {
-      payload: theme,
-    });
-
-    if (!error) {
-      return res.status(200).json({ ok: true });
+  if (isContentfulManagementConfigured()) {
+    try {
+      await contentfulUpsertSiteSettings(theme);
+      return res.status(200).json({ ok: true, backend: "contentful" });
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
+  }
 
-    if (!shouldFallback(error)) {
-      return res.status(500).json({ error: error.message });
-    }
-  } catch (e: any) {
-    if (!shouldFallback(e)) {
-      return res.status(500).json({ error: e?.message || String(e) });
+  if (hasSupabase()) {
+    try {
+      const { error } = await supabaseServer!.rpc("upsert_site_settings", {
+        payload: theme,
+      });
+
+      if (!error) {
+        return res.status(200).json({ ok: true, backend: "supabase" });
+      }
+
+      if (!shouldFallback(error)) {
+        return res.status(500).json({ error: error.message });
+      }
+    } catch (e: any) {
+      if (!shouldFallback(e)) {
+        return res.status(500).json({ error: e?.message || String(e) });
+      }
     }
   }
 

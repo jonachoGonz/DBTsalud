@@ -326,6 +326,25 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
   return res.status(200).json({ ok: true, backend: "local" });
 };
 
+function formatContentfulError(e: any) {
+  const status = e?.response?.status || e?.status;
+  const message =
+    e?.response?.data?.message ||
+    e?.response?.data?.details?.errors?.[0]?.message ||
+    e?.message ||
+    String(e);
+
+  if (status === 401 || status === 403) {
+    return {
+      status,
+      message:
+        "Contentful auth error: verifica que CONTENTFUL_MANAGEMENT_TOKEN tenga acceso al Space y Environment.",
+    };
+  }
+
+  return { status, message: String(message) };
+}
+
 export const handleSeedContentful: RequestHandler = async (req, res) => {
   if (!isAuthorized(req)) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -335,6 +354,7 @@ export const handleSeedContentful: RequestHandler = async (req, res) => {
     const result = await seedContentfulFromDefaults();
     return res.status(200).json(result);
   } catch (e: any) {
-    return res.status(500).json({ error: e?.message || String(e) });
+    const err = formatContentfulError(e);
+    return res.status(500).json({ error: err.message, status: err.status });
   }
 };

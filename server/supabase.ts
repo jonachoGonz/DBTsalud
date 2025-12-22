@@ -1,7 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 function sanitizeEnv(v?: string) {
-  return (v || "").trim().replace(/^['"]+|['"]+$/g, "");
+  return (v || "").trim().replace(/^['\"]+|['\"]+$/g, "");
 }
 
 function getEnv(...keys: string[]) {
@@ -17,19 +17,16 @@ const supabaseUrl = getEnv(
   "VITE_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_URL",
 );
+
 const supabaseAnonKey = getEnv(
-  "SUPABASE_ANON_KEY",
   "SUPABASE_ANON_KEY",
   "VITE_SUPABASE_ANON_KEY",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
 );
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Missing Supabase environment variables for server. Set SUPABASE_URL + SUPABASE_ANON_KEY (or VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY).",
-  );
-}
-
-export const supabaseServer = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { persistSession: false, autoRefreshToken: false },
-});
+export const supabaseServer: SupabaseClient | null =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      })
+    : null;

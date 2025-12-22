@@ -1,5 +1,73 @@
 import contentfulManagement from "contentful-management";
 
+type ParsedContentfulError = {
+  status?: number;
+  message: string;
+  requestId?: string;
+  code?: string;
+};
+
+function parseContentfulError(e: any): ParsedContentfulError {
+  const directStatus = e?.response?.status || e?.status;
+  const directMessage =
+    e?.response?.data?.message ||
+    e?.response?.data?.details?.errors?.[0]?.message ||
+    e?.message ||
+    String(e);
+  const directRequestId =
+    e?.requestId ||
+    e?.response?.headers?.["x-contentful-request-id"] ||
+    e?.response?.data?.requestId;
+  const directCode = e?.response?.data?.sys?.id;
+
+  if (typeof directMessage === "string") {
+    const trimmed = directMessage.trim();
+    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === "object") {
+          return {
+            status: Number(parsed.status) || directStatus,
+            message: String(parsed.message || directMessage),
+            requestId: String(parsed.requestId || directRequestId || "") || undefined,
+            code: String(parsed.sys?.id || directCode || "") || undefined,
+          };
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  return {
+    status: typeof directStatus === "number" ? directStatus : undefined,
+    message: String(directMessage),
+    requestId: directRequestId ? String(directRequestId) : undefined,
+    code: directCode ? String(directCode) : undefined,
+  };
+}
+
+async function runStep<T>(label: string, fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (e: any) {
+    const info = parseContentfulError(e);
+    const extra = [
+      info.status ? `status=${info.status}` : null,
+      info.code ? `code=${info.code}` : null,
+      info.requestId ? `requestId=${info.requestId}` : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    const msg = extra
+      ? `Contentful seed failed at "${label}": ${info.message} (${extra})`
+      : `Contentful seed failed at "${label}": ${info.message}`;
+
+    throw new Error(msg, { cause: e });
+  }
+}
+
 export type SeedLocale = "es" | "en";
 
 type LocaleInfo = {
@@ -53,17 +121,28 @@ export async function seedContentfulFromDefaults() {
   const managementToken = requireEnv("CONTENTFUL_MANAGEMENT_TOKEN");
   const environmentId = env("CONTENTFUL_ENVIRONMENT", "master");
 
-  const contentTypeContentEntry = env("CONTENTFUL_CONTENT_ENTRY_TYPE", "contentEntry");
+  const contentTypeContentEntry = env(
+    "CONTENTFUL_CONTENT_ENTRY_TYPE",
+    "contentEntry",
+  );
   const contentTypeSiteSettings = env("CONTENTFUL_SITE_SETTINGS_TYPE", "siteSettings");
 
-  const mgmtClient = (contentfulManagement as any).createClient({
+  const cmAny: any = contentfulManagement as any;
+  const createMgmtClient = cmAny?.createClient || cmAny?.default?.createClient;
+  if (typeof createMgmtClient !== "function") {
+    throw new Error("contentful-management client factory not found");
+  }
+
+  const mgmtClient = createMgmtClient({
     accessToken: managementToken,
   });
 
-  const space = await mgmtClient.getSpace(spaceId);
-  const envApi = await space.getEnvironment(environmentId);
+  const space = await runStep("getSpace", async () => mgmtClient.getSpace(spaceId));
+  const envApi = await runStep("getEnvironment", async () =>
+    space.getEnvironment(environmentId),
+  );
 
-  const localesRes = await envApi.getLocales();
+  const localesRes = await runStep("getLocales", async () => envApi.getLocales());
   const locales: LocaleInfo[] = (localesRes?.items || []).map((l: any) => ({
     code: String(l.code),
     default: Boolean(l.default),
@@ -81,7 +160,8 @@ export async function seedContentfulFromDefaults() {
   process.env.CONTENTFUL_LOCALE_ES = localeEs;
   process.env.CONTENTFUL_LOCALE_EN = localeEn;
 
-  await ensureContentType(envApi, contentTypeContentEntry, {
+  await runStep(`ensureContentType:${contentTypeContentEntry}`, async () =>
+    ensureContentType(envApi, contentTypeContentEntry, {
     name: "Content Entry",
     displayField: "key",
     fields: [
@@ -100,9 +180,11 @@ export async function seedContentfulFromDefaults() {
         localized: true,
       },
     ],
-  });
+    }),
+  );
 
-  await ensureContentType(envApi, contentTypeSiteSettings, {
+  await runStep(`ensureContentType:${contentTypeSiteSettings}`, async () =>
+    ensureContentType(envApi, contentTypeSiteSettings, {
     name: "Site Settings",
     displayField: "name",
     fields: [
@@ -121,7 +203,8 @@ export async function seedContentfulFromDefaults() {
         localized: false,
       },
     ],
-  });
+    }),
+  );
 
   const { contentfulUpsertContent, contentfulUpsertSiteSettings } = await import(
     "./contentful-store"
@@ -568,17 +651,23 @@ export async function seedContentfulFromDefaults() {
 
   for (const key of Object.keys(CONTENT)) {
     for (const locale of localesToSeed) {
-      await contentfulUpsertContent(key, locale, CONTENT[key][locale]);
+      await runStep(`upsertContent:${key}:${locale}`, async () =>
+        contentfulUpsertContent(key, locale, CONTENT[key][locale]),
+      );
     }
   }
 
   for (const styleKey of Object.keys(STYLES)) {
     for (const locale of localesToSeed) {
-      await contentfulUpsertContent(styleKey, locale, STYLES[styleKey]);
+      await runStep(`upsertStyle:${styleKey}:${locale}`, async () =>
+        contentfulUpsertContent(styleKey, locale, STYLES[styleKey]),
+      );
     }
   }
 
-  await contentfulUpsertSiteSettings(STYLES["luminous.styles.generales"]);
+  await runStep("upsertSiteSettings", async () =>
+    contentfulUpsertSiteSettings(STYLES["luminous.styles.generales"]),
+  );
 
   return {
     ok: true as const,

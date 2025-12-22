@@ -343,13 +343,13 @@ export const handleUpsertSiteSettings: RequestHandler = async (req, res) => {
 function formatContentfulError(e: any) {
   let status: any = e?.response?.status || e?.status;
 
-  const requestId: any =
+  let requestId: any =
     e?.requestId ||
     e?.response?.headers?.["x-contentful-request-id"] ||
     e?.response?.headers?.["X-Contentful-Request-Id"] ||
     e?.response?.data?.requestId;
 
-  const sysId: any =
+  let sysId: any =
     e?.response?.data?.sys?.id ||
     e?.response?.data?.details?.errors?.[0]?.name ||
     undefined;

@@ -112,22 +112,19 @@ export function isContentfulManagementConfigured() {
 }
 
 async function findContentEntryByKey(cfg: ContentfulStoreConfig, key: string) {
-  const client = getDeliveryClient(cfg, false);
+  const client: any = getDeliveryClient(cfg, false);
+  const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
 
-  const tryQuery = async (locale: string) => {
-    const q: Record<string, any> = {
-      content_type: cfg.contentTypeContentEntry,
-      limit: 1,
-      locale,
-    };
-    q[`fields.${cfg.fieldKey}`] = key;
-    return client.getEntries(q);
+  const q: Record<string, any> = {
+    content_type: cfg.contentTypeContentEntry,
+    limit: 1,
   };
+  q[`fields.${cfg.fieldKey}`] = key;
 
-  const resAllLocales = await tryQuery("*");
+  const resAllLocales = await allLocalesClient.getEntries(q);
   if (resAllLocales.items?.length) return resAllLocales.items[0] as any;
 
-  const resDefault = await tryQuery(cfg.defaultLocale);
+  const resDefault = await client.getEntries({ ...q, locale: cfg.defaultLocale });
   if (resDefault.items?.length) return resDefault.items[0] as any;
 
   return null;
@@ -149,7 +146,8 @@ export async function contentfulListKeys(prefix?: string) {
   const cfg = getConfig();
   if (!cfg) return { configured: false as const, keys: [] as string[] };
 
-  const client = getDeliveryClient(cfg, false);
+  const client: any = getDeliveryClient(cfg, false);
+  const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
 
   const keys = new Set<string>();
   let skip = 0;
@@ -161,10 +159,9 @@ export async function contentfulListKeys(prefix?: string) {
       select: `fields.${cfg.fieldKey}`,
       limit,
       skip,
-      locale: "*",
     };
 
-    const page = await client.getEntries(q);
+    const page = await allLocalesClient.getEntries(q);
     for (const item of page.items as any[]) {
       const k = pickLocaleValue<string>(item.fields?.[cfg.fieldKey], cfg.defaultLocale, cfg.defaultLocale);
       if (typeof k === "string" && (!prefix || k.startsWith(prefix))) keys.add(k);
@@ -182,11 +179,11 @@ export async function contentfulGetSiteSettings() {
   const cfg = getConfig();
   if (!cfg) return { configured: false as const, settings: null as any };
 
-  const client = getDeliveryClient(cfg, false);
-  const page = await client.getEntries({
+  const client: any = getDeliveryClient(cfg, false);
+  const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
+  const page = await allLocalesClient.getEntries({
     content_type: cfg.contentTypeSiteSettings,
     limit: 1,
-    locale: "*",
   });
 
   const item: any = page.items?.[0];

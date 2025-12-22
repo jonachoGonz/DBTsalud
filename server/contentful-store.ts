@@ -1,9 +1,5 @@
 import { createClient } from "contentful";
-import {
-  createClient as createManagementClient,
-  type Entry,
-  type EntryCollection,
-} from "contentful-management";
+import contentfulManagement from "contentful-management";
 
 export type Locale = "es" | "en";
 
@@ -213,7 +209,9 @@ async function getManagementEnvironment(cfg: ContentfulStoreConfig) {
     throw new Error("Contentful management token not configured");
   }
 
-  const client = createManagementClient({ accessToken: cfg.managementToken });
+  const client = (contentfulManagement as any).createClient({
+    accessToken: cfg.managementToken,
+  });
   const space = await client.getSpace(cfg.spaceId);
   return space.getEnvironment(cfg.environment);
 }
@@ -225,14 +223,14 @@ async function findManagementEntryByKey(cfg: ContentfulStoreConfig, key: string)
     limit: 1,
   };
   q[`fields.${cfg.fieldKey}`] = key;
-  const res: EntryCollection<any> = await envApi.getEntries(q);
-  return (res.items && res.items[0]) || null;
+  const res: any = await envApi.getEntries(q);
+  return (res?.items && res.items[0]) || null;
 }
 
-async function safePublish(entry: Entry<any>) {
+async function safePublish(entry: any) {
   try {
-    const published = await (entry as any).publish();
-    return published as Entry<any>;
+    if (typeof entry?.publish !== "function") return entry;
+    return await entry.publish();
   } catch {
     return entry;
   }
@@ -280,7 +278,7 @@ export async function contentfulUpsertSiteSettings(theme: unknown) {
   }
 
   const envApi = await getManagementEnvironment(cfg);
-  const res: EntryCollection<any> = await envApi.getEntries({
+  const res: any = await envApi.getEntries({
     content_type: cfg.contentTypeSiteSettings,
     limit: 1,
   });

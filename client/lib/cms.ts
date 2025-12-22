@@ -5,21 +5,27 @@ const API_BASE = "/api/cms";
 async function apiFetchJson<T>(
   input: string,
   init?: RequestInit,
-  opts?: { timeoutMs?: number },
+  opts?: { timeoutMs?: number; retries?: number; retryDelayMs?: number },
 ): Promise<{ ok: true; data: T } | { ok: false; error: string; status?: number }> {
   const controller = new AbortController();
   const timeoutMs = opts?.timeoutMs ?? 15_000;
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-  try {
-    const res = await fetch(input, {
-      ...init,
-      signal: controller.signal,
-      headers: {
-        Accept: "application/json",
-        ...(init?.headers || {}),
-      },
-    });
+  const retries = Math.max(0, opts?.retries ?? 0);
+  const retryDelayMs = Math.max(0, opts?.retryDelayMs ?? 500);
+
+  async function attempt(remaining: number): Promise<
+    { ok: true; data: T } | { ok: false; error: string; status?: number }
+  > {
+    try {
+      const res = await fetch(input, {
+        ...init,
+        signal: controller.signal,
+        headers: {
+          Accept: "application/json",
+          ...(init?.headers || {}),
+        },
+      });
 
     const status = res.status;
 
@@ -30,16 +36,34 @@ async function apiFetchJson<T>(
       json = null;
     }
 
-    if (!res.ok) {
-      const msg =
-        (json && typeof json === "object" && (json.error || json.message)) ||
-        `HTTP ${status}`;
-      return { ok: false, error: String(msg), status };
-    }
+      if (!res.ok) {
+        const msg =
+          (json && typeof json === "object" && (json.error || json.message)) ||
+          `HTTP ${status}`;
+        return { ok: false, error: String(msg), status };
+      }
 
-    return { ok: true, data: json as T };
-  } catch (e: any) {
-    return { ok: false, error: e?.message || String(e) };
+      return { ok: true, data: json as T };
+    } catch (e: any) {
+      const message = e?.message || String(e);
+      const isAbort = e?.name === "AbortError";
+      const isNetwork =
+        !isAbort &&
+        (message === "Failed to fetch" ||
+          message.toLowerCase().includes("network") ||
+          message.toLowerCase().includes("load failed"));
+
+      if (isNetwork && remaining > 0) {
+        await new Promise((r) => setTimeout(r, retryDelayMs));
+        return attempt(remaining - 1);
+      }
+
+      return { ok: false, error: message };
+    }
+  }
+
+  try {
+    return await attempt(retries);
   } finally {
     clearTimeout(timeout);
   }
@@ -127,6 +151,8 @@ export async function listContentKeys(prefix?: string): Promise<string[]> {
 export async function fetchSiteSettings(): Promise<SiteSettings | null> {
   const res = await apiFetchJson<{ settings: SiteSettings | null }>(
     `${API_BASE}/settings`,
+    undefined,
+    { retries: 1, retryDelayMs: 600 },
   );
   if (res.ok === false) {
     console.error("fetchSiteSettings error", res.error);

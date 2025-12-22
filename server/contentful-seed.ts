@@ -64,7 +64,9 @@ async function runStep<T>(label: string, fn: () => Promise<T>): Promise<T> {
       ? `Contentful seed failed at "${label}": ${info.message} (${extra})`
       : `Contentful seed failed at "${label}": ${info.message}`;
 
-    throw new Error(msg, { cause: e });
+    const err = new Error(msg);
+    (err as any).cause = e;
+    throw err;
   }
 }
 
@@ -108,7 +110,8 @@ async function ensureContentType(envApi: any, id: string, spec: any) {
     await envApi.getContentType(id);
     return;
   } catch (e: any) {
-    const status = e?.response?.status || e?.status || 0;
+    const info = parseContentfulError(e);
+    const status = info.status || 0;
     if (status !== 404) throw e;
   }
 

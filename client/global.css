@@ -86,9 +86,9 @@ src:url("https://use.typekit.net/af/b63594/0000000000000000773628e2/31/l?primer=
 font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
 }
 
-.tk-alegreya { font-family: "alegreya-sans",sans-serif; }
-.tk-quador { font-family: "quador-display",serif; }
-.tk-aboreto { font-family: "aboreto",sans-serif; }
+.tk-alegreya { font-family: var(--font-family); }
+.tk-quador { font-family: var(--font-family); }
+.tk-aboreto { font-family: var(--font-family); }
 
 @tailwind base;
 @tailwind components;
@@ -146,6 +146,9 @@ font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --font-family: alegreya-sans, sans-serif;
+    --base-font-size: 16px;
   }
 
   .dark {
@@ -194,6 +197,8 @@ font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-family);
+    font-size: var(--base-font-size);
   }
 }
 

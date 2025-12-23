@@ -258,7 +258,7 @@ export default function DBTTherapies() {
                         <h3
                           className="text-[36px] font-medium leading-[39.6px]"
                           style={{
-                            fontFamily: '"saans trial", sans-serif',
+                            fontFamily: 'var(--font-family)',
                             letterSpacing: "-0.36px",
                           }}
                         >

@@ -7,6 +7,7 @@ import {
   fetchSiteSettings,
   upsertSiteSettings,
   listContentKeys,
+  seedContentful,
   type Locale,
 } from "@/lib/cms";
 import { applyTheme } from "@/lib/theme";
@@ -21,6 +22,7 @@ const defaultKeys = [
   "luminous.seo",
   "luminous.header",
   "luminous.about",
+  "luminous.spaces",
   "luminous.therapies",
   "luminous.services",
   "luminous.process",
@@ -42,11 +44,18 @@ export default function Admin() {
   const [saving, setSaving] = useState(false);
   const [editorMode, setEditorMode] = useState<"json" | "form">("form");
 
+  const [seeding, setSeeding] = useState(false);
+  const [seedStatus, setSeedStatus] = useState<
+    { ok: true; environment: string; locales: { defaultLocale: string; es: string; en: string } } | null
+  >(null);
+
   // styles: general theme
   const [primary, setPrimary] = useState("#2e4c47");
   const [secondary, setSecondary] = useState("#CBEDE0");
   const [fontFamily, setFontFamily] = useState("alegreya-sans, sans-serif");
   const [baseSize, setBaseSize] = useState(16);
+  const [fontOptions, setFontOptions] = useState<{ label: string; value: string }[]>([]);
+  const [fontsLoading, setFontsLoading] = useState(false);
   const [logoUrl, setLogoUrl] = useState("");
   // styles: per-section
   const styleKeysBase = useMemo(
@@ -117,6 +126,32 @@ export default function Admin() {
     })();
   }, [selectedKey, locale, authed]);
 
+  useEffect(() => {
+    if (!authed) return;
+    (async () => {
+      try {
+        setFontsLoading(true);
+        const { listGoogleFonts, formatFontFamilyCSS, ensureGoogleFontLoaded } = await import("@/lib/googleFonts");
+        const apiKey = import.meta.env.VITE_GOOGLE_FONTS_API_KEY as string | undefined;
+        const fonts = await listGoogleFonts(apiKey);
+        const opts = fonts.map((f) => ({ label: f.family, value: formatFontFamilyCSS(f.family, f.category) }));
+        setFontOptions(opts);
+        ensureGoogleFontLoaded(fontFamily);
+      } catch (e) {
+        console.warn("No se pudieron cargar Google Fonts", e);
+      } finally {
+        setFontsLoading(false);
+      }
+    })();
+  }, [authed]);
+
+  useEffect(() => {
+    (async () => {
+      const { ensureGoogleFontLoaded } = await import("@/lib/googleFonts");
+      ensureGoogleFontLoaded(fontFamily);
+    })();
+  }, [fontFamily]);
+
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
@@ -124,6 +159,7 @@ export default function Admin() {
     const pw = String(form.get("password") || "");
     if (user === ADMIN_USER && pw === ADMIN_PASSWORD) {
       sessionStorage.setItem("adminAuthed", "1");
+      sessionStorage.setItem("adminBasicAuth", btoa(`${user}:${pw}`));
       setAuthed(true);
     } else {
       alert("Credenciales inválidas");
@@ -158,6 +194,39 @@ export default function Admin() {
     }
     applyTheme(theme);
     alert("Estilos aplicados");
+  };
+
+  const handleSeedContentful = async () => {
+    const ok = confirm(
+      "Esto creará/actualizará el esquema y contenido inicial en Contentful (master). ¿Continuar?",
+    );
+    if (!ok) return;
+
+    try {
+      setSeeding(true);
+      const result = await seedContentful();
+      setSeedStatus({
+        ok: true,
+        environment: result.environment,
+        locales: result.locales,
+      });
+
+      await loadSettings();
+
+      try {
+        const keys = await listContentKeys("luminous.");
+        if (keys.length)
+          setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
+      } catch {
+        // ignore
+      }
+
+      alert("Contentful sincronizado correctamente");
+    } catch (e: any) {
+      alert("Error al sincronizar Contentful: " + (e?.message || String(e)));
+    } finally {
+      setSeeding(false);
+    }
   };
 
   async function migrateFromLuminous() {
@@ -431,6 +500,7 @@ export default function Admin() {
       seo: "SEO",
       header: "Encabezado",
       about: "Nosotros",
+      spaces: "Espacios",
       therapies: "Terapias",
       services: "Servicios",
       process: "Proceso",
@@ -454,6 +524,7 @@ export default function Admin() {
       generales: "Generales",
       header: "Encabezado",
       about: "Nosotros",
+      spaces: "Espacios",
       therapies: "Terapias",
       services: "Servicios",
       process: "Proceso",
@@ -492,8 +563,25 @@ export default function Admin() {
               Sección actual:{" "}
               <span className="font-medium">{sectionLabel(selectedKey)}</span>
             </div>
-            {/* Botones ocultos: plantilla y migración ya no son necesarios */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                disabled={seeding}
+                onClick={handleSeedContentful}
+                className="px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50 disabled:opacity-50"
+              >
+                {seeding ? "Sincronizando Contentful…" : "Replicar en Contentful"}
+              </button>
+            </div>
           </div>
+
+          {seedStatus && (
+            <div className="rounded-md border bg-[rgb(248,250,252)] p-3 text-sm text-gray-700">
+              <div className="font-medium">Contentful listo</div>
+              <div className="text-xs text-gray-500">
+                Environment: {seedStatus.environment} · Locales: ES={seedStatus.locales.es}, EN={seedStatus.locales.en}
+              </div>
+            </div>
+          )}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -604,14 +692,24 @@ export default function Admin() {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
-                  Tipografía (CSS font-family)
+                  Tipografía (Google Fonts)
                 </label>
-                <input
-                  type="text"
+                <select
                   value={fontFamily}
                   onChange={(e) => setFontFamily(e.target.value)}
                   className="w-full border rounded-md px-3 py-2"
-                />
+                >
+                  {fontsLoading && <option>Cargando fuentes…</option>}
+                  {!fontsLoading && (
+                    <>
+                      {fontOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </>
+                  )}
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">
@@ -787,6 +885,12 @@ function defaultStyles(key: string) {
       backgroundImage: "",
     };
   }
+  if (name === "spaces") {
+    return {
+      textColor: "#1C1C1C",
+      speedSeconds: 25.6,
+    };
+  }
   if (name === "therapies") {
     return {
       titleColor: "#111111",
@@ -857,6 +961,35 @@ function defaultContent(key: string) {
         linkText: "Conócenos",
         linkUrl: "/#nosotros",
         image: "",
+      };
+    case "luminous.spaces":
+      return {
+        eyebrow: "NUESTROS ESPACIOS",
+        title: "Conoce el centro y sus espacios",
+        ctaText: "VER TODAS LAS FOTOS",
+        ctaLink: "#contacto",
+        items: [
+          {
+            title: "Espacio 1",
+            image:
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b0202b2d312f5d46f_Frame%20147.avif",
+          },
+          {
+            title: "Espacio 2",
+            image:
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3b26ca1b096a6eda7c_Frame%2098.avif",
+          },
+          {
+            title: "Espacio 3",
+            image:
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bfd4346c3a790d01a_Frame%20143.avif",
+          },
+          {
+            title: "Espacio 4",
+            image:
+              "https://cdn.prod.website-files.com/68d563f4fd5681015e6537de/692cce3bd7bea7f2504f39de_Frame%20142.avif",
+          },
+        ],
       };
     case "luminous.therapies":
       return {
@@ -1013,6 +1146,23 @@ function ComponentPreview({ k, jsonText }: { k: string; jsonText: string }) {
               )}
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+  if (k === "luminous.spaces") {
+    return (
+      <div>
+        <Heading>Espacios</Heading>
+        <Small>{data.eyebrow}</Small>
+        <Small>{data.title}</Small>
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          {(data.items || []).slice(0, 4).map((it: any, idx: number) => (
+            <div key={idx} className="border rounded-lg p-2 bg-white">
+              <div className="font-medium text-xs">{it.title}</div>
+              <div className="text-[10px] text-gray-500 truncate">{it.image}</div>
+            </div>
+          ))}
         </div>
       </div>
     );

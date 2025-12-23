@@ -2,6 +2,14 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import {
+  handleGetContent,
+  handleGetSiteSettings,
+  handleListKeys,
+  handleUpsertContent,
+  handleUpsertSiteSettings,
+  handleSeedContentful,
+} from "./routes/cms";
 
 export function createServer() {
   const app = express();
@@ -18,6 +26,14 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // CMS routes (proxy to Supabase to avoid browser CORS issues)
+  app.get("/api/cms/content", handleGetContent);
+  app.post("/api/cms/content", handleUpsertContent);
+  app.get("/api/cms/keys", handleListKeys);
+  app.get("/api/cms/settings", handleGetSiteSettings);
+  app.post("/api/cms/settings", handleUpsertSiteSettings);
+  app.post("/api/cms/seed", handleSeedContentful);
 
   return app;
 }

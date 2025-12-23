@@ -709,9 +709,14 @@ export async function seedContentfulFromDefaults() {
     }),
   );
 
-  // Styles types (optional but enables editing style values as fields)
-  await runStep("ensureContentType:dbtStylesGenerales", async () =>
-    ensureContentType(envApi, "dbtStylesGenerales", {
+  // Styles types (optional). If the Contentful user doesn't have "content model" permissions,
+  // we skip these and the site keeps using the legacy JSON styles.
+  let structuredStylesEnabled = true;
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesGenerales", async () =>
+      ensureContentType(envApi, "dbtStylesGenerales", {
       name: "DBT Styles Generales",
       displayField: "key",
       fields: [
@@ -722,11 +727,13 @@ export async function seedContentfulFromDefaults() {
         { id: "baseSize", name: "Base Size", type: "Number", required: false, localized: false },
         { id: "logoUrl", name: "Logo URL", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesHeader", async () =>
-    ensureContentType(envApi, "dbtStylesHeader", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesHeader", async () =>
+      ensureContentType(envApi, "dbtStylesHeader", {
       name: "DBT Styles Header",
       displayField: "key",
       fields: [
@@ -738,11 +745,13 @@ export async function seedContentfulFromDefaults() {
         { id: "subtitle1Color", name: "Subtitle 1 Color", type: "Symbol", required: false, localized: false },
         { id: "subtitle2Color", name: "Subtitle 2 Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesAbout", async () =>
-    ensureContentType(envApi, "dbtStylesAbout", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesAbout", async () =>
+      ensureContentType(envApi, "dbtStylesAbout", {
       name: "DBT Styles About",
       displayField: "key",
       fields: [
@@ -754,11 +763,13 @@ export async function seedContentfulFromDefaults() {
         { id: "bodySize", name: "Body Size", type: "Number", required: false, localized: false },
         { id: "backgroundImage", name: "Background Image", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesSpaces", async () =>
-    ensureContentType(envApi, "dbtStylesSpaces", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesSpaces", async () =>
+      ensureContentType(envApi, "dbtStylesSpaces", {
       name: "DBT Styles Spaces",
       displayField: "key",
       fields: [
@@ -766,11 +777,13 @@ export async function seedContentfulFromDefaults() {
         { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
         { id: "speedSeconds", name: "Speed Seconds", type: "Number", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesTherapies", async () =>
-    ensureContentType(envApi, "dbtStylesTherapies", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesTherapies", async () =>
+      ensureContentType(envApi, "dbtStylesTherapies", {
       name: "DBT Styles Therapies",
       displayField: "key",
       fields: [
@@ -779,11 +792,13 @@ export async function seedContentfulFromDefaults() {
         { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
         { id: "itemDescColor", name: "Item Desc Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesServices", async () =>
-    ensureContentType(envApi, "dbtStylesServices", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesServices", async () =>
+      ensureContentType(envApi, "dbtStylesServices", {
       name: "DBT Styles Services",
       displayField: "key",
       fields: [
@@ -792,11 +807,13 @@ export async function seedContentfulFromDefaults() {
         { id: "subtitleColor", name: "Subtitle Color", type: "Symbol", required: false, localized: false },
         { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesProcess", async () =>
-    ensureContentType(envApi, "dbtStylesProcess", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesProcess", async () =>
+      ensureContentType(envApi, "dbtStylesProcess", {
       name: "DBT Styles Process",
       displayField: "key",
       fields: [
@@ -806,11 +823,13 @@ export async function seedContentfulFromDefaults() {
         { id: "stepTitleColor", name: "Step Title Color", type: "Symbol", required: false, localized: false },
         { id: "stepDescColor", name: "Step Desc Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesTeam", async () =>
-    ensureContentType(envApi, "dbtStylesTeam", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesTeam", async () =>
+      ensureContentType(envApi, "dbtStylesTeam", {
       name: "DBT Styles Team",
       displayField: "key",
       fields: [
@@ -819,11 +838,13 @@ export async function seedContentfulFromDefaults() {
         { id: "nameColor", name: "Name Color", type: "Symbol", required: false, localized: false },
         { id: "roleColor", name: "Role Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesContact", async () =>
-    ensureContentType(envApi, "dbtStylesContact", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesContact", async () =>
+      ensureContentType(envApi, "dbtStylesContact", {
       name: "DBT Styles Contact",
       displayField: "key",
       fields: [
@@ -831,19 +852,21 @@ export async function seedContentfulFromDefaults() {
         { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
         { id: "infoColor", name: "Info Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
-  await runStep("ensureContentType:dbtStylesFooter", async () =>
-    ensureContentType(envApi, "dbtStylesFooter", {
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesFooter", async () =>
+      ensureContentType(envApi, "dbtStylesFooter", {
       name: "DBT Styles Footer",
       displayField: "key",
       fields: [
         { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
         { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
       ],
-    }),
-  );
+      }),
+    ));
 
   const { contentfulUpsertContent, contentfulUpsertSiteSettings } =
     await import("./contentful-store");

@@ -47,7 +47,13 @@ export default function Admin() {
 
   const [seeding, setSeeding] = useState(false);
   const [seedStatus, setSeedStatus] = useState<
-    { ok: true; environment: string; locales: { defaultLocale: string; es: string; en: string } } | null
+    {
+      ok: true;
+      environment: string;
+      locales: { defaultLocale: string; es: string; en: string };
+      warnings?: string[];
+      structured?: { stylesEnabled?: boolean };
+    } | null
   >(null);
 
   // styles: general theme
@@ -581,6 +587,19 @@ export default function Admin() {
               <div className="text-xs text-gray-500">
                 Environment: {seedStatus.environment} · Locales: ES={seedStatus.locales.es}, EN={seedStatus.locales.en}
               </div>
+              {seedStatus.structured?.stylesEnabled === false && (
+                <div className="mt-2 text-xs text-amber-700">
+                  Nota: no se pudieron crear los <span className="font-medium">estilos estructurados</span> en Contentful (falta permiso).
+                  La web seguirá usando estilos legacy.
+                </div>
+              )}
+              {seedStatus.warnings && seedStatus.warnings.length > 0 && (
+                <ul className="mt-2 text-xs text-amber-700 list-disc pl-5 space-y-1">
+                  {seedStatus.warnings.map((w) => (
+                    <li key={w}>{w}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}

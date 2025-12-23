@@ -196,23 +196,14 @@ async function ensureAssetFromUrl(envApi: any, defaultLocale: string, title: str
 
   const processed = await asset.processForAllLocales();
 
-  // Processing is async in Contentful. We retry a few times until the file URL appears.
-  let ready = processed;
-  for (let i = 0; i < 10; i++) {
-    const reloaded = await ready.reload();
-    const file = reloaded?.fields?.file?.[defaultLocale];
-    if (file?.url) {
-      ready = reloaded;
-      break;
-    }
-    await new Promise((r) => setTimeout(r, 1000));
-    ready = reloaded;
-  }
+  // Processing is async in Contentful; avoid long waits so the seed finishes quickly.
+  // The asset can still finish processing shortly after.
+  const ready = await processed.reload();
 
   try {
     await ready.publish();
   } catch {
-    // ignore publish errors (e.g., already published)
+    // ignore publish errors (e.g. processing not done yet)
   }
 
   return ready;

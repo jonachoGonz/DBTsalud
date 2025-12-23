@@ -216,6 +216,8 @@ export default function Admin() {
         ok: true,
         environment: result.environment,
         locales: result.locales,
+        warnings: result.warnings,
+        structured: result.structured,
       });
 
       await loadSettings();

@@ -225,6 +225,7 @@ async function findContentEntryByKey(
   const q: Record<string, any> = {
     content_type: cfg.contentTypeContentEntry,
     limit: 1,
+    include: 10,
   };
   q[`fields.${cfg.fieldKey}`] = key;
 

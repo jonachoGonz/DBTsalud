@@ -144,6 +144,118 @@ async function ensureContentType(envApi: any, id: string, spec: any) {
   await created.publish();
 }
 
+function guessImageContentType(url: string) {
+  const u = String(url || "").toLowerCase();
+  if (u.includes(".png")) return "image/png";
+  if (u.includes(".webp")) return "image/webp";
+  if (u.includes(".avif")) return "image/avif";
+  if (u.includes(".gif")) return "image/gif";
+  return "image/jpeg";
+}
+
+function guessImageFileExtension(url: string) {
+  const u = String(url || "").toLowerCase();
+  if (u.includes(".png")) return "png";
+  if (u.includes(".webp")) return "webp";
+  if (u.includes(".avif")) return "avif";
+  if (u.includes(".gif")) return "gif";
+  return "jpg";
+}
+
+async function ensureAssetFromUrl(envApi: any, defaultLocale: string, title: string, url: string) {
+  const safeTitle = title.trim();
+  if (!safeTitle) throw new Error("Missing asset title");
+  if (!url) throw new Error(`Missing asset url for ${safeTitle}`);
+
+  try {
+    const existing = await envApi.getAssets({
+      limit: 1,
+      "fields.title": safeTitle,
+    });
+    if (existing?.items?.length) {
+      return existing.items[0];
+    }
+  } catch {
+    // ignore search errors
+  }
+
+  const fileName = `${safeTitle}.${guessImageFileExtension(url)}`;
+
+  const asset = await envApi.createAsset({
+    fields: {
+      title: { [defaultLocale]: safeTitle },
+      file: {
+        [defaultLocale]: {
+          contentType: guessImageContentType(url),
+          fileName,
+          upload: url,
+        },
+      },
+    },
+  });
+
+  const processed = await asset.processForAllLocales();
+
+  // Processing is async in Contentful. We retry a few times until the file URL appears.
+  let ready = processed;
+  for (let i = 0; i < 10; i++) {
+    const reloaded = await ready.reload();
+    const file = reloaded?.fields?.file?.[defaultLocale];
+    if (file?.url) {
+      ready = reloaded;
+      break;
+    }
+    await new Promise((r) => setTimeout(r, 1000));
+    ready = reloaded;
+  }
+
+  try {
+    await ready.publish();
+  } catch {
+    // ignore publish errors (e.g., already published)
+  }
+
+  return ready;
+}
+
+function linkToAsset(asset: any) {
+  return { sys: { type: "Link", linkType: "Asset", id: asset.sys.id } };
+}
+
+function linkToEntry(entry: any) {
+  return { sys: { type: "Link", linkType: "Entry", id: entry.sys.id } };
+}
+
+async function findEntryByKey(envApi: any, contentType: string, key: string) {
+  const q: Record<string, any> = { content_type: contentType, limit: 1 };
+  q["fields.key"] = key;
+  const res: any = await envApi.getEntries(q);
+  return (res?.items && res.items[0]) || null;
+}
+
+async function upsertEntryByKey(envApi: any, contentType: string, key: string, fields: any) {
+  const existing = await findEntryByKey(envApi, contentType, key);
+
+  if (existing) {
+    existing.fields = { ...existing.fields, ...fields };
+    const updated = await existing.update();
+    try {
+      await updated.publish();
+    } catch {
+      // ignore
+    }
+    return updated;
+  }
+
+  const created = await envApi.createEntry(contentType, { fields });
+  try {
+    await created.publish();
+  } catch {
+    // ignore
+  }
+  return created;
+}
+
 export async function seedContentfulFromDefaults() {
   const spaceId = requireEnv("CONTENTFUL_SPACE_ID");
   const managementToken = requireEnv("CONTENTFUL_MANAGEMENT_TOKEN");

@@ -214,6 +214,10 @@ export type SeedContentfulResult = {
     styleKeys: string[];
     settings: true;
   };
+  warnings?: string[];
+  structured?: {
+    stylesEnabled?: boolean;
+  };
 };
 
 export async function seedContentful(): Promise<SeedContentfulResult> {

@@ -1662,5 +1662,9 @@ export async function seedContentfulFromDefaults() {
       styleKeys: Object.keys(STYLES),
       settings: true,
     },
+    warnings: warnings.length ? warnings : undefined,
+    structured: {
+      stylesEnabled: structuredStylesEnabled,
+    },
   };
 }

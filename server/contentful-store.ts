@@ -1177,6 +1177,76 @@ const structuredHandlers: Record<string, StructuredKeyHandler> = {
   },
 };
 
+const STRUCTURED_EMPTY = Symbol("structured-empty");
+
+function isStructuredResultEmpty(key: string, data: any) {
+  if (!data || typeof data !== "object") return true;
+
+  const hasAnyText = (...values: any[]) =>
+    values.some((v) => typeof v === "string" && v.trim().length > 0);
+
+  if (key === "luminous.header") {
+    return !hasAnyText(
+      data.title1,
+      data.title2,
+      data.subtitle1,
+      data.subtitle2,
+      data.cta1,
+      data.cta2,
+      data.backgroundImage,
+    );
+  }
+
+  if (key === "luminous.about") {
+    return !hasAnyText(data.title, data.body, data.image);
+  }
+
+  if (key === "luminous.spaces") {
+    return !hasAnyText(data.eyebrow, data.title) && !(data.items?.length > 0);
+  }
+
+  if (key === "luminous.therapies" || key === "luminous.services") {
+    return !hasAnyText(data.title, data.subtitle) && !(data.items?.length > 0);
+  }
+
+  if (key === "luminous.process") {
+    return !hasAnyText(data.title, data.intro) && !(data.steps?.length > 0);
+  }
+
+  if (key === "luminous.team") {
+    return !hasAnyText(data.title) && !(data.members?.length > 0);
+  }
+
+  if (key === "luminous.contact") {
+    return !hasAnyText(
+      data.title,
+      data.address,
+      data.whatsapp,
+      data.instagram,
+      data.email,
+      data?.hours?.weekdays,
+      data?.hours?.saturday,
+      data?.hours?.sunday,
+    );
+  }
+
+  if (key === "luminous.footer") {
+    return !hasAnyText(data.quote, data.text);
+  }
+
+  if (key === "luminous.seo") {
+    return !hasAnyText(data.title, data.description, data.canonical, data.ogUrl);
+  }
+
+  // styles
+  if (key.startsWith("luminous.styles.")) {
+    // If nothing is set, keep using legacy JSON so existing styling doesn't change.
+    return !JSON.stringify(data).replace(/\s+/g, "").includes("#");
+  }
+
+  return false;
+}
+
 async function tryGetStructuredContent(
   cfg: ContentfulStoreConfig,
   locale: Locale,
@@ -1194,7 +1264,7 @@ async function tryGetStructuredContent(
     resolved.defaultLocale,
   );
 
-  if (!item) return null;
+  if (!item) return STRUCTURED_EMPTY;
 
   const localeCode = resolved.localeMap[locale] || resolved.defaultLocale;
   const data = await handler({
@@ -1204,6 +1274,8 @@ async function tryGetStructuredContent(
     localeCode,
     fallbackLocaleCode: resolved.defaultLocale,
   });
+
+  if (isStructuredResultEmpty(key, data)) return STRUCTURED_EMPTY;
 
   return data;
 }
@@ -1219,7 +1291,7 @@ export async function contentfulGetContent<T = any>(
 
   try {
     const structured = await tryGetStructuredContent(cfg, locale, resolved, key);
-    if (structured !== undefined) {
+    if (structured !== undefined && structured !== STRUCTURED_EMPTY) {
       return { configured: true as const, data: (structured as any) as T | null };
     }
 

@@ -1277,6 +1277,298 @@ export async function seedContentfulFromDefaults() {
 
   const localesToSeed: SeedLocale[] = ["es", "en"];
 
+  // Seed structured entries so Contentful can manage the site via field editors and Asset uploads.
+  // The frontend continues to support the legacy JSON entries as fallback.
+  const loc = (esValue: any, enValue: any) => {
+    const out: any = { [localeEs]: esValue, [localeEn]: enValue };
+    if (!(defaultLocale in out)) {
+      out[defaultLocale] = defaultLocale.toLowerCase().startsWith("es")
+        ? esValue
+        : enValue;
+    }
+    return out;
+  };
+
+  const makeKeyField = (k: string) => ({ [defaultLocale]: k });
+
+  const headerBgAsset = await runStep("asset:dbtHeaderBackground", async () =>
+    ensureAssetFromUrl(
+      envApi,
+      defaultLocale,
+      "dbt-header-background",
+      HEADER.es.backgroundImage,
+    ),
+  );
+
+  const aboutAsset = await runStep("asset:dbtAboutImage", async () =>
+    ensureAssetFromUrl(envApi, defaultLocale, "dbt-about-image", ABOUT.es.image),
+  );
+
+  // Spaces items
+  const spacesItemEntries: any[] = [];
+  for (let i = 0; i < (SPACES.es.items || []).length; i++) {
+    const key = `luminous.spaces.item.${i + 1}`;
+    const imageUrl = SPACES.es.items[i]?.image;
+
+    const asset = await runStep(`asset:dbtSpaces:${i + 1}`, async () =>
+      ensureAssetFromUrl(envApi, defaultLocale, `dbt-spaces-${i + 1}`, imageUrl),
+    );
+
+    const entry = await runStep(`entry:dbtSpacesItem:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtSpacesItem", key, {
+        key: makeKeyField(key),
+        title: loc(SPACES.es.items[i]?.title || "", SPACES.en.items[i]?.title || ""),
+        href: loc(SPACES.es.items[i]?.href || "", SPACES.en.items[i]?.href || ""),
+        image: { [defaultLocale]: linkToAsset(asset) },
+      }),
+    );
+
+    spacesItemEntries.push(entry);
+  }
+
+  // Therapies items
+  const therapiesItemEntries: any[] = [];
+  for (let i = 0; i < (THERAPIES.es.items || []).length; i++) {
+    const key = `luminous.therapies.item.${i + 1}`;
+    const imageUrl = THERAPIES.es.items[i]?.image;
+
+    const asset = await runStep(`asset:dbtTherapies:${i + 1}`, async () =>
+      ensureAssetFromUrl(
+        envApi,
+        defaultLocale,
+        `dbt-therapy-${i + 1}`,
+        imageUrl,
+      ),
+    );
+
+    const entry = await runStep(`entry:dbtTherapiesItem:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtTherapiesItem", key, {
+        key: makeKeyField(key),
+        title: loc(
+          THERAPIES.es.items[i]?.title || "",
+          THERAPIES.en.items[i]?.title || "",
+        ),
+        desc: loc(
+          THERAPIES.es.items[i]?.desc || "",
+          THERAPIES.en.items[i]?.desc || "",
+        ),
+        image: { [defaultLocale]: linkToAsset(asset) },
+      }),
+    );
+
+    therapiesItemEntries.push(entry);
+  }
+
+  // Services items (images are optional; the component has its own fallback images)
+  const servicesItemEntries: any[] = [];
+  for (let i = 0; i < (SERVICES.es.items || []).length; i++) {
+    const key = `luminous.services.item.${i + 1}`;
+    const entry = await runStep(`entry:dbtServicesItem:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtServicesItem", key, {
+        key: makeKeyField(key),
+        title: loc(
+          SERVICES.es.items[i]?.title || "",
+          SERVICES.en.items[i]?.title || "",
+        ),
+        desc: loc(
+          SERVICES.es.items[i]?.desc || "",
+          SERVICES.en.items[i]?.desc || "",
+        ),
+      }),
+    );
+    servicesItemEntries.push(entry);
+  }
+
+  // Process steps
+  const processStepEntries: any[] = [];
+  for (let i = 0; i < (PROCESS.es.steps || []).length; i++) {
+    const key = `luminous.process.step.${i + 1}`;
+    const entry = await runStep(`entry:dbtProcessStep:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtProcessStep", key, {
+        key: makeKeyField(key),
+        number: loc(`0${i + 1}`, `0${i + 1}`),
+        title: loc(
+          PROCESS.es.steps[i]?.title || "",
+          PROCESS.en.steps[i]?.title || "",
+        ),
+        description: loc(
+          PROCESS.es.steps[i]?.description || "",
+          PROCESS.en.steps[i]?.description || "",
+        ),
+      }),
+    );
+    processStepEntries.push(entry);
+  }
+
+  // Team members
+  const teamMemberEntries: any[] = [];
+  for (let i = 0; i < (TEAM.es.members || []).length; i++) {
+    const key = `luminous.team.member.${i + 1}`;
+    const imageUrl = TEAM.es.members[i]?.image;
+
+    const asset = await runStep(`asset:dbtTeam:${i + 1}`, async () =>
+      ensureAssetFromUrl(envApi, defaultLocale, `dbt-team-${i + 1}`, imageUrl),
+    );
+
+    const entry = await runStep(`entry:dbtTeamMember:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtTeamMember", key, {
+        key: makeKeyField(key),
+        name: loc(TEAM.es.members[i]?.name || "", TEAM.en.members[i]?.name || ""),
+        description: loc(
+          TEAM.es.members[i]?.description || "",
+          TEAM.en.members[i]?.description || "",
+        ),
+        image: { [defaultLocale]: linkToAsset(asset) },
+        specialties: loc(
+          TEAM.es.members[i]?.specialties || [],
+          TEAM.en.members[i]?.specialties || [],
+        ),
+      }),
+    );
+
+    teamMemberEntries.push(entry);
+  }
+
+  // Section entries
+  await runStep("entry:dbtSeo", async () =>
+    upsertEntryByKey(envApi, "dbtSeo", "luminous.seo", {
+      key: makeKeyField("luminous.seo"),
+      title: loc(SEO.es.title, SEO.en.title),
+      description: loc(SEO.es.description, SEO.en.description),
+      canonical: loc(SEO.es.canonical, SEO.en.canonical),
+      ogUrl: loc(SEO.es.ogUrl, SEO.en.ogUrl),
+      ogImage: loc(SEO.es.ogImage, SEO.en.ogImage),
+      keywords: loc(SEO.es.keywords, SEO.en.keywords),
+    }),
+  );
+
+  await runStep("entry:dbtHeader", async () =>
+    upsertEntryByKey(envApi, "dbtHeader", "luminous.header", {
+      key: makeKeyField("luminous.header"),
+      title1: loc(HEADER.es.title1, HEADER.en.title1),
+      title2: loc(HEADER.es.title2, HEADER.en.title2),
+      subtitle1: loc(HEADER.es.subtitle1, HEADER.en.subtitle1),
+      subtitle2: loc(HEADER.es.subtitle2, HEADER.en.subtitle2),
+      cta1: loc(HEADER.es.cta1, HEADER.en.cta1),
+      cta1Link: loc(HEADER.es.cta1Link, HEADER.en.cta1Link),
+      cta2: loc(HEADER.es.cta2, HEADER.en.cta2),
+      cta2Link: loc(HEADER.es.cta2Link, HEADER.en.cta2Link),
+      backgroundImage: { [defaultLocale]: linkToAsset(headerBgAsset) },
+    }),
+  );
+
+  await runStep("entry:dbtAbout", async () =>
+    upsertEntryByKey(envApi, "dbtAbout", "luminous.about", {
+      key: makeKeyField("luminous.about"),
+      title: loc(ABOUT.es.title, ABOUT.en.title),
+      body: loc(ABOUT.es.body, ABOUT.en.body),
+      linkText: loc(ABOUT.es.linkText, ABOUT.en.linkText),
+      linkUrl: loc(ABOUT.es.linkUrl, ABOUT.en.linkUrl),
+      image: { [defaultLocale]: linkToAsset(aboutAsset) },
+    }),
+  );
+
+  await runStep("entry:dbtSpaces", async () =>
+    upsertEntryByKey(envApi, "dbtSpaces", "luminous.spaces", {
+      key: makeKeyField("luminous.spaces"),
+      eyebrow: loc(SPACES.es.eyebrow, SPACES.en.eyebrow),
+      title: loc(SPACES.es.title, SPACES.en.title),
+      items: { [defaultLocale]: spacesItemEntries.map(linkToEntry) },
+    }),
+  );
+
+  await runStep("entry:dbtTherapies", async () =>
+    upsertEntryByKey(envApi, "dbtTherapies", "luminous.therapies", {
+      key: makeKeyField("luminous.therapies"),
+      title: loc(THERAPIES.es.title, THERAPIES.en.title),
+      items: { [defaultLocale]: therapiesItemEntries.map(linkToEntry) },
+    }),
+  );
+
+  await runStep("entry:dbtServices", async () =>
+    upsertEntryByKey(envApi, "dbtServices", "luminous.services", {
+      key: makeKeyField("luminous.services"),
+      title: loc(SERVICES.es.title, SERVICES.en.title),
+      subtitle: loc(SERVICES.es.subtitle, SERVICES.en.subtitle),
+      items: { [defaultLocale]: servicesItemEntries.map(linkToEntry) },
+    }),
+  );
+
+  await runStep("entry:dbtProcess", async () =>
+    upsertEntryByKey(envApi, "dbtProcess", "luminous.process", {
+      key: makeKeyField("luminous.process"),
+      title: loc(PROCESS.es.title, PROCESS.en.title),
+      intro: loc(PROCESS.es.intro, PROCESS.en.intro),
+      steps: { [defaultLocale]: processStepEntries.map(linkToEntry) },
+    }),
+  );
+
+  await runStep("entry:dbtTeam", async () =>
+    upsertEntryByKey(envApi, "dbtTeam", "luminous.team", {
+      key: makeKeyField("luminous.team"),
+      title: loc(TEAM.es.title, TEAM.en.title),
+      members: { [defaultLocale]: teamMemberEntries.map(linkToEntry) },
+    }),
+  );
+
+  await runStep("entry:dbtContact", async () =>
+    upsertEntryByKey(envApi, "dbtContact", "luminous.contact", {
+      key: makeKeyField("luminous.contact"),
+      title: loc(CONTACT.es.title, CONTACT.en.title),
+      address: loc(CONTACT.es.address, CONTACT.en.address),
+      whatsapp: loc(CONTACT.es.whatsapp, CONTACT.en.whatsapp),
+      instagram: loc(CONTACT.es.instagram, CONTACT.en.instagram),
+      email: loc(CONTACT.es.email, CONTACT.en.email),
+      hoursWeekdays: loc(CONTACT.es.hours.weekdays, CONTACT.en.hours.weekdays),
+      hoursSaturday: loc(CONTACT.es.hours.saturday, CONTACT.en.hours.saturday),
+      hoursSunday: loc(CONTACT.es.hours.sunday, CONTACT.en.hours.sunday),
+    }),
+  );
+
+  await runStep("entry:dbtFooter", async () =>
+    upsertEntryByKey(envApi, "dbtFooter", "luminous.footer", {
+      key: makeKeyField("luminous.footer"),
+      quote: loc(FOOTER.es.quote, FOOTER.en.quote),
+      text: loc(FOOTER.es.text, FOOTER.en.text),
+    }),
+  );
+
+  // Styles entries
+  await runStep("entry:dbtStylesGenerales", async () =>
+    upsertEntryByKey(envApi, "dbtStylesGenerales", "luminous.styles.generales", {
+      key: makeKeyField("luminous.styles.generales"),
+      primary: { [defaultLocale]: STYLES["luminous.styles.generales"].colors.primary },
+      secondary: { [defaultLocale]: STYLES["luminous.styles.generales"].colors.secondary },
+      fontFamily: { [defaultLocale]: STYLES["luminous.styles.generales"].typography.fontFamily },
+      baseSize: { [defaultLocale]: STYLES["luminous.styles.generales"].typography.baseSize },
+      logoUrl: { [defaultLocale]: STYLES["luminous.styles.generales"].assets.logoUrl },
+    }),
+  );
+
+  const styleTypeByKey: Record<string, string> = {
+    "luminous.styles.header": "dbtStylesHeader",
+    "luminous.styles.about": "dbtStylesAbout",
+    "luminous.styles.spaces": "dbtStylesSpaces",
+    "luminous.styles.therapies": "dbtStylesTherapies",
+    "luminous.styles.services": "dbtStylesServices",
+    "luminous.styles.process": "dbtStylesProcess",
+    "luminous.styles.team": "dbtStylesTeam",
+    "luminous.styles.contact": "dbtStylesContact",
+    "luminous.styles.footer": "dbtStylesFooter",
+  };
+
+  for (const k of Object.keys(styleTypeByKey)) {
+    const ct = styleTypeByKey[k];
+    await runStep(`entry:${ct}`, async () =>
+      upsertEntryByKey(envApi, ct, k, {
+        key: makeKeyField(k),
+        ...Object.fromEntries(
+          Object.entries(STYLES[k]).map(([field, value]) => [field, { [defaultLocale]: value }]),
+        ),
+      }),
+    );
+  }
+
   for (const key of Object.keys(CONTENT)) {
     for (const locale of localesToSeed) {
       await runStep(`upsertContent:${key}:${locale}`, async () =>

@@ -278,6 +278,35 @@ export async function seedContentfulFromDefaults() {
     space.getEnvironment(environmentId),
   );
 
+  const warnings: string[] = [];
+
+  async function runOptionalStep(label: string, fn: () => Promise<void>) {
+    try {
+      await fn();
+      return true;
+    } catch (e: any) {
+      const info = parseContentfulError(e);
+      if ((info.status || 0) === 403) {
+        const extra = [
+          info.status ? `status=${info.status}` : null,
+          info.code ? `code=${info.code}` : null,
+          info.requestId ? `requestId=${info.requestId}` : null,
+        ]
+          .filter(Boolean)
+          .join(", ");
+
+        warnings.push(
+          extra
+            ? `Permiso insuficiente en Contentful para "${label}" (${extra}). Se omitió este paso.`
+            : `Permiso insuficiente en Contentful para "${label}". Se omitió este paso.`,
+        );
+        return false;
+      }
+
+      throw e;
+    }
+  }
+
   let localesRes = await runStep("getLocales", async () => envApi.getLocales());
   let locales: LocaleInfo[] = (localesRes?.items || []).map((l: any) => ({
     code: String(l.code),

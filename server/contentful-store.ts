@@ -1285,6 +1285,42 @@ export async function contentfulListKeys(prefix?: string) {
       if (skip >= total || page.items.length === 0) break;
     }
 
+    // Also include structured types (if they exist). This keeps the in-app admin
+    // key list useful even when the site is managed via structured Contentful models.
+    const structuredTypes = Array.from(
+      new Set(Object.values(STRUCTURED_KEY_TO_CONTENT_TYPE)),
+    );
+
+    for (const ct of structuredTypes) {
+      try {
+        let s = 0;
+        while (true) {
+          const page = await allLocalesClient.getEntries({
+            content_type: ct,
+            select: `fields.${cfg.fieldKey}`,
+            limit,
+            skip: s,
+          });
+
+          for (const item of page.items as any[]) {
+            const k = pickLocaleValue<string>(
+              item.fields?.[cfg.fieldKey],
+              resolved.defaultLocale,
+              resolved.defaultLocale,
+            );
+            if (typeof k === "string" && (!prefix || k.startsWith(prefix)))
+              keys.add(k);
+          }
+
+          const total = page.total ?? 0;
+          s += page.items.length;
+          if (s >= total || page.items.length === 0) break;
+        }
+      } catch (e: any) {
+        if (!isUnknownContentTypeError(e)) throw e;
+      }
+    }
+
     return { configured: true as const, keys: Array.from(keys).sort() };
   } catch (e: any) {
     if (isUnknownContentTypeError(e)) {

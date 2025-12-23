@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import JsonFormEditor from "@/components/admin/JsonFormEditor";
 import AdminLayout from "@/components/admin/AdminLayout";
+import AdminAccessList from "@/components/admin/AdminAccessList";
 import {
   fetchContent,
   upsertContent,
@@ -16,7 +17,7 @@ import { autoTranslate } from "@/lib/translate";
 const ADMIN_USER = import.meta.env.VITE_ADMIN_USER || "admin";
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "qpsych2025!";
 
-type Tab = "content" | "styles" | "translate";
+type Tab = "content" | "styles" | "translate" | "access";
 
 const defaultKeys = [
   "luminous.seo",
@@ -824,6 +825,8 @@ export default function Admin() {
           </div>
         </section>
       )}
+
+      {tab === "access" && <AdminAccessList adminUser={ADMIN_USER} />}
 
       {tab === "translate" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">

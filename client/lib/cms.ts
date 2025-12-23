@@ -6,7 +6,9 @@ async function apiFetchJson<T>(
   input: string,
   init?: RequestInit,
   opts?: { timeoutMs?: number; retries?: number; retryDelayMs?: number },
-): Promise<{ ok: true; data: T } | { ok: false; error: string; status?: number }> {
+): Promise<
+  { ok: true; data: T } | { ok: false; error: string; status?: number }
+> {
   const controller = new AbortController();
   const timeoutMs = opts?.timeoutMs ?? 15_000;
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -14,7 +16,9 @@ async function apiFetchJson<T>(
   const retries = Math.max(0, opts?.retries ?? 0);
   const retryDelayMs = Math.max(0, opts?.retryDelayMs ?? 500);
 
-  async function attempt(remaining: number): Promise<
+  async function attempt(
+    remaining: number,
+  ): Promise<
     { ok: true; data: T } | { ok: false; error: string; status?: number }
   > {
     try {
@@ -27,26 +31,28 @@ async function apiFetchJson<T>(
         },
       });
 
-    const status = res.status;
+      const status = res.status;
 
-    let json: any = null;
-    try {
-      json = await res.json();
-    } catch {
-      json = null;
-    }
+      let json: any = null;
+      try {
+        json = await res.json();
+      } catch {
+        json = null;
+      }
 
-        if (!res.ok) {
+      if (!res.ok) {
         const baseMsg =
           (json && typeof json === "object" && (json.error || json.message)) ||
           `HTTP ${status}`;
 
         const reqId =
           json && typeof json === "object"
-            ? (json.requestId || json.requestID || json.request_id)
+            ? json.requestId || json.requestID || json.request_id
             : undefined;
         const code =
-          json && typeof json === "object" ? (json.code || json.sysId) : undefined;
+          json && typeof json === "object"
+            ? json.code || json.sysId
+            : undefined;
 
         const suffixParts: string[] = [];
         if (code) suffixParts.push(`code=${String(code)}`);
@@ -212,12 +218,16 @@ export type SeedContentfulResult = {
 
 export async function seedContentful(): Promise<SeedContentfulResult> {
   const auth = getAdminAuthHeader();
-  const res = await apiFetchJson<SeedContentfulResult>(`${API_BASE}/seed`, {
-    method: "POST",
-    headers: {
-      ...(auth ? { Authorization: auth } : {}),
+  const res = await apiFetchJson<SeedContentfulResult>(
+    `${API_BASE}/seed`,
+    {
+      method: "POST",
+      headers: {
+        ...(auth ? { Authorization: auth } : {}),
+      },
     },
-  }, { timeoutMs: 120_000 });
+    { timeoutMs: 120_000 },
+  );
 
   if (res.ok === false) throw new Error(res.error);
   return res.data;

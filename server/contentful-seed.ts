@@ -29,7 +29,8 @@ function parseContentfulError(e: any): ParsedContentfulError {
           return {
             status: Number(parsed.status) || directStatus,
             message: String(parsed.message || directMessage),
-            requestId: String(parsed.requestId || directRequestId || "") || undefined,
+            requestId:
+              String(parsed.requestId || directRequestId || "") || undefined,
             code: String(parsed.sys?.id || directCode || "") || undefined,
           };
         }
@@ -98,7 +99,9 @@ function pickLocale(locales: LocaleInfo[], preferred: string[]) {
     if (exact) return exact.code;
   }
   for (const p of preferred) {
-    const prefix = locales.find((l) => l.code.toLowerCase().startsWith(p.toLowerCase()));
+    const prefix = locales.find((l) =>
+      l.code.toLowerCase().startsWith(p.toLowerCase()),
+    );
     if (prefix) return prefix.code;
   }
   const def = locales.find((l) => l.default);
@@ -150,7 +153,10 @@ export async function seedContentfulFromDefaults() {
     "CONTENTFUL_CONTENT_ENTRY_TYPE",
     "contentEntry",
   );
-  const contentTypeSiteSettings = env("CONTENTFUL_SITE_SETTINGS_TYPE", "siteSettings");
+  const contentTypeSiteSettings = env(
+    "CONTENTFUL_SITE_SETTINGS_TYPE",
+    "siteSettings",
+  );
 
   const cmAny: any = contentfulManagement as any;
   const createMgmtClient = cmAny?.createClient || cmAny?.default?.createClient;
@@ -162,7 +168,9 @@ export async function seedContentfulFromDefaults() {
     accessToken: managementToken,
   });
 
-  const space = await runStep("getSpace", async () => mgmtClient.getSpace(spaceId));
+  const space = await runStep("getSpace", async () =>
+    mgmtClient.getSpace(spaceId),
+  );
   const envApi = await runStep("getEnvironment", async () =>
     space.getEnvironment(environmentId),
   );
@@ -194,7 +202,9 @@ export async function seedContentfulFromDefaults() {
     );
   }
 
-  localesRes = await runStep("getLocales:afterEnsure", async () => envApi.getLocales());
+  localesRes = await runStep("getLocales:afterEnsure", async () =>
+    envApi.getLocales(),
+  );
   locales = (localesRes?.items || []).map((l: any) => ({
     code: String(l.code),
     default: Boolean(l.default),
@@ -209,58 +219,58 @@ export async function seedContentfulFromDefaults() {
 
   await runStep(`ensureContentType:${contentTypeContentEntry}`, async () =>
     ensureContentType(envApi, contentTypeContentEntry, {
-    name: "Content Entry",
-    displayField: "key",
-    fields: [
-      {
-        id: "key",
-        name: "Key",
-        type: "Symbol",
-        required: true,
-        localized: false,
-      },
-      {
-        id: "data",
-        name: "Data",
-        type: "Object",
-        required: false,
-        localized: true,
-      },
-    ],
+      name: "Content Entry",
+      displayField: "key",
+      fields: [
+        {
+          id: "key",
+          name: "Key",
+          type: "Symbol",
+          required: true,
+          localized: false,
+        },
+        {
+          id: "data",
+          name: "Data",
+          type: "Object",
+          required: false,
+          localized: true,
+        },
+      ],
     }),
   );
 
   await runStep(`ensureContentType:${contentTypeSiteSettings}`, async () =>
     ensureContentType(envApi, contentTypeSiteSettings, {
-    name: "Site Settings",
-    displayField: "name",
-    fields: [
-      {
-        id: "name",
-        name: "Name",
-        type: "Symbol",
-        required: true,
-        localized: false,
-      },
-      {
-        id: "theme",
-        name: "Theme",
-        type: "Object",
-        required: false,
-        localized: false,
-      },
-    ],
+      name: "Site Settings",
+      displayField: "name",
+      fields: [
+        {
+          id: "name",
+          name: "Name",
+          type: "Symbol",
+          required: true,
+          localized: false,
+        },
+        {
+          id: "theme",
+          name: "Theme",
+          type: "Object",
+          required: false,
+          localized: false,
+        },
+      ],
     }),
   );
 
-  const { contentfulUpsertContent, contentfulUpsertSiteSettings } = await import(
-    "./contentful-store"
-  );
+  const { contentfulUpsertContent, contentfulUpsertSiteSettings } =
+    await import("./contentful-store");
 
   const SEO: Record<SeedLocale, any> = {
     es: {
       title: "Terapia DBT en Chile | DBT Salud",
-      description: "Psicoterapia DBT, TCC, ACT y PBT en Chile. Online y presencial.",
+      description:
+        "Psicoterapia DBT, TCC, ACT y PBT en Chile. Online y presencial.",
       canonical: "https://www.dbtsalud.cl/",
       ogUrl: "https://www.dbtsalud.cl/",
       ogImage: "https://www.dbtsalud.cl/assets/og-image.jpg",
@@ -280,8 +290,10 @@ export async function seedContentfulFromDefaults() {
     es: {
       title1: "No necesitas tenerlo todo claro.",
       title2: "A veces, solo hace falta tomar el primer paso.",
-      subtitle1: "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.",
-      subtitle2: "Atención psicológica online y presencial, en español e inglés, desde Chile.",
+      subtitle1:
+        "Acompañamos procesos terapéuticos con calidez, evidencia y humanidad.",
+      subtitle2:
+        "Atención psicológica online y presencial, en español e inglés, desde Chile.",
       cta1: "Quiero comenzar terapia",
       cta1Link: "https://wa.me/56949897699",
       cta2: "Conoce el Programa DBT",
@@ -292,8 +304,10 @@ export async function seedContentfulFromDefaults() {
     en: {
       title1: "You don't need to have it all figured out.",
       title2: "Sometimes, you just need to take the first step.",
-      subtitle1: "We accompany therapeutic processes with warmth, evidence and humanity.",
-      subtitle2: "Online and in-person psychological care, in Spanish and English, from Chile.",
+      subtitle1:
+        "We accompany therapeutic processes with warmth, evidence and humanity.",
+      subtitle2:
+        "Online and in-person psychological care, in Spanish and English, from Chile.",
       cta1: "I want to start therapy",
       cta1Link: "https://wa.me/56949897699",
       cta2: "Learn about DBT Program",
@@ -493,7 +507,8 @@ export async function seedContentfulFromDefaults() {
       steps: [
         {
           title: "Primer contacto",
-          description: "Escríbenos por WhatsApp o correo para orientación o agendar sesión.",
+          description:
+            "Escríbenos por WhatsApp o correo para orientación o agendar sesión.",
         },
         {
           title: "Cuestionario de ingreso",
@@ -509,7 +524,8 @@ export async function seedContentfulFromDefaults() {
         },
         {
           title: "Inicio del tratamiento",
-          description: "Trabajamos tus objetivos con herramientas basadas en evidencia.",
+          description:
+            "Trabajamos tus objetivos con herramientas basadas en evidencia.",
         },
       ],
     },
@@ -520,7 +536,8 @@ export async function seedContentfulFromDefaults() {
       steps: [
         {
           title: "First contact",
-          description: "Write to us via WhatsApp or email for guidance or to schedule a session.",
+          description:
+            "Write to us via WhatsApp or email for guidance or to schedule a session.",
         },
         {
           title: "Intake questionnaire",
@@ -617,11 +634,13 @@ export async function seedContentfulFromDefaults() {
   const FOOTER: Record<SeedLocale, any> = {
     es: {
       text: "© 2025 DBT Salud",
-      quote: "Tu historia merece ser escuchada. Tu vida merece ser vivida con sentido.",
+      quote:
+        "Tu historia merece ser escuchada. Tu vida merece ser vivida con sentido.",
     },
     en: {
       text: "© 2025 DBT Salud",
-      quote: "Your story deserves to be heard. Your life deserves to be lived with meaning.",
+      quote:
+        "Your story deserves to be heard. Your life deserves to be lived with meaning.",
     },
   };
 

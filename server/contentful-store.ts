@@ -93,9 +93,10 @@ function getConfig(): ContentfulStoreConfig | null {
   };
 }
 
-let resolvedLocalesCache:
-  | { cacheKey: string; promise: Promise<ResolvedLocales> }
-  | null = null;
+let resolvedLocalesCache: {
+  cacheKey: string;
+  promise: Promise<ResolvedLocales>;
+} | null = null;
 
 function pickLocaleCodeFromList(available: string[], preferred: string[]) {
   for (const p of preferred) {
@@ -106,14 +107,18 @@ function pickLocaleCodeFromList(available: string[], preferred: string[]) {
 
   for (const p of preferred) {
     if (!p) continue;
-    const prefix = available.find((a) => a.toLowerCase().startsWith(p.toLowerCase()));
+    const prefix = available.find((a) =>
+      a.toLowerCase().startsWith(p.toLowerCase()),
+    );
     if (prefix) return prefix;
   }
 
   return available[0] || "en-US";
 }
 
-async function resolveLocales(cfg: ContentfulStoreConfig): Promise<ResolvedLocales> {
+async function resolveLocales(
+  cfg: ContentfulStoreConfig,
+): Promise<ResolvedLocales> {
   const cacheKey = `${cfg.spaceId}:${cfg.environment}`;
   if (resolvedLocalesCache?.cacheKey === cacheKey) {
     return resolvedLocalesCache.promise;
@@ -133,8 +138,18 @@ async function resolveLocales(cfg: ContentfulStoreConfig): Promise<ResolvedLocal
         cfg.defaultLocale ||
         "en-US";
 
-      const es = pickLocaleCodeFromList(codes, [cfg.localeMap.es, "es-CL", "es-ES", "es"]);
-      const en = pickLocaleCodeFromList(codes, [cfg.localeMap.en, "en-US", "en-GB", "en"]);
+      const es = pickLocaleCodeFromList(codes, [
+        cfg.localeMap.es,
+        "es-CL",
+        "es-ES",
+        "es",
+      ]);
+      const en = pickLocaleCodeFromList(codes, [
+        cfg.localeMap.en,
+        "en-US",
+        "en-GB",
+        "en",
+      ]);
 
       return {
         defaultLocale: String(defaultLocale),
@@ -181,7 +196,9 @@ function getDeliveryClient(cfg: ContentfulStoreConfig, usePreview: boolean) {
   return createClient({
     space: cfg.spaceId,
     environment: cfg.environment,
-    accessToken: usePreview ? cfg.previewToken || cfg.deliveryToken : cfg.deliveryToken,
+    accessToken: usePreview
+      ? cfg.previewToken || cfg.deliveryToken
+      : cfg.deliveryToken,
     host: usePreview ? "preview.contentful.com" : undefined,
   });
 }
@@ -201,7 +218,9 @@ async function findContentEntryByKey(
   defaultLocale: string,
 ) {
   const client: any = getDeliveryClient(cfg, false);
-  const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
+  const allLocalesClient: any = client?.withAllLocales
+    ? client.withAllLocales
+    : client;
 
   const q: Record<string, any> = {
     content_type: cfg.contentTypeContentEntry,
@@ -223,14 +242,21 @@ async function findContentEntryByKey(
   }
 }
 
-export async function contentfulGetContent<T = any>(key: string, locale: Locale) {
+export async function contentfulGetContent<T = any>(
+  key: string,
+  locale: Locale,
+) {
   const cfg = getConfig();
   if (!cfg) return { configured: false as const, data: null as T | null };
 
   const resolved = await resolveLocales(cfg);
 
   try {
-    const entry: any = await findContentEntryByKey(cfg, key, resolved.defaultLocale);
+    const entry: any = await findContentEntryByKey(
+      cfg,
+      key,
+      resolved.defaultLocale,
+    );
     if (!entry) return { configured: true as const, data: null as T | null };
 
     const localeCode = resolved.localeMap[locale] || resolved.defaultLocale;
@@ -253,7 +279,9 @@ export async function contentfulListKeys(prefix?: string) {
   if (!cfg) return { configured: false as const, keys: [] as string[] };
 
   const client: any = getDeliveryClient(cfg, false);
-  const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
+  const allLocalesClient: any = client?.withAllLocales
+    ? client.withAllLocales
+    : client;
 
   const keys = new Set<string>();
   let skip = 0;
@@ -277,7 +305,8 @@ export async function contentfulListKeys(prefix?: string) {
           resolved.defaultLocale,
           resolved.defaultLocale,
         );
-        if (typeof k === "string" && (!prefix || k.startsWith(prefix))) keys.add(k);
+        if (typeof k === "string" && (!prefix || k.startsWith(prefix)))
+          keys.add(k);
       }
 
       const total = page.total ?? 0;
@@ -299,7 +328,9 @@ export async function contentfulGetSiteSettings() {
   if (!cfg) return { configured: false as const, settings: null as any };
 
   const client: any = getDeliveryClient(cfg, false);
-  const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
+  const allLocalesClient: any = client?.withAllLocales
+    ? client.withAllLocales
+    : client;
 
   try {
     const page = await allLocalesClient.getEntries({
@@ -345,7 +376,10 @@ async function getManagementEnvironment(cfg: ContentfulStoreConfig) {
   return space.getEnvironment(cfg.environment);
 }
 
-async function findManagementEntryByKey(cfg: ContentfulStoreConfig, key: string) {
+async function findManagementEntryByKey(
+  cfg: ContentfulStoreConfig,
+  key: string,
+) {
   const envApi = await getManagementEnvironment(cfg);
   const q: Record<string, any> = {
     content_type: cfg.contentTypeContentEntry,
@@ -365,7 +399,11 @@ async function safePublish(entry: any) {
   }
 }
 
-export async function contentfulUpsertContent(key: string, locale: Locale, data: unknown) {
+export async function contentfulUpsertContent(
+  key: string,
+  locale: Locale,
+  data: unknown,
+) {
   const cfg = getConfig();
   if (!cfg) return { configured: false as const, ok: false as const };
   if (!cfg.managementToken) {
@@ -395,7 +433,9 @@ export async function contentfulUpsertContent(key: string, locale: Locale, data:
     [cfg.fieldData]: { [localeCode]: data },
   };
 
-  const created = await envApi.createEntry(cfg.contentTypeContentEntry, { fields });
+  const created = await envApi.createEntry(cfg.contentTypeContentEntry, {
+    fields,
+  });
   await safePublish(created as any);
   return { configured: true as const, ok: true as const };
 }

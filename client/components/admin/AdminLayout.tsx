@@ -1,7 +1,7 @@
 import React from "react";
-import { FileText, Palette, Languages, LayoutGrid } from "lucide-react";
+import { FileText, Palette, Languages, LayoutGrid, Users } from "lucide-react";
 
-export type AdminNavKey = "content" | "styles" | "translate";
+export type AdminNavKey = "content" | "styles" | "translate" | "access";
 
 type NavItem = { key: AdminNavKey; label: string; icon: React.ReactNode };
 
@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { key: "content", label: "Contenido", icon: <FileText size={16} /> },
   { key: "styles", label: "Estilos", icon: <Palette size={16} /> },
   { key: "translate", label: "Traductor", icon: <Languages size={16} /> },
+  { key: "access", label: "Accesos", icon: <Users size={16} /> },
 ];
 
 type Props = {

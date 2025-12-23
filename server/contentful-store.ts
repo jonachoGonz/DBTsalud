@@ -259,6 +259,8 @@ export async function contentfulListKeys(prefix?: string) {
   let skip = 0;
   const limit = 1000;
 
+  const resolved = await resolveLocales(cfg);
+
   try {
     while (true) {
       const q: Record<string, any> = {
@@ -270,7 +272,6 @@ export async function contentfulListKeys(prefix?: string) {
 
       const page = await allLocalesClient.getEntries(q);
       for (const item of page.items as any[]) {
-        const resolved = await resolveLocales(cfg);
         const k = pickLocaleValue<string>(
           item.fields?.[cfg.fieldKey],
           resolved.defaultLocale,

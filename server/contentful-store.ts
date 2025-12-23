@@ -1241,7 +1241,16 @@ function isStructuredResultEmpty(key: string, data: any) {
   // styles
   if (key.startsWith("luminous.styles.")) {
     // If nothing is set, keep using legacy JSON so existing styling doesn't change.
-    return !JSON.stringify(data).replace(/\s+/g, "").includes("#");
+    const stack: any[] = [data];
+    while (stack.length) {
+      const cur = stack.pop();
+      if (typeof cur === "string" && cur.trim().length > 0) return false;
+      if (typeof cur === "number" && Number.isFinite(cur)) return false;
+      if (cur && typeof cur === "object") {
+        for (const v of Object.values(cur)) stack.push(v);
+      }
+    }
+    return true;
   }
 
   return false;

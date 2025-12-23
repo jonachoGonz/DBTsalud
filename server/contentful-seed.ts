@@ -443,8 +443,9 @@ export async function seedContentfulFromDefaults() {
   await runStep("ensureContentType:dbtSpacesItem", async () =>
     ensureContentType(envApi, "dbtSpacesItem", {
       name: "DBT Spaces Item",
-      displayField: "title",
+      displayField: "key",
       fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
         { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
         { id: "href", name: "Href", type: "Symbol", required: false, localized: true },
         {
@@ -486,8 +487,9 @@ export async function seedContentfulFromDefaults() {
   await runStep("ensureContentType:dbtTherapiesItem", async () =>
     ensureContentType(envApi, "dbtTherapiesItem", {
       name: "DBT Therapy Item",
-      displayField: "title",
+      displayField: "key",
       fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
         { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
         { id: "desc", name: "Description", type: "Text", required: false, localized: true },
         {
@@ -528,8 +530,9 @@ export async function seedContentfulFromDefaults() {
   await runStep("ensureContentType:dbtServicesItem", async () =>
     ensureContentType(envApi, "dbtServicesItem", {
       name: "DBT Services Item",
-      displayField: "title",
+      displayField: "key",
       fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
         { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
         { id: "desc", name: "Description", type: "Text", required: false, localized: true },
         {
@@ -571,8 +574,9 @@ export async function seedContentfulFromDefaults() {
   await runStep("ensureContentType:dbtProcessStep", async () =>
     ensureContentType(envApi, "dbtProcessStep", {
       name: "DBT Process Step",
-      displayField: "title",
+      displayField: "key",
       fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
         { id: "number", name: "Number", type: "Symbol", required: false, localized: true },
         { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
         { id: "description", name: "Description", type: "Text", required: false, localized: true },
@@ -607,8 +611,9 @@ export async function seedContentfulFromDefaults() {
   await runStep("ensureContentType:dbtTeamMember", async () =>
     ensureContentType(envApi, "dbtTeamMember", {
       name: "DBT Team Member",
-      displayField: "name",
+      displayField: "key",
       fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
         { id: "name", name: "Name", type: "Symbol", required: false, localized: true },
         { id: "description", name: "Description", type: "Text", required: false, localized: true },
         {

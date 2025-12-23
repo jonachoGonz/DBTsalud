@@ -1576,39 +1576,55 @@ export async function seedContentfulFromDefaults() {
     }),
   );
 
-  // Styles entries
-  await runStep("entry:dbtStylesGenerales", async () =>
-    upsertEntryByKey(envApi, "dbtStylesGenerales", "luminous.styles.generales", {
-      key: makeKeyField("luminous.styles.generales"),
-      primary: { [defaultLocale]: STYLES["luminous.styles.generales"].colors.primary },
-      secondary: { [defaultLocale]: STYLES["luminous.styles.generales"].colors.secondary },
-      fontFamily: { [defaultLocale]: STYLES["luminous.styles.generales"].typography.fontFamily },
-      baseSize: { [defaultLocale]: STYLES["luminous.styles.generales"].typography.baseSize },
-      logoUrl: { [defaultLocale]: STYLES["luminous.styles.generales"].assets.logoUrl },
-    }),
-  );
-
-  const styleTypeByKey: Record<string, string> = {
-    "luminous.styles.header": "dbtStylesHeader",
-    "luminous.styles.about": "dbtStylesAbout",
-    "luminous.styles.spaces": "dbtStylesSpaces",
-    "luminous.styles.therapies": "dbtStylesTherapies",
-    "luminous.styles.services": "dbtStylesServices",
-    "luminous.styles.process": "dbtStylesProcess",
-    "luminous.styles.team": "dbtStylesTeam",
-    "luminous.styles.contact": "dbtStylesContact",
-    "luminous.styles.footer": "dbtStylesFooter",
-  };
-
-  for (const k of Object.keys(styleTypeByKey)) {
-    const ct = styleTypeByKey[k];
-    await runStep(`entry:${ct}`, async () =>
-      upsertEntryByKey(envApi, ct, k, {
-        key: makeKeyField(k),
-        ...Object.fromEntries(
-          Object.entries(STYLES[k]).map(([field, value]) => [field, { [defaultLocale]: value }]),
-        ),
+  if (structuredStylesEnabled) {
+    // Styles entries
+    await runStep("entry:dbtStylesGenerales", async () =>
+      upsertEntryByKey(envApi, "dbtStylesGenerales", "luminous.styles.generales", {
+        key: makeKeyField("luminous.styles.generales"),
+        primary: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].colors.primary,
+        },
+        secondary: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].colors.secondary,
+        },
+        fontFamily: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].typography.fontFamily,
+        },
+        baseSize: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].typography.baseSize,
+        },
+        logoUrl: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].assets.logoUrl,
+        },
       }),
+    );
+
+    const styleTypeByKey: Record<string, string> = {
+      "luminous.styles.header": "dbtStylesHeader",
+      "luminous.styles.about": "dbtStylesAbout",
+      "luminous.styles.spaces": "dbtStylesSpaces",
+      "luminous.styles.therapies": "dbtStylesTherapies",
+      "luminous.styles.services": "dbtStylesServices",
+      "luminous.styles.process": "dbtStylesProcess",
+      "luminous.styles.team": "dbtStylesTeam",
+      "luminous.styles.contact": "dbtStylesContact",
+      "luminous.styles.footer": "dbtStylesFooter",
+    };
+
+    for (const k of Object.keys(styleTypeByKey)) {
+      const ct = styleTypeByKey[k];
+      await runStep(`entry:${ct}`, async () =>
+        upsertEntryByKey(envApi, ct, k, {
+          key: makeKeyField(k),
+          ...Object.fromEntries(
+            Object.entries(STYLES[k]).map(([field, value]) => [field, { [defaultLocale]: value }]),
+          ),
+        }),
+      );
+    }
+  } else {
+    warnings.push(
+      "Se omitió la creación de estilos estructurados en Contentful (faltan permisos de modelo). La web seguirá usando los estilos legacy.",
     );
   }
 

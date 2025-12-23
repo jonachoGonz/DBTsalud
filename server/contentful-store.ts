@@ -18,6 +18,11 @@ type ContentfulStoreConfig = {
   fieldTheme: string;
 };
 
+type ResolvedLocales = {
+  defaultLocale: string;
+  localeMap: Record<Locale, string>;
+};
+
 function sanitizeEnv(v?: string) {
   return (v || "").trim().replace(/^['"]+|['"]+$/g, "");
 }
@@ -88,8 +93,63 @@ function getConfig(): ContentfulStoreConfig | null {
   };
 }
 
-function mappedLocale(cfg: ContentfulStoreConfig, locale: Locale) {
-  return cfg.localeMap[locale] || cfg.defaultLocale;
+let resolvedLocalesCache:
+  | { cacheKey: string; promise: Promise<ResolvedLocales> }
+  | null = null;
+
+function pickLocaleCodeFromList(available: string[], preferred: string[]) {
+  for (const p of preferred) {
+    if (!p) continue;
+    const exact = available.find((a) => a === p);
+    if (exact) return exact;
+  }
+
+  for (const p of preferred) {
+    if (!p) continue;
+    const prefix = available.find((a) => a.toLowerCase().startsWith(p.toLowerCase()));
+    if (prefix) return prefix;
+  }
+
+  return available[0] || "en-US";
+}
+
+async function resolveLocales(cfg: ContentfulStoreConfig): Promise<ResolvedLocales> {
+  const cacheKey = `${cfg.spaceId}:${cfg.environment}`;
+  if (resolvedLocalesCache?.cacheKey === cacheKey) {
+    return resolvedLocalesCache.promise;
+  }
+
+  const promise = (async () => {
+    try {
+      const client: any = getDeliveryClient(cfg, false);
+      const localesRes = await client.getLocales();
+      const items: any[] = localesRes?.items || [];
+      const codes = items.map((l) => String(l.code)).filter(Boolean);
+      if (!codes.length) throw new Error("No locales found");
+
+      const defaultLocale =
+        items.find((l) => Boolean(l.default))?.code ||
+        codes[0] ||
+        cfg.defaultLocale ||
+        "en-US";
+
+      const es = pickLocaleCodeFromList(codes, [cfg.localeMap.es, "es-CL", "es-ES", "es"]);
+      const en = pickLocaleCodeFromList(codes, [cfg.localeMap.en, "en-US", "en-GB", "en"]);
+
+      return {
+        defaultLocale: String(defaultLocale),
+        localeMap: { es, en },
+      };
+    } catch {
+      return {
+        defaultLocale: cfg.defaultLocale,
+        localeMap: cfg.localeMap,
+      };
+    }
+  })();
+
+  resolvedLocalesCache = { cacheKey, promise };
+  return promise;
 }
 
 function pickLocaleValue<T>(
@@ -99,13 +159,19 @@ function pickLocaleValue<T>(
 ): T | null {
   if (fieldValue == null) return null;
 
-  if (
-    typeof fieldValue === "object" &&
-    !Array.isArray(fieldValue) &&
-    (localeCode in (fieldValue as any) || fallbackLocaleCode in (fieldValue as any))
-  ) {
+  if (typeof fieldValue === "object" && !Array.isArray(fieldValue)) {
     const obj = fieldValue as any;
-    return (obj[localeCode] ?? obj[fallbackLocaleCode] ?? null) as T | null;
+
+    if (localeCode in obj || fallbackLocaleCode in obj) {
+      return (obj[localeCode] ?? obj[fallbackLocaleCode] ?? null) as T | null;
+    }
+
+    const keys = Object.keys(obj);
+    const byPrefix = (code: string) =>
+      keys.find((k) => k.toLowerCase().startsWith(code.toLowerCase()));
+
+    const match = byPrefix(localeCode) || byPrefix(fallbackLocaleCode);
+    if (match) return (obj[match] ?? null) as T | null;
   }
 
   return fieldValue as T;
@@ -129,7 +195,11 @@ export function isContentfulManagementConfigured() {
   return Boolean(cfg?.managementToken);
 }
 
-async function findContentEntryByKey(cfg: ContentfulStoreConfig, key: string) {
+async function findContentEntryByKey(
+  cfg: ContentfulStoreConfig,
+  key: string,
+  defaultLocale: string,
+) {
   const client: any = getDeliveryClient(cfg, false);
   const allLocalesClient: any = client?.withAllLocales ? client.withAllLocales : client;
 
@@ -143,7 +213,7 @@ async function findContentEntryByKey(cfg: ContentfulStoreConfig, key: string) {
     const resAllLocales = await allLocalesClient.getEntries(q);
     if (resAllLocales.items?.length) return resAllLocales.items[0] as any;
 
-    const resDefault = await client.getEntries({ ...q, locale: cfg.defaultLocale });
+    const resDefault = await client.getEntries({ ...q, locale: defaultLocale });
     if (resDefault.items?.length) return resDefault.items[0] as any;
 
     return null;
@@ -157,15 +227,17 @@ export async function contentfulGetContent<T = any>(key: string, locale: Locale)
   const cfg = getConfig();
   if (!cfg) return { configured: false as const, data: null as T | null };
 
+  const resolved = await resolveLocales(cfg);
+
   try {
-    const entry: any = await findContentEntryByKey(cfg, key);
+    const entry: any = await findContentEntryByKey(cfg, key, resolved.defaultLocale);
     if (!entry) return { configured: true as const, data: null as T | null };
 
-    const localeCode = mappedLocale(cfg, locale);
+    const localeCode = resolved.localeMap[locale] || resolved.defaultLocale;
     const data = pickLocaleValue<T>(
       entry.fields?.[cfg.fieldData],
       localeCode,
-      cfg.defaultLocale,
+      resolved.defaultLocale,
     );
     return { configured: true as const, data };
   } catch (e: any) {
@@ -198,10 +270,11 @@ export async function contentfulListKeys(prefix?: string) {
 
       const page = await allLocalesClient.getEntries(q);
       for (const item of page.items as any[]) {
+        const resolved = await resolveLocales(cfg);
         const k = pickLocaleValue<string>(
           item.fields?.[cfg.fieldKey],
-          cfg.defaultLocale,
-          cfg.defaultLocale,
+          resolved.defaultLocale,
+          resolved.defaultLocale,
         );
         if (typeof k === "string" && (!prefix || k.startsWith(prefix))) keys.add(k);
       }
@@ -236,10 +309,11 @@ export async function contentfulGetSiteSettings() {
     const item: any = page.items?.[0];
     if (!item) return { configured: true as const, settings: null as any };
 
+    const resolved = await resolveLocales(cfg);
     const theme = pickLocaleValue<any>(
       item.fields?.[cfg.fieldTheme],
-      cfg.defaultLocale,
-      cfg.defaultLocale,
+      resolved.defaultLocale,
+      resolved.defaultLocale,
     );
     const settings = theme
       ? {
@@ -300,11 +374,12 @@ export async function contentfulUpsertContent(key: string, locale: Locale, data:
   const envApi = await getManagementEnvironment(cfg);
   const existing = await findManagementEntryByKey(cfg, key);
 
-  const localeCode = mappedLocale(cfg, locale);
+  const resolved = await resolveLocales(cfg);
+  const localeCode = resolved.localeMap[locale] || resolved.defaultLocale;
 
   if (existing) {
     existing.fields[cfg.fieldKey] = existing.fields[cfg.fieldKey] || {};
-    existing.fields[cfg.fieldKey][cfg.defaultLocale] = key;
+    existing.fields[cfg.fieldKey][resolved.defaultLocale] = key;
 
     existing.fields[cfg.fieldData] = existing.fields[cfg.fieldData] || {};
     existing.fields[cfg.fieldData][localeCode] = data;
@@ -315,7 +390,7 @@ export async function contentfulUpsertContent(key: string, locale: Locale, data:
   }
 
   const fields: any = {
-    [cfg.fieldKey]: { [cfg.defaultLocale]: key },
+    [cfg.fieldKey]: { [resolved.defaultLocale]: key },
     [cfg.fieldData]: { [localeCode]: data },
   };
 
@@ -340,15 +415,17 @@ export async function contentfulUpsertSiteSettings(theme: unknown) {
   const existing = (res.items && res.items[0]) || null;
 
   if (existing) {
+    const resolved = await resolveLocales(cfg);
     existing.fields[cfg.fieldTheme] = existing.fields[cfg.fieldTheme] || {};
-    existing.fields[cfg.fieldTheme][cfg.defaultLocale] = theme;
+    existing.fields[cfg.fieldTheme][resolved.defaultLocale] = theme;
     const updated = await existing.update();
     await safePublish(updated as any);
     return { configured: true as const, ok: true as const };
   }
 
+  const resolved = await resolveLocales(cfg);
   const created = await envApi.createEntry(cfg.contentTypeSiteSettings, {
-    fields: { [cfg.fieldTheme]: { [cfg.defaultLocale]: theme } },
+    fields: { [cfg.fieldTheme]: { [resolved.defaultLocale]: theme } },
   });
   await safePublish(created as any);
   return { configured: true as const, ok: true as const };

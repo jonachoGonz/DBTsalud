@@ -375,6 +375,451 @@ export async function seedContentfulFromDefaults() {
     }),
   );
 
+  // Structured types for managing content directly in Contentful (field editors + asset uploads)
+  await runStep("ensureContentType:dbtSeo", async () =>
+    ensureContentType(envApi, "dbtSeo", {
+      name: "DBT SEO",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "description", name: "Description", type: "Text", required: false, localized: true },
+        { id: "canonical", name: "Canonical", type: "Symbol", required: false, localized: true },
+        { id: "ogUrl", name: "OG Url", type: "Symbol", required: false, localized: true },
+        { id: "ogImage", name: "OG Image", type: "Symbol", required: false, localized: true },
+        { id: "keywords", name: "Keywords", type: "Text", required: false, localized: true },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtHeader", async () =>
+    ensureContentType(envApi, "dbtHeader", {
+      name: "DBT Header",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title1", name: "Title 1", type: "Symbol", required: false, localized: true },
+        { id: "title2", name: "Title 2", type: "Symbol", required: false, localized: true },
+        { id: "subtitle1", name: "Subtitle 1", type: "Text", required: false, localized: true },
+        { id: "subtitle2", name: "Subtitle 2", type: "Text", required: false, localized: true },
+        { id: "cta1", name: "CTA 1", type: "Symbol", required: false, localized: true },
+        { id: "cta1Link", name: "CTA 1 Link", type: "Symbol", required: false, localized: true },
+        { id: "cta2", name: "CTA 2", type: "Symbol", required: false, localized: true },
+        { id: "cta2Link", name: "CTA 2 Link", type: "Symbol", required: false, localized: true },
+        {
+          id: "backgroundImage",
+          name: "Background Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtAbout", async () =>
+    ensureContentType(envApi, "dbtAbout", {
+      name: "DBT About",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "body", name: "Body", type: "Text", required: false, localized: true },
+        { id: "linkText", name: "Link Text", type: "Symbol", required: false, localized: true },
+        { id: "linkUrl", name: "Link Url", type: "Symbol", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtSpacesItem", async () =>
+    ensureContentType(envApi, "dbtSpacesItem", {
+      name: "DBT Spaces Item",
+      displayField: "title",
+      fields: [
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "href", name: "Href", type: "Symbol", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtSpaces", async () =>
+    ensureContentType(envApi, "dbtSpaces", {
+      name: "DBT Spaces",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "eyebrow", name: "Eyebrow", type: "Symbol", required: false, localized: true },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        {
+          id: "items",
+          name: "Items",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtSpacesItem"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTherapiesItem", async () =>
+    ensureContentType(envApi, "dbtTherapiesItem", {
+      name: "DBT Therapy Item",
+      displayField: "title",
+      fields: [
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "desc", name: "Description", type: "Text", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTherapies", async () =>
+    ensureContentType(envApi, "dbtTherapies", {
+      name: "DBT Therapies",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        {
+          id: "items",
+          name: "Items",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtTherapiesItem"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtServicesItem", async () =>
+    ensureContentType(envApi, "dbtServicesItem", {
+      name: "DBT Services Item",
+      displayField: "title",
+      fields: [
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "desc", name: "Description", type: "Text", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtServices", async () =>
+    ensureContentType(envApi, "dbtServices", {
+      name: "DBT Services",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "subtitle", name: "Subtitle", type: "Text", required: false, localized: true },
+        {
+          id: "items",
+          name: "Items",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtServicesItem"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtProcessStep", async () =>
+    ensureContentType(envApi, "dbtProcessStep", {
+      name: "DBT Process Step",
+      displayField: "title",
+      fields: [
+        { id: "number", name: "Number", type: "Symbol", required: false, localized: true },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "description", name: "Description", type: "Text", required: false, localized: true },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtProcess", async () =>
+    ensureContentType(envApi, "dbtProcess", {
+      name: "DBT Process",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "intro", name: "Intro", type: "Text", required: false, localized: true },
+        {
+          id: "steps",
+          name: "Steps",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtProcessStep"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTeamMember", async () =>
+    ensureContentType(envApi, "dbtTeamMember", {
+      name: "DBT Team Member",
+      displayField: "name",
+      fields: [
+        { id: "name", name: "Name", type: "Symbol", required: false, localized: true },
+        { id: "description", name: "Description", type: "Text", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+        {
+          id: "specialties",
+          name: "Specialties",
+          type: "Array",
+          required: false,
+          localized: true,
+          items: { type: "Symbol" },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTeam", async () =>
+    ensureContentType(envApi, "dbtTeam", {
+      name: "DBT Team",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        {
+          id: "members",
+          name: "Members",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtTeamMember"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtContact", async () =>
+    ensureContentType(envApi, "dbtContact", {
+      name: "DBT Contact",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "address", name: "Address", type: "Text", required: false, localized: true },
+        { id: "whatsapp", name: "WhatsApp", type: "Symbol", required: false, localized: true },
+        { id: "instagram", name: "Instagram", type: "Symbol", required: false, localized: true },
+        { id: "email", name: "Email", type: "Symbol", required: false, localized: true },
+        { id: "hoursWeekdays", name: "Hours Weekdays", type: "Symbol", required: false, localized: true },
+        { id: "hoursSaturday", name: "Hours Saturday", type: "Symbol", required: false, localized: true },
+        { id: "hoursSunday", name: "Hours Sunday", type: "Symbol", required: false, localized: true },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtFooter", async () =>
+    ensureContentType(envApi, "dbtFooter", {
+      name: "DBT Footer",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "quote", name: "Quote", type: "Text", required: false, localized: true },
+        { id: "text", name: "Text", type: "Symbol", required: false, localized: true },
+      ],
+    }),
+  );
+
+  // Styles types (optional but enables editing style values as fields)
+  await runStep("ensureContentType:dbtStylesGenerales", async () =>
+    ensureContentType(envApi, "dbtStylesGenerales", {
+      name: "DBT Styles Generales",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "primary", name: "Primary", type: "Symbol", required: false, localized: false },
+        { id: "secondary", name: "Secondary", type: "Symbol", required: false, localized: false },
+        { id: "fontFamily", name: "Font Family", type: "Symbol", required: false, localized: false },
+        { id: "baseSize", name: "Base Size", type: "Number", required: false, localized: false },
+        { id: "logoUrl", name: "Logo URL", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesHeader", async () =>
+    ensureContentType(envApi, "dbtStylesHeader", {
+      name: "DBT Styles Header",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title1Color", name: "Title 1 Color", type: "Symbol", required: false, localized: false },
+        { id: "title2Color", name: "Title 2 Color", type: "Symbol", required: false, localized: false },
+        { id: "title1Size", name: "Title 1 Size", type: "Number", required: false, localized: false },
+        { id: "title2Size", name: "Title 2 Size", type: "Number", required: false, localized: false },
+        { id: "subtitle1Color", name: "Subtitle 1 Color", type: "Symbol", required: false, localized: false },
+        { id: "subtitle2Color", name: "Subtitle 2 Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesAbout", async () =>
+    ensureContentType(envApi, "dbtStylesAbout", {
+      name: "DBT Styles About",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "bodyColor", name: "Body Color", type: "Symbol", required: false, localized: false },
+        { id: "backgroundColor", name: "Background Color", type: "Symbol", required: false, localized: false },
+        { id: "titleSize", name: "Title Size", type: "Number", required: false, localized: false },
+        { id: "bodySize", name: "Body Size", type: "Number", required: false, localized: false },
+        { id: "backgroundImage", name: "Background Image", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesSpaces", async () =>
+    ensureContentType(envApi, "dbtStylesSpaces", {
+      name: "DBT Styles Spaces",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+        { id: "speedSeconds", name: "Speed Seconds", type: "Number", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesTherapies", async () =>
+    ensureContentType(envApi, "dbtStylesTherapies", {
+      name: "DBT Styles Therapies",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+        { id: "itemDescColor", name: "Item Desc Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesServices", async () =>
+    ensureContentType(envApi, "dbtStylesServices", {
+      name: "DBT Styles Services",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "subtitleColor", name: "Subtitle Color", type: "Symbol", required: false, localized: false },
+        { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesProcess", async () =>
+    ensureContentType(envApi, "dbtStylesProcess", {
+      name: "DBT Styles Process",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "introColor", name: "Intro Color", type: "Symbol", required: false, localized: false },
+        { id: "stepTitleColor", name: "Step Title Color", type: "Symbol", required: false, localized: false },
+        { id: "stepDescColor", name: "Step Desc Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesTeam", async () =>
+    ensureContentType(envApi, "dbtStylesTeam", {
+      name: "DBT Styles Team",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "nameColor", name: "Name Color", type: "Symbol", required: false, localized: false },
+        { id: "roleColor", name: "Role Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesContact", async () =>
+    ensureContentType(envApi, "dbtStylesContact", {
+      name: "DBT Styles Contact",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "infoColor", name: "Info Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtStylesFooter", async () =>
+    ensureContentType(envApi, "dbtStylesFooter", {
+      name: "DBT Styles Footer",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+      ],
+    }),
+  );
+
   const { contentfulUpsertContent, contentfulUpsertSiteSettings } =
     await import("./contentful-store");
 

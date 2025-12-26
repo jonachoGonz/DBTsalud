@@ -161,13 +161,21 @@ export async function upsertContent<T = any>(
   if (res.ok === false) throw new Error(res.error);
 }
 
-export async function listContentKeys(prefix?: string): Promise<string[]> {
+export type CmsBackend = "contentful" | "supabase" | "local";
+
+export async function listContentKeys(
+  prefix?: string,
+): Promise<{ keys: string[]; backend?: CmsBackend }> {
   const url = prefix
     ? `${API_BASE}/keys?prefix=${encodeURIComponent(prefix)}`
     : `${API_BASE}/keys`;
-  const res = await apiFetchJson<{ keys: string[] }>(url);
+  const res = await apiFetchJson<{ keys: string[]; backend?: CmsBackend }>(url);
   if (res.ok === false) throw new Error(res.error);
-  return Array.from(new Set(res.data.keys)).sort();
+
+  return {
+    keys: Array.from(new Set(res.data.keys)).sort(),
+    backend: res.data.backend,
+  };
 }
 
 // SETTINGS

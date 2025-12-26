@@ -1285,9 +1285,40 @@ async function tryGetStructuredContent(
   resolved: ResolvedLocales,
   key: string,
 ) {
-  const contentType = STRUCTURED_KEY_TO_CONTENT_TYPE[key];
   const handler = structuredHandlers[key];
-  if (!contentType || !handler) return undefined;
+  if (!handler) return undefined;
+
+  // Unified mode: style keys can be read from the corresponding section entry
+  // (single entry in Contentful for content + styles).
+  const unifiedBaseKey = UNIFIED_STYLE_KEY_TO_BASE_KEY[key];
+  if (unifiedBaseKey) {
+    const unifiedContentType = STRUCTURED_KEY_TO_CONTENT_TYPE[unifiedBaseKey];
+    if (unifiedContentType) {
+      const { item, includes } = await findDeliveryEntryByKey(
+        cfg,
+        unifiedContentType,
+        unifiedBaseKey,
+        resolved.defaultLocale,
+      );
+
+      if (item) {
+        const localeCode = resolved.localeMap[locale] || resolved.defaultLocale;
+        const data = await handler({
+          cfg,
+          entry: item,
+          includes,
+          localeCode,
+          fallbackLocaleCode: resolved.defaultLocale,
+        });
+
+        if (!isStructuredResultEmpty(key, data)) return data;
+      }
+    }
+  }
+
+  // Legacy mode: separate content types/entries per style key.
+  const contentType = STRUCTURED_KEY_TO_CONTENT_TYPE[key];
+  if (!contentType) return undefined;
 
   const { item, includes } = await findDeliveryEntryByKey(
     cfg,

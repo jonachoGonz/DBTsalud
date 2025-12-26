@@ -144,6 +144,120 @@ async function ensureContentType(envApi: any, id: string, spec: any) {
   await created.publish();
 }
 
+async function ensureContentTypeHasFields(envApi: any, id: string, fields: any[]) {
+  const ct = await envApi.getContentType(id);
+  const existingIds = new Set<string>((ct?.fields || []).map((f: any) => String(f.id)));
+  const toAdd = fields.filter((f) => f?.id && !existingIds.has(String(f.id)));
+  if (!toAdd.length) return;
+
+  ct.fields = [...(ct.fields || []), ...toAdd];
+  const updated = await ct.update();
+  await updated.publish();
+}
+
+function guessImageContentType(url: string) {
+  const u = String(url || "").toLowerCase();
+  if (u.includes(".png")) return "image/png";
+  if (u.includes(".webp")) return "image/webp";
+  if (u.includes(".avif")) return "image/avif";
+  if (u.includes(".gif")) return "image/gif";
+  return "image/jpeg";
+}
+
+function guessImageFileExtension(url: string) {
+  const u = String(url || "").toLowerCase();
+  if (u.includes(".png")) return "png";
+  if (u.includes(".webp")) return "webp";
+  if (u.includes(".avif")) return "avif";
+  if (u.includes(".gif")) return "gif";
+  return "jpg";
+}
+
+async function ensureAssetFromUrl(envApi: any, defaultLocale: string, title: string, url: string) {
+  const safeTitle = title.trim();
+  if (!safeTitle) throw new Error("Missing asset title");
+  if (!url) throw new Error(`Missing asset url for ${safeTitle}`);
+
+  try {
+    const existing = await envApi.getAssets({
+      limit: 1,
+      "fields.title": safeTitle,
+    });
+    if (existing?.items?.length) {
+      return existing.items[0];
+    }
+  } catch {
+    // ignore search errors
+  }
+
+  const fileName = `${safeTitle}.${guessImageFileExtension(url)}`;
+
+  const asset = await envApi.createAsset({
+    fields: {
+      title: { [defaultLocale]: safeTitle },
+      file: {
+        [defaultLocale]: {
+          contentType: guessImageContentType(url),
+          fileName,
+          upload: url,
+        },
+      },
+    },
+  });
+
+  const processed = await asset.processForAllLocales();
+
+  // Processing is async in Contentful; avoid long waits so the seed finishes quickly.
+  // The asset can still finish processing shortly after.
+  const ready = await processed.reload();
+
+  try {
+    await ready.publish();
+  } catch {
+    // ignore publish errors (e.g. processing not done yet)
+  }
+
+  return ready;
+}
+
+function linkToAsset(asset: any) {
+  return { sys: { type: "Link", linkType: "Asset", id: asset.sys.id } };
+}
+
+function linkToEntry(entry: any) {
+  return { sys: { type: "Link", linkType: "Entry", id: entry.sys.id } };
+}
+
+async function findEntryByKey(envApi: any, contentType: string, key: string) {
+  const q: Record<string, any> = { content_type: contentType, limit: 1 };
+  q["fields.key"] = key;
+  const res: any = await envApi.getEntries(q);
+  return (res?.items && res.items[0]) || null;
+}
+
+async function upsertEntryByKey(envApi: any, contentType: string, key: string, fields: any) {
+  const existing = await findEntryByKey(envApi, contentType, key);
+
+  if (existing) {
+    existing.fields = { ...existing.fields, ...fields };
+    const updated = await existing.update();
+    try {
+      await updated.publish();
+    } catch {
+      // ignore
+    }
+    return updated;
+  }
+
+  const created = await envApi.createEntry(contentType, { fields });
+  try {
+    await created.publish();
+  } catch {
+    // ignore
+  }
+  return created;
+}
+
 export async function seedContentfulFromDefaults() {
   const spaceId = requireEnv("CONTENTFUL_SPACE_ID");
   const managementToken = requireEnv("CONTENTFUL_MANAGEMENT_TOKEN");
@@ -174,6 +288,35 @@ export async function seedContentfulFromDefaults() {
   const envApi = await runStep("getEnvironment", async () =>
     space.getEnvironment(environmentId),
   );
+
+  const warnings: string[] = [];
+
+  async function runOptionalStep(label: string, fn: () => Promise<void>) {
+    try {
+      await fn();
+      return true;
+    } catch (e: any) {
+      const info = parseContentfulError(e);
+      if ((info.status || 0) === 403) {
+        const extra = [
+          info.status ? `status=${info.status}` : null,
+          info.code ? `code=${info.code}` : null,
+          info.requestId ? `requestId=${info.requestId}` : null,
+        ]
+          .filter(Boolean)
+          .join(", ");
+
+        warnings.push(
+          extra
+            ? `Permiso insuficiente en Contentful para "${label}" (${extra}). Se omitió este paso.`
+            : `Permiso insuficiente en Contentful para "${label}". Se omitió este paso.`,
+        );
+        return false;
+      }
+
+      throw e;
+    }
+  }
 
   let localesRes = await runStep("getLocales", async () => envApi.getLocales());
   let locales: LocaleInfo[] = (localesRes?.items || []).map((l: any) => ({
@@ -262,6 +405,551 @@ export async function seedContentfulFromDefaults() {
       ],
     }),
   );
+
+  // Structured types for managing content directly in Contentful (field editors + asset uploads)
+  await runStep("ensureContentType:dbtSeo", async () =>
+    ensureContentType(envApi, "dbtSeo", {
+      name: "DBT SEO",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "description", name: "Description", type: "Text", required: false, localized: true },
+        { id: "canonical", name: "Canonical", type: "Symbol", required: false, localized: true },
+        { id: "ogUrl", name: "OG Url", type: "Symbol", required: false, localized: true },
+        { id: "ogImage", name: "OG Image", type: "Symbol", required: false, localized: true },
+        { id: "keywords", name: "Keywords", type: "Text", required: false, localized: true },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtHeader", async () =>
+    ensureContentType(envApi, "dbtHeader", {
+      name: "DBT Header",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title1", name: "Title 1", type: "Symbol", required: false, localized: true },
+        { id: "title2", name: "Title 2", type: "Symbol", required: false, localized: true },
+        { id: "subtitle1", name: "Subtitle 1", type: "Text", required: false, localized: true },
+        { id: "subtitle2", name: "Subtitle 2", type: "Text", required: false, localized: true },
+        { id: "cta1", name: "CTA 1", type: "Symbol", required: false, localized: true },
+        { id: "cta1Link", name: "CTA 1 Link", type: "Symbol", required: false, localized: true },
+        { id: "cta2", name: "CTA 2", type: "Symbol", required: false, localized: true },
+        { id: "cta2Link", name: "CTA 2 Link", type: "Symbol", required: false, localized: true },
+        {
+          id: "backgroundImage",
+          name: "Background Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtAbout", async () =>
+    ensureContentType(envApi, "dbtAbout", {
+      name: "DBT About",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "body", name: "Body", type: "Text", required: false, localized: true },
+        { id: "linkText", name: "Link Text", type: "Symbol", required: false, localized: true },
+        { id: "linkUrl", name: "Link Url", type: "Symbol", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtSpacesItem", async () =>
+    ensureContentType(envApi, "dbtSpacesItem", {
+      name: "DBT Spaces Item",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "href", name: "Href", type: "Symbol", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtSpaces", async () =>
+    ensureContentType(envApi, "dbtSpaces", {
+      name: "DBT Spaces",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "eyebrow", name: "Eyebrow", type: "Symbol", required: false, localized: true },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        {
+          id: "items",
+          name: "Items",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtSpacesItem"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTherapiesItem", async () =>
+    ensureContentType(envApi, "dbtTherapiesItem", {
+      name: "DBT Therapy Item",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "desc", name: "Description", type: "Text", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTherapies", async () =>
+    ensureContentType(envApi, "dbtTherapies", {
+      name: "DBT Therapies",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        {
+          id: "items",
+          name: "Items",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtTherapiesItem"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtServicesItem", async () =>
+    ensureContentType(envApi, "dbtServicesItem", {
+      name: "DBT Services Item",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "desc", name: "Description", type: "Text", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtServices", async () =>
+    ensureContentType(envApi, "dbtServices", {
+      name: "DBT Services",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "subtitle", name: "Subtitle", type: "Text", required: false, localized: true },
+        {
+          id: "items",
+          name: "Items",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtServicesItem"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtProcessStep", async () =>
+    ensureContentType(envApi, "dbtProcessStep", {
+      name: "DBT Process Step",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "number", name: "Number", type: "Symbol", required: false, localized: true },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "description", name: "Description", type: "Text", required: false, localized: true },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtProcess", async () =>
+    ensureContentType(envApi, "dbtProcess", {
+      name: "DBT Process",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "intro", name: "Intro", type: "Text", required: false, localized: true },
+        {
+          id: "steps",
+          name: "Steps",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtProcessStep"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTeamMember", async () =>
+    ensureContentType(envApi, "dbtTeamMember", {
+      name: "DBT Team Member",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "name", name: "Name", type: "Symbol", required: false, localized: true },
+        { id: "description", name: "Description", type: "Text", required: false, localized: true },
+        {
+          id: "image",
+          name: "Image",
+          type: "Link",
+          linkType: "Asset",
+          required: false,
+          localized: false,
+        },
+        {
+          id: "specialties",
+          name: "Specialties",
+          type: "Array",
+          required: false,
+          localized: true,
+          items: { type: "Symbol" },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtTeam", async () =>
+    ensureContentType(envApi, "dbtTeam", {
+      name: "DBT Team",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        {
+          id: "members",
+          name: "Members",
+          type: "Array",
+          required: false,
+          localized: false,
+          items: {
+            type: "Link",
+            linkType: "Entry",
+            validations: [{ linkContentType: ["dbtTeamMember"] }],
+          },
+        },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtContact", async () =>
+    ensureContentType(envApi, "dbtContact", {
+      name: "DBT Contact",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title", name: "Title", type: "Symbol", required: false, localized: true },
+        { id: "address", name: "Address", type: "Text", required: false, localized: true },
+        { id: "whatsapp", name: "WhatsApp", type: "Symbol", required: false, localized: true },
+        { id: "instagram", name: "Instagram", type: "Symbol", required: false, localized: true },
+        { id: "email", name: "Email", type: "Symbol", required: false, localized: true },
+        { id: "hoursWeekdays", name: "Hours Weekdays", type: "Symbol", required: false, localized: true },
+        { id: "hoursSaturday", name: "Hours Saturday", type: "Symbol", required: false, localized: true },
+        { id: "hoursSunday", name: "Hours Sunday", type: "Symbol", required: false, localized: true },
+      ],
+    }),
+  );
+
+  await runStep("ensureContentType:dbtFooter", async () =>
+    ensureContentType(envApi, "dbtFooter", {
+      name: "DBT Footer",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "quote", name: "Quote", type: "Text", required: false, localized: true },
+        { id: "text", name: "Text", type: "Symbol", required: false, localized: true },
+      ],
+    }),
+  );
+
+  // Unified styles: put section styles into the same section entry (e.g. DBT About + DBT Styles About).
+  // This requires content model permissions because we need to add fields to existing content types.
+  const nonLocalized = (value: any) => ({ [defaultLocale]: value });
+
+  const unifiedStyleFieldDefsByContentType: Record<string, any[]> = {
+    dbtHeader: [
+      { id: "title1Color", name: "Title 1 Color", type: "Symbol", required: false, localized: false },
+      { id: "title2Color", name: "Title 2 Color", type: "Symbol", required: false, localized: false },
+      { id: "title1Size", name: "Title 1 Size", type: "Number", required: false, localized: false },
+      { id: "title2Size", name: "Title 2 Size", type: "Number", required: false, localized: false },
+      { id: "subtitle1Color", name: "Subtitle 1 Color", type: "Symbol", required: false, localized: false },
+      { id: "subtitle2Color", name: "Subtitle 2 Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtAbout: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "bodyColor", name: "Body Color", type: "Symbol", required: false, localized: false },
+      { id: "backgroundColor", name: "Background Color", type: "Symbol", required: false, localized: false },
+      { id: "titleSize", name: "Title Size", type: "Number", required: false, localized: false },
+      { id: "bodySize", name: "Body Size", type: "Number", required: false, localized: false },
+      {
+        id: "backgroundImage",
+        name: "Background Image",
+        type: "Link",
+        linkType: "Asset",
+        required: false,
+        localized: false,
+      },
+    ],
+    dbtSpaces: [
+      { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+      { id: "speedSeconds", name: "Speed Seconds", type: "Number", required: false, localized: false },
+    ],
+    dbtTherapies: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+      { id: "itemDescColor", name: "Item Desc Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtServices: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "subtitleColor", name: "Subtitle Color", type: "Symbol", required: false, localized: false },
+      { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtProcess: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "introColor", name: "Intro Color", type: "Symbol", required: false, localized: false },
+      { id: "stepTitleColor", name: "Step Title Color", type: "Symbol", required: false, localized: false },
+      { id: "stepDescColor", name: "Step Desc Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtTeam: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "nameColor", name: "Name Color", type: "Symbol", required: false, localized: false },
+      { id: "roleColor", name: "Role Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtContact: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "infoColor", name: "Info Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtFooter: [
+      { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+    ],
+  };
+
+  const unifiedStylesEnabledByContentType: Record<string, boolean> = {};
+  for (const [contentTypeId, fields] of Object.entries(unifiedStyleFieldDefsByContentType)) {
+    const ok = await runOptionalStep(`extendContentType:${contentTypeId}:styles`, async () =>
+      ensureContentTypeHasFields(envApi, contentTypeId, fields),
+    );
+    unifiedStylesEnabledByContentType[contentTypeId] = ok;
+  }
+
+  const unifiedStylesEnabled = Object.values(unifiedStylesEnabledByContentType).some(Boolean);
+
+  // Styles types (legacy / optional). If the Contentful user doesn't have "content model" permissions,
+  // we skip these and the site keeps using the legacy JSON styles.
+  let structuredStylesEnabled = true;
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesGenerales", async () =>
+      ensureContentType(envApi, "dbtStylesGenerales", {
+      name: "DBT Styles Generales",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "primary", name: "Primary", type: "Symbol", required: false, localized: false },
+        { id: "secondary", name: "Secondary", type: "Symbol", required: false, localized: false },
+        { id: "fontFamily", name: "Font Family", type: "Symbol", required: false, localized: false },
+        { id: "baseSize", name: "Base Size", type: "Number", required: false, localized: false },
+        { id: "logoUrl", name: "Logo URL", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesHeader", async () =>
+      ensureContentType(envApi, "dbtStylesHeader", {
+      name: "DBT Styles Header",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "title1Color", name: "Title 1 Color", type: "Symbol", required: false, localized: false },
+        { id: "title2Color", name: "Title 2 Color", type: "Symbol", required: false, localized: false },
+        { id: "title1Size", name: "Title 1 Size", type: "Number", required: false, localized: false },
+        { id: "title2Size", name: "Title 2 Size", type: "Number", required: false, localized: false },
+        { id: "subtitle1Color", name: "Subtitle 1 Color", type: "Symbol", required: false, localized: false },
+        { id: "subtitle2Color", name: "Subtitle 2 Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesAbout", async () =>
+      ensureContentType(envApi, "dbtStylesAbout", {
+      name: "DBT Styles About",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "bodyColor", name: "Body Color", type: "Symbol", required: false, localized: false },
+        { id: "backgroundColor", name: "Background Color", type: "Symbol", required: false, localized: false },
+        { id: "titleSize", name: "Title Size", type: "Number", required: false, localized: false },
+        { id: "bodySize", name: "Body Size", type: "Number", required: false, localized: false },
+        { id: "backgroundImage", name: "Background Image", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesSpaces", async () =>
+      ensureContentType(envApi, "dbtStylesSpaces", {
+      name: "DBT Styles Spaces",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+        { id: "speedSeconds", name: "Speed Seconds", type: "Number", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesTherapies", async () =>
+      ensureContentType(envApi, "dbtStylesTherapies", {
+      name: "DBT Styles Therapies",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+        { id: "itemDescColor", name: "Item Desc Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesServices", async () =>
+      ensureContentType(envApi, "dbtStylesServices", {
+      name: "DBT Styles Services",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "subtitleColor", name: "Subtitle Color", type: "Symbol", required: false, localized: false },
+        { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesProcess", async () =>
+      ensureContentType(envApi, "dbtStylesProcess", {
+      name: "DBT Styles Process",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "introColor", name: "Intro Color", type: "Symbol", required: false, localized: false },
+        { id: "stepTitleColor", name: "Step Title Color", type: "Symbol", required: false, localized: false },
+        { id: "stepDescColor", name: "Step Desc Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesTeam", async () =>
+      ensureContentType(envApi, "dbtStylesTeam", {
+      name: "DBT Styles Team",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "nameColor", name: "Name Color", type: "Symbol", required: false, localized: false },
+        { id: "roleColor", name: "Role Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesContact", async () =>
+      ensureContentType(envApi, "dbtStylesContact", {
+      name: "DBT Styles Contact",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+        { id: "infoColor", name: "Info Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
+
+  structuredStylesEnabled =
+    structuredStylesEnabled &&
+    (await runOptionalStep("ensureContentType:dbtStylesFooter", async () =>
+      ensureContentType(envApi, "dbtStylesFooter", {
+      name: "DBT Styles Footer",
+      displayField: "key",
+      fields: [
+        { id: "key", name: "Key", type: "Symbol", required: true, localized: false },
+        { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+      ],
+      }),
+    ));
 
   const { contentfulUpsertContent, contentfulUpsertSiteSettings } =
     await import("./contentful-store");
@@ -715,6 +1403,402 @@ export async function seedContentfulFromDefaults() {
 
   const localesToSeed: SeedLocale[] = ["es", "en"];
 
+  // Seed structured entries so Contentful can manage the site via field editors and Asset uploads.
+  // The frontend continues to support the legacy JSON entries as fallback.
+  const loc = (esValue: any, enValue: any) => {
+    const out: any = { [localeEs]: esValue, [localeEn]: enValue };
+    if (!(defaultLocale in out)) {
+      out[defaultLocale] = defaultLocale.toLowerCase().startsWith("es")
+        ? esValue
+        : enValue;
+    }
+    return out;
+  };
+
+  const makeKeyField = (k: string) => ({ [defaultLocale]: k });
+
+  const headerBgAsset = await runStep("asset:dbtHeaderBackground", async () =>
+    ensureAssetFromUrl(
+      envApi,
+      defaultLocale,
+      "dbt-header-background",
+      HEADER.es.backgroundImage,
+    ),
+  );
+
+  const aboutAsset = await runStep("asset:dbtAboutImage", async () =>
+    ensureAssetFromUrl(envApi, defaultLocale, "dbt-about-image", ABOUT.es.image),
+  );
+
+  // Spaces items
+  const spacesItemEntries: any[] = [];
+  for (let i = 0; i < (SPACES.es.items || []).length; i++) {
+    const key = `luminous.spaces.item.${i + 1}`;
+    const imageUrl = SPACES.es.items[i]?.image;
+
+    const asset = await runStep(`asset:dbtSpaces:${i + 1}`, async () =>
+      ensureAssetFromUrl(envApi, defaultLocale, `dbt-spaces-${i + 1}`, imageUrl),
+    );
+
+    const entry = await runStep(`entry:dbtSpacesItem:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtSpacesItem", key, {
+        key: makeKeyField(key),
+        title: loc(SPACES.es.items[i]?.title || "", SPACES.en.items[i]?.title || ""),
+        href: loc(SPACES.es.items[i]?.href || "", SPACES.en.items[i]?.href || ""),
+        image: { [defaultLocale]: linkToAsset(asset) },
+      }),
+    );
+
+    spacesItemEntries.push(entry);
+  }
+
+  // Therapies items
+  const therapiesItemEntries: any[] = [];
+  for (let i = 0; i < (THERAPIES.es.items || []).length; i++) {
+    const key = `luminous.therapies.item.${i + 1}`;
+    const imageUrl = THERAPIES.es.items[i]?.image;
+
+    const asset = await runStep(`asset:dbtTherapies:${i + 1}`, async () =>
+      ensureAssetFromUrl(
+        envApi,
+        defaultLocale,
+        `dbt-therapy-${i + 1}`,
+        imageUrl,
+      ),
+    );
+
+    const entry = await runStep(`entry:dbtTherapiesItem:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtTherapiesItem", key, {
+        key: makeKeyField(key),
+        title: loc(
+          THERAPIES.es.items[i]?.title || "",
+          THERAPIES.en.items[i]?.title || "",
+        ),
+        desc: loc(
+          THERAPIES.es.items[i]?.desc || "",
+          THERAPIES.en.items[i]?.desc || "",
+        ),
+        image: { [defaultLocale]: linkToAsset(asset) },
+      }),
+    );
+
+    therapiesItemEntries.push(entry);
+  }
+
+  // Services items (images are optional; the component has its own fallback images)
+  const servicesItemEntries: any[] = [];
+  for (let i = 0; i < (SERVICES.es.items || []).length; i++) {
+    const key = `luminous.services.item.${i + 1}`;
+    const entry = await runStep(`entry:dbtServicesItem:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtServicesItem", key, {
+        key: makeKeyField(key),
+        title: loc(
+          SERVICES.es.items[i]?.title || "",
+          SERVICES.en.items[i]?.title || "",
+        ),
+        desc: loc(
+          SERVICES.es.items[i]?.desc || "",
+          SERVICES.en.items[i]?.desc || "",
+        ),
+      }),
+    );
+    servicesItemEntries.push(entry);
+  }
+
+  // Process steps
+  const processStepEntries: any[] = [];
+  for (let i = 0; i < (PROCESS.es.steps || []).length; i++) {
+    const key = `luminous.process.step.${i + 1}`;
+    const entry = await runStep(`entry:dbtProcessStep:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtProcessStep", key, {
+        key: makeKeyField(key),
+        number: loc(`0${i + 1}`, `0${i + 1}`),
+        title: loc(
+          PROCESS.es.steps[i]?.title || "",
+          PROCESS.en.steps[i]?.title || "",
+        ),
+        description: loc(
+          PROCESS.es.steps[i]?.description || "",
+          PROCESS.en.steps[i]?.description || "",
+        ),
+      }),
+    );
+    processStepEntries.push(entry);
+  }
+
+  // Team members
+  const teamMemberEntries: any[] = [];
+  for (let i = 0; i < (TEAM.es.members || []).length; i++) {
+    const key = `luminous.team.member.${i + 1}`;
+    const imageUrl = TEAM.es.members[i]?.image;
+
+    const asset = await runStep(`asset:dbtTeam:${i + 1}`, async () =>
+      ensureAssetFromUrl(envApi, defaultLocale, `dbt-team-${i + 1}`, imageUrl),
+    );
+
+    const entry = await runStep(`entry:dbtTeamMember:${i + 1}`, async () =>
+      upsertEntryByKey(envApi, "dbtTeamMember", key, {
+        key: makeKeyField(key),
+        name: loc(TEAM.es.members[i]?.name || "", TEAM.en.members[i]?.name || ""),
+        description: loc(
+          TEAM.es.members[i]?.description || "",
+          TEAM.en.members[i]?.description || "",
+        ),
+        image: { [defaultLocale]: linkToAsset(asset) },
+        specialties: loc(
+          TEAM.es.members[i]?.specialties || [],
+          TEAM.en.members[i]?.specialties || [],
+        ),
+      }),
+    );
+
+    teamMemberEntries.push(entry);
+  }
+
+  // Section entries
+  await runStep("entry:dbtSeo", async () =>
+    upsertEntryByKey(envApi, "dbtSeo", "luminous.seo", {
+      key: makeKeyField("luminous.seo"),
+      title: loc(SEO.es.title, SEO.en.title),
+      description: loc(SEO.es.description, SEO.en.description),
+      canonical: loc(SEO.es.canonical, SEO.en.canonical),
+      ogUrl: loc(SEO.es.ogUrl, SEO.en.ogUrl),
+      ogImage: loc(SEO.es.ogImage, SEO.en.ogImage),
+      keywords: loc(SEO.es.keywords, SEO.en.keywords),
+    }),
+  );
+
+  await runStep("entry:dbtHeader", async () =>
+    upsertEntryByKey(envApi, "dbtHeader", "luminous.header", {
+      key: makeKeyField("luminous.header"),
+      title1: loc(HEADER.es.title1, HEADER.en.title1),
+      title2: loc(HEADER.es.title2, HEADER.en.title2),
+      subtitle1: loc(HEADER.es.subtitle1, HEADER.en.subtitle1),
+      subtitle2: loc(HEADER.es.subtitle2, HEADER.en.subtitle2),
+      cta1: loc(HEADER.es.cta1, HEADER.en.cta1),
+      cta1Link: loc(HEADER.es.cta1Link, HEADER.en.cta1Link),
+      cta2: loc(HEADER.es.cta2, HEADER.en.cta2),
+      cta2Link: loc(HEADER.es.cta2Link, HEADER.en.cta2Link),
+      backgroundImage: { [defaultLocale]: linkToAsset(headerBgAsset) },
+      ...(unifiedStylesEnabledByContentType.dbtHeader
+        ? {
+            title1Color: nonLocalized(STYLES["luminous.styles.header"].title1Color),
+            title2Color: nonLocalized(STYLES["luminous.styles.header"].title2Color),
+            title1Size: nonLocalized(STYLES["luminous.styles.header"].title1Size),
+            title2Size: nonLocalized(STYLES["luminous.styles.header"].title2Size),
+            subtitle1Color: nonLocalized(STYLES["luminous.styles.header"].subtitle1Color),
+            subtitle2Color: nonLocalized(STYLES["luminous.styles.header"].subtitle2Color),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtAbout", async () =>
+    upsertEntryByKey(envApi, "dbtAbout", "luminous.about", {
+      key: makeKeyField("luminous.about"),
+      title: loc(ABOUT.es.title, ABOUT.en.title),
+      body: loc(ABOUT.es.body, ABOUT.en.body),
+      linkText: loc(ABOUT.es.linkText, ABOUT.en.linkText),
+      linkUrl: loc(ABOUT.es.linkUrl, ABOUT.en.linkUrl),
+      image: { [defaultLocale]: linkToAsset(aboutAsset) },
+      ...(unifiedStylesEnabledByContentType.dbtAbout
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.about"].titleColor),
+            bodyColor: nonLocalized(STYLES["luminous.styles.about"].bodyColor),
+            backgroundColor: nonLocalized(STYLES["luminous.styles.about"].backgroundColor),
+            titleSize: nonLocalized(STYLES["luminous.styles.about"].titleSize),
+            bodySize: nonLocalized(STYLES["luminous.styles.about"].bodySize),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtSpaces", async () =>
+    upsertEntryByKey(envApi, "dbtSpaces", "luminous.spaces", {
+      key: makeKeyField("luminous.spaces"),
+      eyebrow: loc(SPACES.es.eyebrow, SPACES.en.eyebrow),
+      title: loc(SPACES.es.title, SPACES.en.title),
+      items: { [defaultLocale]: spacesItemEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtSpaces
+        ? {
+            textColor: nonLocalized(STYLES["luminous.styles.spaces"].textColor),
+            speedSeconds: nonLocalized(STYLES["luminous.styles.spaces"].speedSeconds),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtTherapies", async () =>
+    upsertEntryByKey(envApi, "dbtTherapies", "luminous.therapies", {
+      key: makeKeyField("luminous.therapies"),
+      title: loc(THERAPIES.es.title, THERAPIES.en.title),
+      items: { [defaultLocale]: therapiesItemEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtTherapies
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.therapies"].titleColor),
+            itemTitleColor: nonLocalized(STYLES["luminous.styles.therapies"].itemTitleColor),
+            itemDescColor: nonLocalized(STYLES["luminous.styles.therapies"].itemDescColor),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtServices", async () =>
+    upsertEntryByKey(envApi, "dbtServices", "luminous.services", {
+      key: makeKeyField("luminous.services"),
+      title: loc(SERVICES.es.title, SERVICES.en.title),
+      subtitle: loc(SERVICES.es.subtitle, SERVICES.en.subtitle),
+      items: { [defaultLocale]: servicesItemEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtServices
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.services"].titleColor),
+            subtitleColor: nonLocalized(STYLES["luminous.styles.services"].subtitleColor),
+            itemTitleColor: nonLocalized(STYLES["luminous.styles.services"].itemTitleColor),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtProcess", async () =>
+    upsertEntryByKey(envApi, "dbtProcess", "luminous.process", {
+      key: makeKeyField("luminous.process"),
+      title: loc(PROCESS.es.title, PROCESS.en.title),
+      intro: loc(PROCESS.es.intro, PROCESS.en.intro),
+      steps: { [defaultLocale]: processStepEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtProcess
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.process"].titleColor),
+            introColor: nonLocalized(STYLES["luminous.styles.process"].introColor),
+            stepTitleColor: nonLocalized(STYLES["luminous.styles.process"].stepTitleColor),
+            stepDescColor: nonLocalized(STYLES["luminous.styles.process"].stepDescColor),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtTeam", async () =>
+    upsertEntryByKey(envApi, "dbtTeam", "luminous.team", {
+      key: makeKeyField("luminous.team"),
+      title: loc(TEAM.es.title, TEAM.en.title),
+      members: { [defaultLocale]: teamMemberEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtTeam
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.team"].titleColor),
+            nameColor: nonLocalized(STYLES["luminous.styles.team"].nameColor),
+            roleColor: nonLocalized(STYLES["luminous.styles.team"].roleColor),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtContact", async () =>
+    upsertEntryByKey(envApi, "dbtContact", "luminous.contact", {
+      key: makeKeyField("luminous.contact"),
+      title: loc(CONTACT.es.title, CONTACT.en.title),
+      address: loc(CONTACT.es.address, CONTACT.en.address),
+      whatsapp: loc(CONTACT.es.whatsapp, CONTACT.en.whatsapp),
+      instagram: loc(CONTACT.es.instagram, CONTACT.en.instagram),
+      email: loc(CONTACT.es.email, CONTACT.en.email),
+      hoursWeekdays: loc(CONTACT.es.hours.weekdays, CONTACT.en.hours.weekdays),
+      hoursSaturday: loc(CONTACT.es.hours.saturday, CONTACT.en.hours.saturday),
+      hoursSunday: loc(CONTACT.es.hours.sunday, CONTACT.en.hours.sunday),
+      ...(unifiedStylesEnabledByContentType.dbtContact
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.contact"].titleColor),
+            infoColor: nonLocalized(STYLES["luminous.styles.contact"].infoColor),
+          }
+        : {}),
+    }),
+  );
+
+  await runStep("entry:dbtFooter", async () =>
+    upsertEntryByKey(envApi, "dbtFooter", "luminous.footer", {
+      key: makeKeyField("luminous.footer"),
+      quote: loc(FOOTER.es.quote, FOOTER.en.quote),
+      text: loc(FOOTER.es.text, FOOTER.en.text),
+      ...(unifiedStylesEnabledByContentType.dbtFooter
+        ? {
+            textColor: nonLocalized(STYLES["luminous.styles.footer"].textColor),
+          }
+        : {}),
+    }),
+  );
+
+  if (structuredStylesEnabled) {
+    // Styles entries
+    await runStep("entry:dbtStylesGenerales", async () =>
+      upsertEntryByKey(envApi, "dbtStylesGenerales", "luminous.styles.generales", {
+        key: makeKeyField("luminous.styles.generales"),
+        primary: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].colors.primary,
+        },
+        secondary: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].colors.secondary,
+        },
+        fontFamily: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].typography.fontFamily,
+        },
+        baseSize: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].typography.baseSize,
+        },
+        logoUrl: {
+          [defaultLocale]: STYLES["luminous.styles.generales"].assets.logoUrl,
+        },
+      }),
+    );
+
+    const styleTypeByKey: Record<string, string> = {
+      "luminous.styles.header": "dbtStylesHeader",
+      "luminous.styles.about": "dbtStylesAbout",
+      "luminous.styles.spaces": "dbtStylesSpaces",
+      "luminous.styles.therapies": "dbtStylesTherapies",
+      "luminous.styles.services": "dbtStylesServices",
+      "luminous.styles.process": "dbtStylesProcess",
+      "luminous.styles.team": "dbtStylesTeam",
+      "luminous.styles.contact": "dbtStylesContact",
+      "luminous.styles.footer": "dbtStylesFooter",
+    };
+
+    const unifiedSectionTypeByStyleKey: Record<string, string> = {
+      "luminous.styles.header": "dbtHeader",
+      "luminous.styles.about": "dbtAbout",
+      "luminous.styles.spaces": "dbtSpaces",
+      "luminous.styles.therapies": "dbtTherapies",
+      "luminous.styles.services": "dbtServices",
+      "luminous.styles.process": "dbtProcess",
+      "luminous.styles.team": "dbtTeam",
+      "luminous.styles.contact": "dbtContact",
+      "luminous.styles.footer": "dbtFooter",
+    };
+
+    for (const k of Object.keys(styleTypeByKey)) {
+      const unifiedSectionType = unifiedSectionTypeByStyleKey[k];
+      if (
+        unifiedSectionType &&
+        unifiedStylesEnabledByContentType[unifiedSectionType]
+      ) {
+        // Unified styles are stored in the section entry; keep legacy style entry as fallback only.
+        continue;
+      }
+
+      const ct = styleTypeByKey[k];
+      await runStep(`entry:${ct}`, async () =>
+        upsertEntryByKey(envApi, ct, k, {
+          key: makeKeyField(k),
+          ...Object.fromEntries(
+            Object.entries(STYLES[k]).map(([field, value]) => [field, nonLocalized(value)]),
+          ),
+        }),
+      );
+    }
+  } else {
+    if (!unifiedStylesEnabled) {
+      warnings.push(
+        "Se omitió la creación de estilos estructurados en Contentful (faltan permisos de modelo). La web seguirá usando los estilos legacy.",
+      );
+    }
+  }
+
   for (const key of Object.keys(CONTENT)) {
     for (const locale of localesToSeed) {
       await runStep(`upsertContent:${key}:${locale}`, async () =>
@@ -748,6 +1832,10 @@ export async function seedContentfulFromDefaults() {
       contentKeys: Object.keys(CONTENT),
       styleKeys: Object.keys(STYLES),
       settings: true,
+    },
+    warnings: warnings.length ? warnings : undefined,
+    structured: {
+      stylesEnabled: structuredStylesEnabled || unifiedStylesEnabled,
     },
   };
 }

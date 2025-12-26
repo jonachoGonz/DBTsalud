@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import JsonFormEditor from "@/components/admin/JsonFormEditor";
 import AdminLayout from "@/components/admin/AdminLayout";
+import AdminAccessList from "@/components/admin/AdminAccessList";
 import {
   fetchContent,
   upsertContent,
@@ -9,6 +10,7 @@ import {
   listContentKeys,
   seedContentful,
   type Locale,
+  type CmsBackend,
 } from "@/lib/cms";
 import { applyTheme } from "@/lib/theme";
 import { autoTranslate } from "@/lib/translate";
@@ -16,7 +18,7 @@ import { autoTranslate } from "@/lib/translate";
 const ADMIN_USER = import.meta.env.VITE_ADMIN_USER || "admin";
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "qpsych2025!";
 
-type Tab = "content" | "styles" | "translate";
+type Tab = "content" | "styles" | "translate" | "access";
 
 const defaultKeys = [
   "luminous.seo",
@@ -43,10 +45,17 @@ export default function Admin() {
   const [rawJson, setRawJson] = useState<string>("{}");
   const [saving, setSaving] = useState(false);
   const [editorMode, setEditorMode] = useState<"json" | "form">("form");
+  const [cmsBackend, setCmsBackend] = useState<CmsBackend | null>(null);
 
   const [seeding, setSeeding] = useState(false);
   const [seedStatus, setSeedStatus] = useState<
-    { ok: true; environment: string; locales: { defaultLocale: string; es: string; en: string } } | null
+    {
+      ok: true;
+      environment: string;
+      locales: { defaultLocale: string; es: string; en: string };
+      warnings?: string[];
+      structured?: { stylesEnabled?: boolean };
+    } | null
   >(null);
 
   // styles: general theme
@@ -82,10 +91,13 @@ export default function Admin() {
     loadSettings();
     (async () => {
       try {
-        const keys = await listContentKeys("luminous.");
+        const { keys, backend } = await listContentKeys("luminous.");
+        if (backend) setCmsBackend(backend);
         if (keys.length)
           setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
-      } catch {}
+      } catch {
+        // ignore
+      }
     })();
   }, [authed]);
 
@@ -209,12 +221,15 @@ export default function Admin() {
         ok: true,
         environment: result.environment,
         locales: result.locales,
+        warnings: result.warnings,
+        structured: result.structured,
       });
 
       await loadSettings();
 
       try {
-        const keys = await listContentKeys("luminous.");
+        const { keys, backend } = await listContentKeys("luminous.");
+        if (backend) setCmsBackend(backend);
         if (keys.length)
           setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
       } catch {
@@ -447,7 +462,8 @@ export default function Admin() {
       );
       await upsertContent("luminous.footer", "en", en.footer);
 
-      const keys = await listContentKeys("luminous.");
+      const { keys, backend } = await listContentKeys("luminous.");
+      if (backend) setCmsBackend(backend);
       if (keys.length)
         setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
       alert("Contenido migrado desde Luminous");
@@ -542,6 +558,29 @@ export default function Admin() {
     onClick: () => setSelectedStyleKey(k),
   }));
 
+  const contentfulReadOnly = cmsBackend === "contentful";
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("Copiado");
+    } catch {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert("Copiado");
+      } catch {
+        alert("No se pudo copiar");
+      }
+    }
+  };
+
   return (
     <AdminLayout
       active={tab}
@@ -580,6 +619,29 @@ export default function Admin() {
               <div className="text-xs text-gray-500">
                 Environment: {seedStatus.environment} · Locales: ES={seedStatus.locales.es}, EN={seedStatus.locales.en}
               </div>
+              {seedStatus.structured?.stylesEnabled === false && (
+                <div className="mt-2 text-xs text-amber-700">
+                  Nota: no se pudieron crear los <span className="font-medium">estilos estructurados</span> en Contentful (falta permiso).
+                  La web seguirá usando estilos legacy.
+                </div>
+              )}
+              {seedStatus.warnings && seedStatus.warnings.length > 0 && (
+                <ul className="mt-2 text-xs text-amber-700 list-disc pl-5 space-y-1">
+                  {seedStatus.warnings.map((w) => (
+                    <li key={w}>{w}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {contentfulReadOnly && (
+            <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="font-medium">Contenido administrado en Contentful</div>
+              <div className="text-xs text-amber-800">
+                Esta pantalla queda en <span className="font-medium">modo lectura</span> para evitar sobrescribir el modelo estructurado.
+                Edita títulos, textos, links, imágenes y estilos directamente desde Contentful.
+              </div>
             </div>
           )}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
@@ -593,48 +655,72 @@ export default function Admin() {
               </div>
             </div>
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium">
-                  Editor ({locale})
-                </label>
-                <div className="inline-flex border rounded-md overflow-hidden">
-                  <button
-                    onClick={() => setEditorMode("form")}
-                    className={`px-3 py-1 text-sm ${editorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
-                  >
-                    Formulario
-                  </button>
-                  <button
-                    onClick={() => setEditorMode("json")}
-                    className={`px-3 py-1 text-sm ${editorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
-                  >
-                    JSON
-                  </button>
+              {contentfulReadOnly ? (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium">
+                    Contenido (solo lectura · {locale})
+                  </label>
+                  <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                    <pre className="p-3 text-xs whitespace-pre-wrap font-mono">
+                      {rawJson}
+                    </pre>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(rawJson)}
+                      className="px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50"
+                    >
+                      Copiar JSON
+                    </button>
+                  </div>
                 </div>
-              </div>
-              {editorMode === "json" ? (
-                <textarea
-                  value={rawJson}
-                  onChange={(e) => setRawJson(e.target.value)}
-                  className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
-                />
               ) : (
-                <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
-                  <JsonFormEditor
-                    jsonText={rawJson}
-                    onChangeJsonText={setRawJson}
-                  />
-                </div>
+                <>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium">
+                      Editor ({locale})
+                    </label>
+                    <div className="inline-flex border rounded-md overflow-hidden">
+                      <button
+                        onClick={() => setEditorMode("form")}
+                        className={`px-3 py-1 text-sm ${editorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
+                      >
+                        Formulario
+                      </button>
+                      <button
+                        onClick={() => setEditorMode("json")}
+                        className={`px-3 py-1 text-sm ${editorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
+                      >
+                        JSON
+                      </button>
+                    </div>
+                  </div>
+                  {editorMode === "json" ? (
+                    <textarea
+                      value={rawJson}
+                      onChange={(e) => setRawJson(e.target.value)}
+                      className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
+                    />
+                  ) : (
+                    <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                      <JsonFormEditor
+                        jsonText={rawJson}
+                        onChangeJsonText={setRawJson}
+                      />
+                    </div>
+                  )}
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      disabled={saving}
+                      onClick={handleSaveContent}
+                      className="px-4 py-2 bg-stone-900 text-white rounded-md"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </>
               )}
-              <div className="mt-3 flex gap-2">
-                <button
-                  disabled={saving}
-                  onClick={handleSaveContent}
-                  className="px-4 py-2 bg-stone-900 text-white rounded-md"
-                >
-                  Guardar
-                </button>
-              </div>
             </div>
           </div>
         </section>
@@ -642,6 +728,14 @@ export default function Admin() {
 
       {tab === "styles" && selectedStyleKey === "luminous.styles.generales" && (
         <section className="space-y-6 bg-white rounded-xl border shadow-sm p-4">
+          {contentfulReadOnly && (
+            <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="font-medium">Estilos administrados en Contentful</div>
+              <div className="text-xs text-amber-800">
+                Para mantener Contentful como fuente única, esta sección queda en <span className="font-medium">modo lectura</span>.
+              </div>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
@@ -657,13 +751,15 @@ export default function Admin() {
                         : "#" + primary.replace(/[^0-9a-fA-F]/g, "")
                     }
                     onChange={(e) => setPrimary(e.target.value)}
-                    className="h-10 w-14 p-0 border rounded"
+                    disabled={contentfulReadOnly}
+                    className="h-10 w-14 p-0 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <input
                     type="text"
                     value={primary}
                     onChange={(e) => setPrimary(e.target.value)}
-                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                    disabled={contentfulReadOnly}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -680,13 +776,15 @@ export default function Admin() {
                         : "#" + secondary.replace(/[^0-9a-fA-F]/g, "")
                     }
                     onChange={(e) => setSecondary(e.target.value)}
-                    className="h-10 w-14 p-0 border rounded"
+                    disabled={contentfulReadOnly}
+                    className="h-10 w-14 p-0 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <input
                     type="text"
                     value={secondary}
                     onChange={(e) => setSecondary(e.target.value)}
-                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                    disabled={contentfulReadOnly}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -697,7 +795,8 @@ export default function Admin() {
                 <select
                   value={fontFamily}
                   onChange={(e) => setFontFamily(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
+                  disabled={contentfulReadOnly}
+                  className="w-full border rounded-md px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {fontsLoading && <option>Cargando fuentes…</option>}
                   {!fontsLoading && (
@@ -721,7 +820,8 @@ export default function Admin() {
                   max={24}
                   value={baseSize}
                   onChange={(e) => setBaseSize(Number(e.target.value))}
-                  className="w-full border rounded-md px-3 py-2"
+                  disabled={contentfulReadOnly}
+                  className="w-full border rounded-md px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               <div>
@@ -732,7 +832,8 @@ export default function Admin() {
                   type="text"
                   value={logoUrl}
                   onChange={(e) => setLogoUrl(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
+                  disabled={contentfulReadOnly}
+                  className="w-full border rounded-md px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
@@ -758,7 +859,8 @@ export default function Admin() {
           <div>
             <button
               onClick={handleApplyTheme}
-              className="px-4 py-2 bg-stone-900 text-white rounded-md"
+              disabled={contentfulReadOnly}
+              className="px-4 py-2 bg-stone-900 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Guardar y aplicar
             </button>
@@ -768,66 +870,108 @@ export default function Admin() {
 
       {tab === "styles" && selectedStyleKey !== "luminous.styles.generales" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
-          <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium">
-              Editor de estilos ({locale})
-            </label>
-            <div className="inline-flex border rounded-md overflow-hidden">
-              <button
-                onClick={() => setStyleEditorMode("form")}
-                className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
-              >
-                Formulario
-              </button>
-              <button
-                onClick={() => setStyleEditorMode("json")}
-                className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
-              >
-                JSON
-              </button>
-            </div>
-          </div>
-          {styleEditorMode === "json" ? (
-            <textarea
-              value={styleRawJson}
-              onChange={(e) => setStyleRawJson(e.target.value)}
-              className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
-            />
+          {contentfulReadOnly ? (
+            <>
+              <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+                <div className="font-medium">Estilos administrados en Contentful</div>
+                <div className="text-xs text-amber-800">
+                  Este editor queda en <span className="font-medium">modo lectura</span>. Ajusta CSS/estilos desde Contentful.
+                </div>
+              </div>
+              <label className="block text-sm font-medium">
+                Estilos (solo lectura · {locale})
+              </label>
+              <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                <pre className="p-3 text-xs whitespace-pre-wrap font-mono">
+                  {styleRawJson}
+                </pre>
+              </div>
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(styleRawJson)}
+                  className="px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50"
+                >
+                  Copiar JSON
+                </button>
+              </div>
+            </>
           ) : (
-            <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
-              <JsonFormEditor
-                jsonText={styleRawJson}
-                onChangeJsonText={setStyleRawJson}
-              />
-            </div>
+            <>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium">
+                  Editor de estilos ({locale})
+                </label>
+                <div className="inline-flex border rounded-md overflow-hidden">
+                  <button
+                    onClick={() => setStyleEditorMode("form")}
+                    className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
+                  >
+                    Formulario
+                  </button>
+                  <button
+                    onClick={() => setStyleEditorMode("json")}
+                    className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
+                  >
+                    JSON
+                  </button>
+                </div>
+              </div>
+              {styleEditorMode === "json" ? (
+                <textarea
+                  value={styleRawJson}
+                  onChange={(e) => setStyleRawJson(e.target.value)}
+                  className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
+                />
+              ) : (
+                <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                  <JsonFormEditor
+                    jsonText={styleRawJson}
+                    onChangeJsonText={setStyleRawJson}
+                  />
+                </div>
+              )}
+              <div className="mt-3">
+                <button
+                  disabled={styleSaving}
+                  onClick={async () => {
+                    try {
+                      setStyleSaving(true);
+                      const parsed = JSON.parse(styleRawJson);
+                      await upsertContent(selectedStyleKey, locale, parsed);
+                      setStyleJson(parsed);
+                      alert("Estilos guardados");
+                    } catch (e: any) {
+                      alert("Error al guardar: " + e.message);
+                    } finally {
+                      setStyleSaving(false);
+                    }
+                  }}
+                  className="px-4 py-2 bg-stone-900 text-white rounded-md"
+                >
+                  Guardar
+                </button>
+              </div>
+            </>
           )}
-          <div className="mt-3">
-            <button
-              disabled={styleSaving}
-              onClick={async () => {
-                try {
-                  setStyleSaving(true);
-                  const parsed = JSON.parse(styleRawJson);
-                  await upsertContent(selectedStyleKey, locale, parsed);
-                  setStyleJson(parsed);
-                  alert("Estilos guardados");
-                } catch (e: any) {
-                  alert("Error al guardar: " + e.message);
-                } finally {
-                  setStyleSaving(false);
-                }
-              }}
-              className="px-4 py-2 bg-stone-900 text-white rounded-md"
-            >
-              Guardar
-            </button>
-          </div>
         </section>
       )}
 
+      {tab === "access" && <AdminAccessList adminUser={ADMIN_USER} />}
+
       {tab === "translate" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
-          <TranslatorTool />
+          {contentfulReadOnly ? (
+            <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="font-medium">Traducciones administradas en Contentful</div>
+              <div className="text-xs text-amber-800">
+                Para mantener Contentful como fuente única, esta herramienta queda deshabilitada.
+                Gestiona los locales (ES/EN) desde Contentful.
+              </div>
+            </div>
+          ) : (
+            <TranslatorTool />
+          )}
         </section>
       )}
     </AdminLayout>

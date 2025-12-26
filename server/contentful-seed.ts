@@ -144,6 +144,17 @@ async function ensureContentType(envApi: any, id: string, spec: any) {
   await created.publish();
 }
 
+async function ensureContentTypeHasFields(envApi: any, id: string, fields: any[]) {
+  const ct = await envApi.getContentType(id);
+  const existingIds = new Set<string>((ct?.fields || []).map((f: any) => String(f.id)));
+  const toAdd = fields.filter((f) => f?.id && !existingIds.has(String(f.id)));
+  if (!toAdd.length) return;
+
+  ct.fields = [...(ct.fields || []), ...toAdd];
+  const updated = await ct.update();
+  await updated.publish();
+}
+
 function guessImageContentType(url: string) {
   const u = String(url || "").toLowerCase();
   if (u.includes(".png")) return "image/png";

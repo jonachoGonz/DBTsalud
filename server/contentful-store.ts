@@ -459,6 +459,7 @@ const STRUCTURED_KEY_TO_CONTENT_TYPE: Record<string, string> = {
   "luminous.contact": STRUCTURED_CONTENT_TYPES.contact,
   "luminous.footer": STRUCTURED_CONTENT_TYPES.footer,
 
+  // styles (legacy: separate entries/types)
   "luminous.styles.generales": STRUCTURED_CONTENT_TYPES.stylesGenerales,
   "luminous.styles.header": STRUCTURED_CONTENT_TYPES.stylesHeader,
   "luminous.styles.about": STRUCTURED_CONTENT_TYPES.stylesAbout,
@@ -469,6 +470,21 @@ const STRUCTURED_KEY_TO_CONTENT_TYPE: Record<string, string> = {
   "luminous.styles.team": STRUCTURED_CONTENT_TYPES.stylesTeam,
   "luminous.styles.contact": STRUCTURED_CONTENT_TYPES.stylesContact,
   "luminous.styles.footer": STRUCTURED_CONTENT_TYPES.stylesFooter,
+};
+
+// Unification: allow reading section styles from the same section entry.
+// Example: key "luminous.styles.about" will read from entry key "luminous.about" (content type dbtAbout)
+// so editors manage content + styles in one place.
+const UNIFIED_STYLE_KEY_TO_BASE_KEY: Record<string, string> = {
+  "luminous.styles.header": "luminous.header",
+  "luminous.styles.about": "luminous.about",
+  "luminous.styles.spaces": "luminous.spaces",
+  "luminous.styles.therapies": "luminous.therapies",
+  "luminous.styles.services": "luminous.services",
+  "luminous.styles.process": "luminous.process",
+  "luminous.styles.team": "luminous.team",
+  "luminous.styles.contact": "luminous.contact",
+  "luminous.styles.footer": "luminous.footer",
 };
 
 const structuredHandlers: Record<string, StructuredKeyHandler> = {
@@ -992,7 +1008,19 @@ const structuredHandlers: Record<string, StructuredKeyHandler> = {
     };
   },
 
-  "luminous.styles.about": async ({ entry, localeCode, fallbackLocaleCode }) => {
+  "luminous.styles.about": async ({ cfg, entry, includes, localeCode, fallbackLocaleCode }) => {
+    const backgroundImage = await resolveAssetUrl(
+      cfg,
+      pickLocaleValue<any>(
+        entry.fields?.backgroundImage,
+        localeCode,
+        fallbackLocaleCode,
+      ),
+      localeCode,
+      fallbackLocaleCode,
+      includes,
+    );
+
     return {
       titleColor:
         pickLocaleValue<string>(
@@ -1024,12 +1052,7 @@ const structuredHandlers: Record<string, StructuredKeyHandler> = {
           localeCode,
           fallbackLocaleCode,
         ) ?? 18,
-      backgroundImage:
-        pickLocaleValue<string>(
-          entry.fields?.backgroundImage,
-          localeCode,
-          fallbackLocaleCode,
-        ) ?? "",
+      backgroundImage,
     };
   },
 

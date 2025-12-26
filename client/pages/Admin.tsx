@@ -728,6 +728,14 @@ export default function Admin() {
 
       {tab === "styles" && selectedStyleKey === "luminous.styles.generales" && (
         <section className="space-y-6 bg-white rounded-xl border shadow-sm p-4">
+          {contentfulReadOnly && (
+            <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="font-medium">Estilos administrados en Contentful</div>
+              <div className="text-xs text-amber-800">
+                Para mantener Contentful como fuente única, esta sección queda en <span className="font-medium">modo lectura</span>.
+              </div>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
@@ -743,13 +751,15 @@ export default function Admin() {
                         : "#" + primary.replace(/[^0-9a-fA-F]/g, "")
                     }
                     onChange={(e) => setPrimary(e.target.value)}
-                    className="h-10 w-14 p-0 border rounded"
+                    disabled={contentfulReadOnly}
+                    className="h-10 w-14 p-0 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <input
                     type="text"
                     value={primary}
                     onChange={(e) => setPrimary(e.target.value)}
-                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                    disabled={contentfulReadOnly}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -766,13 +776,15 @@ export default function Admin() {
                         : "#" + secondary.replace(/[^0-9a-fA-F]/g, "")
                     }
                     onChange={(e) => setSecondary(e.target.value)}
-                    className="h-10 w-14 p-0 border rounded"
+                    disabled={contentfulReadOnly}
+                    className="h-10 w-14 p-0 border rounded disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <input
                     type="text"
                     value={secondary}
                     onChange={(e) => setSecondary(e.target.value)}
-                    className="flex-1 border rounded-md px-3 py-2 font-mono"
+                    disabled={contentfulReadOnly}
+                    className="flex-1 border rounded-md px-3 py-2 font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -783,7 +795,8 @@ export default function Admin() {
                 <select
                   value={fontFamily}
                   onChange={(e) => setFontFamily(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
+                  disabled={contentfulReadOnly}
+                  className="w-full border rounded-md px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {fontsLoading && <option>Cargando fuentes…</option>}
                   {!fontsLoading && (
@@ -807,7 +820,8 @@ export default function Admin() {
                   max={24}
                   value={baseSize}
                   onChange={(e) => setBaseSize(Number(e.target.value))}
-                  className="w-full border rounded-md px-3 py-2"
+                  disabled={contentfulReadOnly}
+                  className="w-full border rounded-md px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
               <div>
@@ -818,7 +832,8 @@ export default function Admin() {
                   type="text"
                   value={logoUrl}
                   onChange={(e) => setLogoUrl(e.target.value)}
-                  className="w-full border rounded-md px-3 py-2"
+                  disabled={contentfulReadOnly}
+                  className="w-full border rounded-md px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
@@ -844,7 +859,8 @@ export default function Admin() {
           <div>
             <button
               onClick={handleApplyTheme}
-              className="px-4 py-2 bg-stone-900 text-white rounded-md"
+              disabled={contentfulReadOnly}
+              className="px-4 py-2 bg-stone-900 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Guardar y aplicar
             </button>

@@ -986,13 +986,13 @@ const structuredHandlers: Record<string, StructuredKeyHandler> = {
           entry.fields?.title1Size,
           localeCode,
           fallbackLocaleCode,
-        ) ?? 48,
+        ) ?? undefined,
       title2Size:
         pickLocaleValue<number>(
           entry.fields?.title2Size,
           localeCode,
           fallbackLocaleCode,
-        ) ?? 40,
+        ) ?? undefined,
       subtitle1Color:
         pickLocaleValue<string>(
           entry.fields?.subtitle1Color,
@@ -1045,13 +1045,13 @@ const structuredHandlers: Record<string, StructuredKeyHandler> = {
           entry.fields?.titleSize,
           localeCode,
           fallbackLocaleCode,
-        ) ?? 50,
+        ) ?? undefined,
       bodySize:
         pickLocaleValue<number>(
           entry.fields?.bodySize,
           localeCode,
           fallbackLocaleCode,
-        ) ?? 18,
+        ) ?? undefined,
       backgroundImage,
     };
   },
@@ -1069,7 +1069,7 @@ const structuredHandlers: Record<string, StructuredKeyHandler> = {
           entry.fields?.speedSeconds,
           localeCode,
           fallbackLocaleCode,
-        ) ?? 25.6,
+        ) ?? undefined,
     };
   },
 

@@ -10,6 +10,7 @@ import {
   listContentKeys,
   seedContentful,
   type Locale,
+  type CmsBackend,
 } from "@/lib/cms";
 import { applyTheme } from "@/lib/theme";
 import { autoTranslate } from "@/lib/translate";
@@ -44,6 +45,7 @@ export default function Admin() {
   const [rawJson, setRawJson] = useState<string>("{}");
   const [saving, setSaving] = useState(false);
   const [editorMode, setEditorMode] = useState<"json" | "form">("form");
+  const [cmsBackend, setCmsBackend] = useState<CmsBackend | null>(null);
 
   const [seeding, setSeeding] = useState(false);
   const [seedStatus, setSeedStatus] = useState<
@@ -89,10 +91,13 @@ export default function Admin() {
     loadSettings();
     (async () => {
       try {
-        const keys = await listContentKeys("luminous.");
+        const { keys, backend } = await listContentKeys("luminous.");
+        if (backend) setCmsBackend(backend);
         if (keys.length)
           setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
-      } catch {}
+      } catch {
+        // ignore
+      }
     })();
   }, [authed]);
 
@@ -223,7 +228,8 @@ export default function Admin() {
       await loadSettings();
 
       try {
-        const keys = await listContentKeys("luminous.");
+        const { keys, backend } = await listContentKeys("luminous.");
+        if (backend) setCmsBackend(backend);
         if (keys.length)
           setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
       } catch {
@@ -456,7 +462,8 @@ export default function Admin() {
       );
       await upsertContent("luminous.footer", "en", en.footer);
 
-      const keys = await listContentKeys("luminous.");
+      const { keys, backend } = await listContentKeys("luminous.");
+      if (backend) setCmsBackend(backend);
       if (keys.length)
         setAvailableKeys(Array.from(new Set([...defaultKeys, ...keys])));
       alert("Contenido migrado desde Luminous");

@@ -720,7 +720,79 @@ export async function seedContentfulFromDefaults() {
     }),
   );
 
-  // Styles types (optional). If the Contentful user doesn't have "content model" permissions,
+  // Unified styles: put section styles into the same section entry (e.g. DBT About + DBT Styles About).
+  // This requires content model permissions because we need to add fields to existing content types.
+  const nonLocalized = (value: any) => ({ [defaultLocale]: value });
+
+  const unifiedStyleFieldDefsByContentType: Record<string, any[]> = {
+    dbtHeader: [
+      { id: "title1Color", name: "Title 1 Color", type: "Symbol", required: false, localized: false },
+      { id: "title2Color", name: "Title 2 Color", type: "Symbol", required: false, localized: false },
+      { id: "title1Size", name: "Title 1 Size", type: "Number", required: false, localized: false },
+      { id: "title2Size", name: "Title 2 Size", type: "Number", required: false, localized: false },
+      { id: "subtitle1Color", name: "Subtitle 1 Color", type: "Symbol", required: false, localized: false },
+      { id: "subtitle2Color", name: "Subtitle 2 Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtAbout: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "bodyColor", name: "Body Color", type: "Symbol", required: false, localized: false },
+      { id: "backgroundColor", name: "Background Color", type: "Symbol", required: false, localized: false },
+      { id: "titleSize", name: "Title Size", type: "Number", required: false, localized: false },
+      { id: "bodySize", name: "Body Size", type: "Number", required: false, localized: false },
+      {
+        id: "backgroundImage",
+        name: "Background Image",
+        type: "Link",
+        linkType: "Asset",
+        required: false,
+        localized: false,
+      },
+    ],
+    dbtSpaces: [
+      { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+      { id: "speedSeconds", name: "Speed Seconds", type: "Number", required: false, localized: false },
+    ],
+    dbtTherapies: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+      { id: "itemDescColor", name: "Item Desc Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtServices: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "subtitleColor", name: "Subtitle Color", type: "Symbol", required: false, localized: false },
+      { id: "itemTitleColor", name: "Item Title Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtProcess: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "introColor", name: "Intro Color", type: "Symbol", required: false, localized: false },
+      { id: "stepTitleColor", name: "Step Title Color", type: "Symbol", required: false, localized: false },
+      { id: "stepDescColor", name: "Step Desc Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtTeam: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "nameColor", name: "Name Color", type: "Symbol", required: false, localized: false },
+      { id: "roleColor", name: "Role Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtContact: [
+      { id: "titleColor", name: "Title Color", type: "Symbol", required: false, localized: false },
+      { id: "infoColor", name: "Info Color", type: "Symbol", required: false, localized: false },
+    ],
+    dbtFooter: [
+      { id: "textColor", name: "Text Color", type: "Symbol", required: false, localized: false },
+    ],
+  };
+
+  const unifiedStylesEnabledByContentType: Record<string, boolean> = {};
+  for (const [contentTypeId, fields] of Object.entries(unifiedStyleFieldDefsByContentType)) {
+    const ok = await runOptionalStep(`extendContentType:${contentTypeId}:styles`, async () =>
+      ensureContentTypeHasFields(envApi, contentTypeId, fields),
+    );
+    unifiedStylesEnabledByContentType[contentTypeId] = ok;
+  }
+
+  const unifiedStylesEnabled = Object.values(unifiedStylesEnabledByContentType).some(Boolean);
+
+  // Styles types (legacy / optional). If the Contentful user doesn't have "content model" permissions,
   // we skip these and the site keeps using the legacy JSON styles.
   let structuredStylesEnabled = true;
 

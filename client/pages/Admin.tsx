@@ -961,7 +961,17 @@ export default function Admin() {
 
       {tab === "translate" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
-          <TranslatorTool />
+          {contentfulReadOnly ? (
+            <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="font-medium">Traducciones administradas en Contentful</div>
+              <div className="text-xs text-amber-800">
+                Para mantener Contentful como fuente única, esta herramienta queda deshabilitada.
+                Gestiona los locales (ES/EN) desde Contentful.
+              </div>
+            </div>
+          ) : (
+            <TranslatorTool />
+          )}
         </section>
       )}
     </AdminLayout>

@@ -870,60 +870,90 @@ export default function Admin() {
 
       {tab === "styles" && selectedStyleKey !== "luminous.styles.generales" && (
         <section className="space-y-4 bg-white rounded-xl border shadow-sm p-4">
-          <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium">
-              Editor de estilos ({locale})
-            </label>
-            <div className="inline-flex border rounded-md overflow-hidden">
-              <button
-                onClick={() => setStyleEditorMode("form")}
-                className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
-              >
-                Formulario
-              </button>
-              <button
-                onClick={() => setStyleEditorMode("json")}
-                className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
-              >
-                JSON
-              </button>
-            </div>
-          </div>
-          {styleEditorMode === "json" ? (
-            <textarea
-              value={styleRawJson}
-              onChange={(e) => setStyleRawJson(e.target.value)}
-              className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
-            />
+          {contentfulReadOnly ? (
+            <>
+              <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+                <div className="font-medium">Estilos administrados en Contentful</div>
+                <div className="text-xs text-amber-800">
+                  Este editor queda en <span className="font-medium">modo lectura</span>. Ajusta CSS/estilos desde Contentful.
+                </div>
+              </div>
+              <label className="block text-sm font-medium">
+                Estilos (solo lectura · {locale})
+              </label>
+              <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                <pre className="p-3 text-xs whitespace-pre-wrap font-mono">
+                  {styleRawJson}
+                </pre>
+              </div>
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(styleRawJson)}
+                  className="px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50"
+                >
+                  Copiar JSON
+                </button>
+              </div>
+            </>
           ) : (
-            <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
-              <JsonFormEditor
-                jsonText={styleRawJson}
-                onChangeJsonText={setStyleRawJson}
-              />
-            </div>
+            <>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-sm font-medium">
+                  Editor de estilos ({locale})
+                </label>
+                <div className="inline-flex border rounded-md overflow-hidden">
+                  <button
+                    onClick={() => setStyleEditorMode("form")}
+                    className={`px-3 py-1 text-sm ${styleEditorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
+                  >
+                    Formulario
+                  </button>
+                  <button
+                    onClick={() => setStyleEditorMode("json")}
+                    className={`px-3 py-1 text-sm ${styleEditorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
+                  >
+                    JSON
+                  </button>
+                </div>
+              </div>
+              {styleEditorMode === "json" ? (
+                <textarea
+                  value={styleRawJson}
+                  onChange={(e) => setStyleRawJson(e.target.value)}
+                  className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
+                />
+              ) : (
+                <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                  <JsonFormEditor
+                    jsonText={styleRawJson}
+                    onChangeJsonText={setStyleRawJson}
+                  />
+                </div>
+              )}
+              <div className="mt-3">
+                <button
+                  disabled={styleSaving}
+                  onClick={async () => {
+                    try {
+                      setStyleSaving(true);
+                      const parsed = JSON.parse(styleRawJson);
+                      await upsertContent(selectedStyleKey, locale, parsed);
+                      setStyleJson(parsed);
+                      alert("Estilos guardados");
+                    } catch (e: any) {
+                      alert("Error al guardar: " + e.message);
+                    } finally {
+                      setStyleSaving(false);
+                    }
+                  }}
+                  className="px-4 py-2 bg-stone-900 text-white rounded-md"
+                >
+                  Guardar
+                </button>
+              </div>
+            </>
           )}
-          <div className="mt-3">
-            <button
-              disabled={styleSaving}
-              onClick={async () => {
-                try {
-                  setStyleSaving(true);
-                  const parsed = JSON.parse(styleRawJson);
-                  await upsertContent(selectedStyleKey, locale, parsed);
-                  setStyleJson(parsed);
-                  alert("Estilos guardados");
-                } catch (e: any) {
-                  alert("Error al guardar: " + e.message);
-                } finally {
-                  setStyleSaving(false);
-                }
-              }}
-              className="px-4 py-2 bg-stone-900 text-white rounded-md"
-            >
-              Guardar
-            </button>
-          </div>
         </section>
       )}
 

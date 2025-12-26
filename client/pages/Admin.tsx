@@ -558,6 +558,29 @@ export default function Admin() {
     onClick: () => setSelectedStyleKey(k),
   }));
 
+  const contentfulReadOnly = cmsBackend === "contentful";
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("Copiado");
+    } catch {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert("Copiado");
+      } catch {
+        alert("No se pudo copiar");
+      }
+    }
+  };
+
   return (
     <AdminLayout
       active={tab}

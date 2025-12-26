@@ -1580,6 +1580,16 @@ export async function seedContentfulFromDefaults() {
       cta2: loc(HEADER.es.cta2, HEADER.en.cta2),
       cta2Link: loc(HEADER.es.cta2Link, HEADER.en.cta2Link),
       backgroundImage: { [defaultLocale]: linkToAsset(headerBgAsset) },
+      ...(unifiedStylesEnabledByContentType.dbtHeader
+        ? {
+            title1Color: nonLocalized(STYLES["luminous.styles.header"].title1Color),
+            title2Color: nonLocalized(STYLES["luminous.styles.header"].title2Color),
+            title1Size: nonLocalized(STYLES["luminous.styles.header"].title1Size),
+            title2Size: nonLocalized(STYLES["luminous.styles.header"].title2Size),
+            subtitle1Color: nonLocalized(STYLES["luminous.styles.header"].subtitle1Color),
+            subtitle2Color: nonLocalized(STYLES["luminous.styles.header"].subtitle2Color),
+          }
+        : {}),
     }),
   );
 
@@ -1591,6 +1601,15 @@ export async function seedContentfulFromDefaults() {
       linkText: loc(ABOUT.es.linkText, ABOUT.en.linkText),
       linkUrl: loc(ABOUT.es.linkUrl, ABOUT.en.linkUrl),
       image: { [defaultLocale]: linkToAsset(aboutAsset) },
+      ...(unifiedStylesEnabledByContentType.dbtAbout
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.about"].titleColor),
+            bodyColor: nonLocalized(STYLES["luminous.styles.about"].bodyColor),
+            backgroundColor: nonLocalized(STYLES["luminous.styles.about"].backgroundColor),
+            titleSize: nonLocalized(STYLES["luminous.styles.about"].titleSize),
+            bodySize: nonLocalized(STYLES["luminous.styles.about"].bodySize),
+          }
+        : {}),
     }),
   );
 
@@ -1600,6 +1619,12 @@ export async function seedContentfulFromDefaults() {
       eyebrow: loc(SPACES.es.eyebrow, SPACES.en.eyebrow),
       title: loc(SPACES.es.title, SPACES.en.title),
       items: { [defaultLocale]: spacesItemEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtSpaces
+        ? {
+            textColor: nonLocalized(STYLES["luminous.styles.spaces"].textColor),
+            speedSeconds: nonLocalized(STYLES["luminous.styles.spaces"].speedSeconds),
+          }
+        : {}),
     }),
   );
 
@@ -1608,6 +1633,13 @@ export async function seedContentfulFromDefaults() {
       key: makeKeyField("luminous.therapies"),
       title: loc(THERAPIES.es.title, THERAPIES.en.title),
       items: { [defaultLocale]: therapiesItemEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtTherapies
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.therapies"].titleColor),
+            itemTitleColor: nonLocalized(STYLES["luminous.styles.therapies"].itemTitleColor),
+            itemDescColor: nonLocalized(STYLES["luminous.styles.therapies"].itemDescColor),
+          }
+        : {}),
     }),
   );
 
@@ -1617,6 +1649,13 @@ export async function seedContentfulFromDefaults() {
       title: loc(SERVICES.es.title, SERVICES.en.title),
       subtitle: loc(SERVICES.es.subtitle, SERVICES.en.subtitle),
       items: { [defaultLocale]: servicesItemEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtServices
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.services"].titleColor),
+            subtitleColor: nonLocalized(STYLES["luminous.styles.services"].subtitleColor),
+            itemTitleColor: nonLocalized(STYLES["luminous.styles.services"].itemTitleColor),
+          }
+        : {}),
     }),
   );
 
@@ -1626,6 +1665,14 @@ export async function seedContentfulFromDefaults() {
       title: loc(PROCESS.es.title, PROCESS.en.title),
       intro: loc(PROCESS.es.intro, PROCESS.en.intro),
       steps: { [defaultLocale]: processStepEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtProcess
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.process"].titleColor),
+            introColor: nonLocalized(STYLES["luminous.styles.process"].introColor),
+            stepTitleColor: nonLocalized(STYLES["luminous.styles.process"].stepTitleColor),
+            stepDescColor: nonLocalized(STYLES["luminous.styles.process"].stepDescColor),
+          }
+        : {}),
     }),
   );
 
@@ -1634,6 +1681,13 @@ export async function seedContentfulFromDefaults() {
       key: makeKeyField("luminous.team"),
       title: loc(TEAM.es.title, TEAM.en.title),
       members: { [defaultLocale]: teamMemberEntries.map(linkToEntry) },
+      ...(unifiedStylesEnabledByContentType.dbtTeam
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.team"].titleColor),
+            nameColor: nonLocalized(STYLES["luminous.styles.team"].nameColor),
+            roleColor: nonLocalized(STYLES["luminous.styles.team"].roleColor),
+          }
+        : {}),
     }),
   );
 
@@ -1648,6 +1702,12 @@ export async function seedContentfulFromDefaults() {
       hoursWeekdays: loc(CONTACT.es.hours.weekdays, CONTACT.en.hours.weekdays),
       hoursSaturday: loc(CONTACT.es.hours.saturday, CONTACT.en.hours.saturday),
       hoursSunday: loc(CONTACT.es.hours.sunday, CONTACT.en.hours.sunday),
+      ...(unifiedStylesEnabledByContentType.dbtContact
+        ? {
+            titleColor: nonLocalized(STYLES["luminous.styles.contact"].titleColor),
+            infoColor: nonLocalized(STYLES["luminous.styles.contact"].infoColor),
+          }
+        : {}),
     }),
   );
 
@@ -1656,6 +1716,11 @@ export async function seedContentfulFromDefaults() {
       key: makeKeyField("luminous.footer"),
       quote: loc(FOOTER.es.quote, FOOTER.en.quote),
       text: loc(FOOTER.es.text, FOOTER.en.text),
+      ...(unifiedStylesEnabledByContentType.dbtFooter
+        ? {
+            textColor: nonLocalized(STYLES["luminous.styles.footer"].textColor),
+          }
+        : {}),
     }),
   );
 

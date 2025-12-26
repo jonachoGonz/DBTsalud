@@ -1759,21 +1759,44 @@ export async function seedContentfulFromDefaults() {
       "luminous.styles.footer": "dbtStylesFooter",
     };
 
+    const unifiedSectionTypeByStyleKey: Record<string, string> = {
+      "luminous.styles.header": "dbtHeader",
+      "luminous.styles.about": "dbtAbout",
+      "luminous.styles.spaces": "dbtSpaces",
+      "luminous.styles.therapies": "dbtTherapies",
+      "luminous.styles.services": "dbtServices",
+      "luminous.styles.process": "dbtProcess",
+      "luminous.styles.team": "dbtTeam",
+      "luminous.styles.contact": "dbtContact",
+      "luminous.styles.footer": "dbtFooter",
+    };
+
     for (const k of Object.keys(styleTypeByKey)) {
+      const unifiedSectionType = unifiedSectionTypeByStyleKey[k];
+      if (
+        unifiedSectionType &&
+        unifiedStylesEnabledByContentType[unifiedSectionType]
+      ) {
+        // Unified styles are stored in the section entry; keep legacy style entry as fallback only.
+        continue;
+      }
+
       const ct = styleTypeByKey[k];
       await runStep(`entry:${ct}`, async () =>
         upsertEntryByKey(envApi, ct, k, {
           key: makeKeyField(k),
           ...Object.fromEntries(
-            Object.entries(STYLES[k]).map(([field, value]) => [field, { [defaultLocale]: value }]),
+            Object.entries(STYLES[k]).map(([field, value]) => [field, nonLocalized(value)]),
           ),
         }),
       );
     }
   } else {
-    warnings.push(
-      "Se omitió la creación de estilos estructurados en Contentful (faltan permisos de modelo). La web seguirá usando los estilos legacy.",
-    );
+    if (!unifiedStylesEnabled) {
+      warnings.push(
+        "Se omitió la creación de estilos estructurados en Contentful (faltan permisos de modelo). La web seguirá usando los estilos legacy.",
+      );
+    }
   }
 
   for (const key of Object.keys(CONTENT)) {
@@ -1812,7 +1835,7 @@ export async function seedContentfulFromDefaults() {
     },
     warnings: warnings.length ? warnings : undefined,
     structured: {
-      stylesEnabled: structuredStylesEnabled,
+      stylesEnabled: structuredStylesEnabled || unifiedStylesEnabled,
     },
   };
 }

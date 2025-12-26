@@ -9,18 +9,25 @@ async function apiFetchJson<T>(
 ): Promise<
   { ok: true; data: T } | { ok: false; error: string; status?: number }
 > {
-  const controller = new AbortController();
-  const timeoutMs = opts?.timeoutMs ?? 15_000;
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
+  const timeoutMs = Math.max(1_000, opts?.timeoutMs ?? 15_000);
   const retries = Math.max(0, opts?.retries ?? 0);
   const retryDelayMs = Math.max(0, opts?.retryDelayMs ?? 500);
 
-  async function attempt(
-    remaining: number,
-  ): Promise<
-    { ok: true; data: T } | { ok: false; error: string; status?: number }
-  > {
+  const isLikelyAbortMessage = (msg: string) =>
+    msg.toLowerCase().includes("aborted") ||
+    msg.toLowerCase().includes("abort") ||
+    msg.toLowerCase().includes("signal is aborted");
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      try {
+        controller.abort();
+      } catch {
+        // ignore
+      }
+    }, timeoutMs);
+
     try {
       const res = await fetch(input, {
         ...init,
@@ -68,28 +75,35 @@ async function apiFetchJson<T>(
 
       return { ok: true, data: json as T };
     } catch (e: any) {
-      const message = e?.message || String(e);
-      const isAbort = e?.name === "AbortError";
+      const rawMessage = e?.message || String(e);
+      const isAbort =
+        e?.name === "AbortError" ||
+        rawMessage === "signal is aborted without reason" ||
+        isLikelyAbortMessage(rawMessage);
+
+      const message = isAbort
+        ? `Request timed out after ${timeoutMs}ms`
+        : rawMessage;
+
       const isNetwork =
         !isAbort &&
-        (message === "Failed to fetch" ||
-          message.toLowerCase().includes("network") ||
-          message.toLowerCase().includes("load failed"));
+        (rawMessage === "Failed to fetch" ||
+          rawMessage.toLowerCase().includes("network") ||
+          rawMessage.toLowerCase().includes("load failed"));
 
-      if (isNetwork && remaining > 0) {
+      const canRetry = (isNetwork || isAbort) && attempt < retries;
+      if (canRetry) {
         await new Promise((r) => setTimeout(r, retryDelayMs));
-        return attempt(remaining - 1);
+        continue;
       }
 
       return { ok: false, error: message };
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
-  try {
-    return await attempt(retries);
-  } finally {
-    clearTimeout(timeout);
-  }
+  return { ok: false, error: "Unknown error" };
 }
 
 function getAdminAuthHeader(): string | undefined {

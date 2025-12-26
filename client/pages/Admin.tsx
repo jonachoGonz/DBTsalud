@@ -634,6 +634,16 @@ export default function Admin() {
               )}
             </div>
           )}
+
+          {contentfulReadOnly && (
+            <div className="rounded-md border bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="font-medium">Contenido administrado en Contentful</div>
+              <div className="text-xs text-amber-800">
+                Esta pantalla queda en <span className="font-medium">modo lectura</span> para evitar sobrescribir el modelo estructurado.
+                Edita títulos, textos, links, imágenes y estilos directamente desde Contentful.
+              </div>
+            </div>
+          )}
           {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> */}
           <div className="grid grid-cols-1 gap-6">
             <div>
@@ -645,48 +655,72 @@ export default function Admin() {
               </div>
             </div>
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium">
-                  Editor ({locale})
-                </label>
-                <div className="inline-flex border rounded-md overflow-hidden">
-                  <button
-                    onClick={() => setEditorMode("form")}
-                    className={`px-3 py-1 text-sm ${editorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
-                  >
-                    Formulario
-                  </button>
-                  <button
-                    onClick={() => setEditorMode("json")}
-                    className={`px-3 py-1 text-sm ${editorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
-                  >
-                    JSON
-                  </button>
+              {contentfulReadOnly ? (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium">
+                    Contenido (solo lectura · {locale})
+                  </label>
+                  <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                    <pre className="p-3 text-xs whitespace-pre-wrap font-mono">
+                      {rawJson}
+                    </pre>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(rawJson)}
+                      className="px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50"
+                    >
+                      Copiar JSON
+                    </button>
+                  </div>
                 </div>
-              </div>
-              {editorMode === "json" ? (
-                <textarea
-                  value={rawJson}
-                  onChange={(e) => setRawJson(e.target.value)}
-                  className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
-                />
               ) : (
-                <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
-                  <JsonFormEditor
-                    jsonText={rawJson}
-                    onChangeJsonText={setRawJson}
-                  />
-                </div>
+                <>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium">
+                      Editor ({locale})
+                    </label>
+                    <div className="inline-flex border rounded-md overflow-hidden">
+                      <button
+                        onClick={() => setEditorMode("form")}
+                        className={`px-3 py-1 text-sm ${editorMode === "form" ? "bg-stone-900 text-white" : "bg-white"}`}
+                      >
+                        Formulario
+                      </button>
+                      <button
+                        onClick={() => setEditorMode("json")}
+                        className={`px-3 py-1 text-sm ${editorMode === "json" ? "bg-stone-900 text-white" : "bg-white"}`}
+                      >
+                        JSON
+                      </button>
+                    </div>
+                  </div>
+                  {editorMode === "json" ? (
+                    <textarea
+                      value={rawJson}
+                      onChange={(e) => setRawJson(e.target.value)}
+                      className="w-full h-[460px] border rounded-md p-3 font-mono text-sm"
+                    />
+                  ) : (
+                    <div className="w-full h-[460px] border rounded-md bg-gray-50 overflow-auto">
+                      <JsonFormEditor
+                        jsonText={rawJson}
+                        onChangeJsonText={setRawJson}
+                      />
+                    </div>
+                  )}
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      disabled={saving}
+                      onClick={handleSaveContent}
+                      className="px-4 py-2 bg-stone-900 text-white rounded-md"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                </>
               )}
-              <div className="mt-3 flex gap-2">
-                <button
-                  disabled={saving}
-                  onClick={handleSaveContent}
-                  className="px-4 py-2 bg-stone-900 text-white rounded-md"
-                >
-                  Guardar
-                </button>
-              </div>
             </div>
           </div>
         </section>

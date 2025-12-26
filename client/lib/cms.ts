@@ -150,7 +150,11 @@ export async function fetchContent<T = any>(
   locale: Locale,
 ): Promise<T | null> {
   const url = `${API_BASE}/content?key=${encodeURIComponent(key)}&locale=${encodeURIComponent(locale)}`;
-  const res = await apiFetchJson<{ data: T | null }>(url);
+  const res = await apiFetchJson<{ data: T | null }>(url, undefined, {
+    timeoutMs: 25_000,
+    retries: 1,
+    retryDelayMs: 600,
+  });
   if (res.ok === false) {
     console.error("fetchContent error", res.error);
     return null;
@@ -197,7 +201,7 @@ export async function fetchSiteSettings(): Promise<SiteSettings | null> {
   const res = await apiFetchJson<{ settings: SiteSettings | null }>(
     `${API_BASE}/settings`,
     undefined,
-    { retries: 1, retryDelayMs: 600 },
+    { retries: 1, retryDelayMs: 600, timeoutMs: 25_000 },
   );
   if (res.ok === false) {
     console.error("fetchSiteSettings error", res.error);
